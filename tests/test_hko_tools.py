@@ -1,6 +1,6 @@
 import unittest
 from unittest.mock import patch, MagicMock
-from hko_tools import HKOTools
+from hko_tools import get_current_weather
 
 
 class TestHKOTools(unittest.TestCase):
@@ -290,7 +290,7 @@ class TestHKOTools(unittest.TestCase):
         mock_get.return_value = mock_response
 
         # Test
-        result = HKOTools.get_current_weather()
+        result = get_current_weather()
         self.assertEqual(result['temperature']['value'], 29)
         self.assertEqual(result['temperature']['unit'], "C")
         self.assertEqual(result['temperature']['recordTime'],  "2025-06-07T22:00:00+08:00",)

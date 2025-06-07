@@ -2,23 +2,8 @@ import requests
 from typing import Dict
 
 
-class HKOTools:
-    @staticmethod
-    # def get_weather_warning() -> Dict:
-    #     """Get current weather warnings from HKO"""
-    #     url = "https://data.weather.gov.hk/weatherAPI/opendata/weather.php?dataType=warnsum"
-    #     response = requests.get(url)
-    #     return response.json()
 
-    # @staticmethod
-    # def get_9day_forecast() -> Dict:
-    #     """Get 9-day weather forecast from HKO"""
-    #     url = "https://data.weather.gov.hk/weatherAPI/opendata/weather.php?dataType=fnd"
-    #     response = requests.get(url)
-    #     return response.json()
-
-    @staticmethod
-    def get_current_weather(region: str = "Hong Kong Observatory") -> Dict:
+def get_current_weather(region: str = "Hong Kong Observatory") -> Dict:
         """
         Get current weather observations for a specific region in Hong Kong
 
