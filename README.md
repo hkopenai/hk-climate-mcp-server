@@ -18,7 +18,7 @@ This is an MCP server that provides access to Hong Kong Observatory weather data
    ```
 3. Run the server:
    ```bash
-   python hko_mcp_server.py
+   python app.py
    ```
 
 ### Running Options
