@@ -1,29 +1,19 @@
 import argparse
 from fastmcp import FastMCP
-from typing import Dict
+from hkopenai.hk_weather_mcp_server import tool_weather
+from typing import Dict, Annotated, Optional
+from pydantic import Field
 
 def create_mcp_server():
     """Create and configure the HKO MCP server"""
     mcp = FastMCP(name="HKOServer")
 
     @mcp.tool(
-        description="Get current weather warnings from Hong Kong Observatory"
-    )
-    def get_weather_warning() -> Dict:
-        return HKOTools.get_weather_warning()
-
-    @mcp.tool(
-        description="Get 9-day weather forecast from Hong Kong Observatory"
-    )
-    def get_9day_forecast() -> Dict:
-        return HKOTools.get_9day_forecast()
-
-    @mcp.tool(
-        description="Get current weather observations, warnings, temperature, humiditya and rainfall in Hong Kong from Hong Kong Observatory, with option region or place in Hong Kong",
+        description="Get current weather observations, warnings, temperature, humidity and rainfall in Hong Kong from Hong Kong Observatory, with option region or place in Hong Kong",
     )
     def get_current_weather(region: str = "Hong Kong Observatory") -> Dict:
-        return HKOTools.get_current_weather(region)
-
+        return tool_weather.get_current_weather(region)
+    
     return mcp
 
 def main():

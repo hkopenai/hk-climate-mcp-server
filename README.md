@@ -47,6 +47,6 @@ To connect this MCP server to Cline using stdio:
 
 ## Testing
 
-Tests are available in `tests/test_hko_tools.py`. Run with:
+Tests are available in `tests`. Run with:
 ```bash
-python -m unittest tests/test_hko_tools.py
+pytest

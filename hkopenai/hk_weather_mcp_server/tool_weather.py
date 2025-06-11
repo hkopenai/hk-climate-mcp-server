@@ -1,9 +1,7 @@
 import requests
 from typing import Dict
 
-
-
-def get_current_weather(region: str = "Hong Kong Observatory") -> Dict:
+def  get_current_weather(region: str = "Hong Kong Observatory") -> Dict:
         """
         Get current weather observations for a specific region in Hong Kong
 
