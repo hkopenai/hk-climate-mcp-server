@@ -1,4 +1,4 @@
-"""Hong Kong weather MCP Server package."""
+"""Hong Kong climate MCP Server package."""
 from .app import main
 from .tool_weather import get_current_weather
 

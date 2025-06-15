@@ -3,7 +3,7 @@ requires = ["setuptools>=42", "wheel"]
 build-backend = "setuptools.build_meta"
 
 [tool.setuptools]
-packages = ["hkopenai.hk_weather_mcp_server"]
+packages = ["hkopenai.hk_climate_mcp_server"]
 include-package-data = false
 
 [tool.hatch.build.targets.wheel]
@@ -13,12 +13,12 @@ packages = ["hkopenai"]
 exclude_dirs = ["venv", ".venv", "tests"]
 
 [project.urls]
-repository = "https://github.com/hkopenai/hk-weather-mcp-server.git"
+repository = "https://github.com/hkopenai/hk-climate-mcp-server.git"
 
 [project]
-name = "hkopenai.hk_weather_mcp_server"
+name = "hkopenai.hk_climate_mcp_server"
 version = "0.1.7"
-description = "Hong Kong weather MCP Server providing weather data tools"
+description = "Hong Kong Weather MCP Server providing climate and weather data tools"
 readme = "README.md"
 requires-python = ">=3.7"
 authors = [
@@ -37,4 +37,4 @@ dependencies = [
 ]
 
 [project.scripts]
-hk_weather_mcp_server = "hkopenai.hk_weather_mcp_server.app:main"
+hk_climate_mcp_server = "hkopenai.hk_climate_mcp_server.app:main"

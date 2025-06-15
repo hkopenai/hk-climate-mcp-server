@@ -1,10 +1,14 @@
 # HKO MCP Server
 
-[![GitHub Repository](https://img.shields.io/badge/GitHub-Repository-blue.svg)](https://github.com/hkopenai/hk-weather-mcp-server)
+[![GitHub Repository](https://img.shields.io/badge/GitHub-Repository-blue.svg)](https://github.com/hkopenai/hk-climate-mcp-server)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
 
-This is an MCP server that provides access to Hong Kong Observatory weather data through a FastMCP interface.
+This is an MCP server that provides access to climate and weather data through a FastMCP interface.
+
+## Data Source
+
+* Hong Kong Observatory 
 
 ## Features
 - Current weather: Get current weather observations from HKO (supports optional region parameter)
@@ -39,7 +43,7 @@ To connect this MCP server to Cline using stdio:
     "type": "stdio",
     "command": "python",
     "args": [
-      "c:/Projects/hkopenai/hk-weather-mcp-server/app.py"
+      "c:/Projects/hkopenai/hk-climate-mcp-server/app.py"
     ]
   }
 }

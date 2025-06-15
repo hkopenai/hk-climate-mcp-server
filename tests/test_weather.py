@@ -1,6 +1,6 @@
 import unittest
 from unittest.mock import patch, MagicMock
-from hkopenai.hk_weather_mcp_server import get_current_weather
+from hkopenai.hk_climate_mcp_server import get_current_weather
 
 class TestWeatherTools(unittest.TestCase):
     default_mock_response = {
@@ -90,7 +90,7 @@ class TestWeatherTools(unittest.TestCase):
                 "recordTime": "2025-06-07T22:00:00+08:00",
             },
             "warningMessage": [
-                "The Very Hot Weather Warning is now in force. Prolonged heat alert! Please drink sufficient water. If feeling unwell, take rest or seek help immediately. If needed, seek medical advice as soon as possible."
+                "The Very Hot weather Warning is now in force. Prolonged heat alert! Please drink sufficient water. If feeling unwell, take rest or seek help immediately. If needed, seek medical advice as soon as possible."
             ],
             "mintempFrom00To09": "",
             "rainfallFrom00To12": "",
@@ -123,7 +123,7 @@ class TestWeatherTools(unittest.TestCase):
         self.assertEqual(result['rainfall']['value'], 0)
         self.assertEqual(result['rainfall']['startTime'], "2025-06-07T20:45:00+08:00")
         self.assertEqual(result['rainfall']['endTime'], "2025-06-07T21:45:00+08:00")          
-        self.assertEqual(result['warning'], 'The Very Hot Weather Warning is now in force. Prolonged heat alert! Please drink sufficient water. If feeling unwell, take rest or seek help immediately. If needed, seek medical advice as soon as possible.')    
+        self.assertEqual(result['warning'], 'The Very Hot weather Warning is now in force. Prolonged heat alert! Please drink sufficient water. If feeling unwell, take rest or seek help immediately. If needed, seek medical advice as soon as possible.')    
         mock_get.assert_called_once_with(
             "https://data.weather.gov.hk/weatherAPI/opendata/weather.php?dataType=rhrread"
         )
@@ -146,7 +146,7 @@ class TestWeatherTools(unittest.TestCase):
         self.assertEqual(result['rainfall']['value'], 0)
         self.assertEqual(result['rainfall']['startTime'], "2025-06-07T20:45:00+08:00")
         self.assertEqual(result['rainfall']['endTime'], "2025-06-07T21:45:00+08:00")          
-        self.assertEqual(result['warning'], 'The Very Hot Weather Warning is now in force. Prolonged heat alert! Please drink sufficient water. If feeling unwell, take rest or seek help immediately. If needed, seek medical advice as soon as possible.')    
+        self.assertEqual(result['warning'], 'The Very Hot weather Warning is now in force. Prolonged heat alert! Please drink sufficient water. If feeling unwell, take rest or seek help immediately. If needed, seek medical advice as soon as possible.')    
         mock_get.assert_called_once_with(
             "https://data.weather.gov.hk/weatherAPI/opendata/weather.php?dataType=rhrread"
         )

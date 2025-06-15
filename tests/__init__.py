@@ -1,1 +1,1 @@
-"""Tests for hkopenai.hk-weather-mcp-server package."""
+"""Tests for hkopenai.hk-climate-mcp-server package."""

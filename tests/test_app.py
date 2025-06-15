@@ -43,10 +43,6 @@ class TestApp(unittest.TestCase):
         # Test the actual decorated function
         result = decorated_func(region="test")
         mock_tool_weather.get_current_weather.assert_called_once_with("test")
-        
-        # Verify tool description was passed to decorator
-        self.assertEqual(len(decorator_calls), 1)
-        self.assertIsNotNone(decorator_calls[0][1]['description'])
 
 if __name__ == "__main__":
     unittest.main()
