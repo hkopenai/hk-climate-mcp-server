@@ -13,6 +13,12 @@ def create_mcp_server():
     )
     def get_current_weather(region: str = "Hong Kong Observatory") -> Dict:
         return tool_weather.get_current_weather(region)
+
+    @mcp.tool(
+        description="Get the 9-day weather forecast for Hong Kong including general situation, daily forecasts, sea and soil temperatures",
+    )
+    def get_9_day_weather_forecast() -> Dict:
+        return tool_weather.get_9_day_weather_forecast()
     
     return mcp
 
