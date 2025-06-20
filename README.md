@@ -12,6 +12,7 @@ This is an MCP server that provides access to climate and weather data through a
 
 ## Features
 - Current weather: Get current weather observations from HKO (supports optional region parameter)
+- 9-day forecast: Get extended weather forecast including general situation, daily forecasts, sea and soil temperatures
 
 ## Setup
 
