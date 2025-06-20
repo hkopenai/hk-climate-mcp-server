@@ -1,6 +1,7 @@
 import unittest
 from unittest.mock import patch, MagicMock
 from hkopenai.hk_climate_mcp_server import get_current_weather
+from hkopenai.hk_climate_mcp_server import get_9_day_weather_forecast
 
 class TestWeatherTools(unittest.TestCase):
     default_mock_response = {
@@ -150,6 +151,56 @@ class TestWeatherTools(unittest.TestCase):
         mock_get.assert_called_once_with(
             "https://data.weather.gov.hk/weatherAPI/opendata/weather.php?dataType=rhrread"
         )
+
+    @patch("requests.get")
+    def test_get_9_day_weather_forecast(self, mock_get):
+        example_json = {
+            "generalSituation": "A southerly airstream...",
+            "weatherForecast": [
+                {
+                    "forecastDate": "20250620",
+                    "week": "Friday",
+                    "forecastWind": "South force 3 to 4.",
+                    "forecastWeather": "Mainly cloudy with occasional showers.",
+                    "forecastMaxtemp": {"value": 31, "unit": "C"},
+                    "forecastMintemp": {"value": 27, "unit": "C"},
+                    "forecastMaxrh": {"value": 95, "unit": "percent"},
+                    "forecastMinrh": {"value": 70, "unit": "percent"},
+                    "ForecastIcon": 54,
+                    "PSR": "Medium"
+                }
+            ],
+            "updateTime": "2025-06-20T07:50:00+08:00",
+            "seaTemp": {
+                "place": "North Point",
+                "value": 28,
+                "unit": "C",
+                "recordTime": "2025-06-20T07:00:00+08:00"
+            },
+            "soilTemp": [
+                {
+                    "place": "Hong Kong Observatory",
+                    "value": 29.2,
+                    "unit": "C",
+                    "recordTime": "2025-06-20T07:00:00+08:00",
+                    "depth": {"unit": "metre", "value": 0.5}
+                }
+            ]
+        }
+        mock_response = MagicMock()
+        mock_response.json.return_value = example_json
+        mock_get.return_value = mock_response
+
+        result = get_9_day_weather_forecast()
+        self.assertEqual(result["generalSituation"], example_json["generalSituation"])
+        self.assertEqual(result["updateTime"], example_json["updateTime"])
+        self.assertEqual(result["seaTemp"], example_json["seaTemp"])
+        self.assertEqual(result["soilTemp"], example_json["soilTemp"])
+        self.assertIsInstance(result["weatherForecast"], list)
+        self.assertEqual(result["weatherForecast"][0]["forecastDate"], "20250620")
+        self.assertEqual(result["weatherForecast"][0]["week"], "Friday")
+        self.assertEqual(result["weatherForecast"][0]["forecastWind"], "South force 3 to 4.")
+        self.assertEqual(result["weatherForecast"][0]["forecastWeather"], "Mainly cloudy with occasional showers.")
 
 if __name__ == "__main__":
     unittest.main()
