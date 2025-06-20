@@ -9,9 +9,9 @@ class TestApp(unittest.TestCase):
         # Setup mocks
         mock_server = unittest.mock.Mock()
         
-        # Track decorator calls and capture decorated function
+        # Track decorator calls and capture decorated functions
         decorator_calls = []
-        decorated_func = None
+        decorated_funcs = []
         
         def tool_decorator(description=None):
             # First call: @tool(description=...)
@@ -19,8 +19,7 @@ class TestApp(unittest.TestCase):
             
             def decorator(f):
                 # Second call: decorator(function)
-                nonlocal decorated_func
-                decorated_func = f
+                decorated_funcs.append(f)
                 return f
                 
             return decorator
@@ -37,12 +36,20 @@ class TestApp(unittest.TestCase):
         mock_fastmcp.assert_called_once()
         self.assertEqual(server, mock_server)
 
-        # Verify tool was decorated
-        self.assertIsNotNone(decorated_func)
+        # Verify both tools were decorated
+        self.assertEqual(len(decorator_calls), 2)
+        self.assertEqual(len(decorated_funcs), 2)
         
-        # Test the actual decorated function
-        result = decorated_func(region="test")
-        mock_tool_weather.get_current_weather.assert_called_once_with("test")
+        # Test both tools
+        for func in decorated_funcs:
+            try:
+                # Try calling with region parameter (for get_current_weather)
+                result = func(region="test")
+                mock_tool_weather.get_current_weather.assert_called_once_with("test")
+            except TypeError:
+                # If TypeError, it's get_9_day_weather_forecast
+                result = func()
+                mock_tool_weather.get_9_day_weather_forecast.assert_called_once()
 
 if __name__ == "__main__":
     unittest.main()
