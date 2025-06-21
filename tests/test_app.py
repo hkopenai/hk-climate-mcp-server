@@ -36,20 +36,35 @@ class TestApp(unittest.TestCase):
         mock_fastmcp.assert_called_once()
         self.assertEqual(server, mock_server)
 
-        # Verify both tools were decorated
-        self.assertEqual(len(decorator_calls), 2)
-        self.assertEqual(len(decorated_funcs), 2)
+        # Verify all tools were decorated
+        self.assertEqual(len(decorator_calls), 6)
+        self.assertEqual(len(decorated_funcs), 6)
         
-        # Test both tools
+        # Test all tools
         for func in decorated_funcs:
             try:
                 # Try calling with region parameter (for get_current_weather)
                 result = func(region="test")
                 mock_tool_weather.get_current_weather.assert_called_once_with("test")
             except TypeError:
-                # If TypeError, it's get_9_day_weather_forecast
-                result = func()
-                mock_tool_weather.get_9_day_weather_forecast.assert_called_once()
+                try:
+                    # Try calling with lang parameter
+                    result = func(lang="en")
+                    if func.__name__ == "get_9_day_weather_forecast":
+                        mock_tool_weather.get_9_day_weather_forecast.assert_called_once_with("en")
+                    elif func.__name__ == "get_local_weather_forecast":
+                        mock_tool_weather.get_local_weather_forecast.assert_called_once_with("en")
+                    elif func.__name__ == "get_weather_warning_summary":
+                        mock_tool_weather.get_weather_warning_summary.assert_called_once_with("en")
+                    elif func.__name__ == "get_weather_warning_info":
+                        mock_tool_weather.get_weather_warning_info.assert_called_once_with("en")
+                    elif func.__name__ == "get_special_weather_tips":
+                        mock_tool_weather.get_special_weather_tips.assert_called_once_with("en")
+                except TypeError:
+                    # If TypeError, it's a tool without required params
+                    result = func()
+                    if func.__name__ == "get_9_day_weather_forecast":
+                        mock_tool_weather.get_9_day_weather_forecast.assert_called_once()
 
 if __name__ == "__main__":
     unittest.main()

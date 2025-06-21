@@ -1,7 +1,13 @@
 import unittest
 from unittest.mock import patch, MagicMock
-from hkopenai.hk_climate_mcp_server import get_current_weather
-from hkopenai.hk_climate_mcp_server import get_9_day_weather_forecast
+from hkopenai.hk_climate_mcp_server import (
+    get_current_weather,
+    get_9_day_weather_forecast,
+    get_local_weather_forecast,
+    get_weather_warning_summary,
+    get_weather_warning_info,
+    get_special_weather_tips
+)
 
 class TestWeatherTools(unittest.TestCase):
     default_mock_response = {
@@ -114,19 +120,19 @@ class TestWeatherTools(unittest.TestCase):
         mock_get.return_value = mock_response
 
         # Test
-        result = get_current_weather()
-        self.assertEqual(result['temperature']['value'], 29)
-        self.assertEqual(result['temperature']['unit'], "C")
-        self.assertEqual(result['temperature']['recordTime'],  "2025-06-07T22:00:00+08:00",)
-        self.assertEqual(result['humidity']['value'], 79)
-        self.assertEqual(result['humidity']['unit'], "percent")
-        self.assertEqual(result['humidity']['recordTime'],  "2025-06-07T22:00:00+08:00",)        
-        self.assertEqual(result['rainfall']['value'], 0)
-        self.assertEqual(result['rainfall']['startTime'], "2025-06-07T20:45:00+08:00")
-        self.assertEqual(result['rainfall']['endTime'], "2025-06-07T21:45:00+08:00")          
-        self.assertEqual(result['warning'], 'The Very Hot weather Warning is now in force. Prolonged heat alert! Please drink sufficient water. If feeling unwell, take rest or seek help immediately. If needed, seek medical advice as soon as possible.')    
+        result = get_current_weather(lang="en")
+        self.assertEqual(result['weatherObservation']['temperature']['value'], 29)
+        self.assertEqual(result['weatherObservation']['temperature']['unit'], "C")
+        self.assertEqual(result['weatherObservation']['temperature']['recordTime'], "2025-06-07T22:00:00+08:00")
+        self.assertEqual(result['weatherObservation']['humidity']['value'], 79)
+        self.assertEqual(result['weatherObservation']['humidity']['unit'], "percent")
+        self.assertEqual(result['weatherObservation']['humidity']['recordTime'], "2025-06-07T22:00:00+08:00")
+        self.assertEqual(result['weatherObservation']['rainfall']['value'], 0)
+        self.assertEqual(result['weatherObservation']['rainfall']['startTime'], "2025-06-07T20:45:00+08:00")
+        self.assertEqual(result['weatherObservation']['rainfall']['endTime'], "2025-06-07T21:45:00+08:00")
+        self.assertEqual(result['generalSituation'], 'The Very Hot weather Warning is now in force. Prolonged heat alert! Please drink sufficient water. If feeling unwell, take rest or seek help immediately. If needed, seek medical advice as soon as possible.')
         mock_get.assert_called_once_with(
-            "https://data.weather.gov.hk/weatherAPI/opendata/weather.php?dataType=rhrread"
+            "https://data.weather.gov.hk/weatherAPI/opendata/weather.php?dataType=rhrread&lang=en"
         )
 
     @patch("requests.get")
@@ -137,19 +143,19 @@ class TestWeatherTools(unittest.TestCase):
         mock_get.return_value = mock_response
 
         # Test
-        result = get_current_weather("Cheung Chau")
-        self.assertEqual(result['temperature']['value'], 27)
-        self.assertEqual(result['temperature']['unit'], "C")
-        self.assertEqual(result['temperature']['recordTime'],  "2025-06-07T22:00:00+08:00",)
-        self.assertEqual(result['humidity']['value'], 79)
-        self.assertEqual(result['humidity']['unit'], "percent")
-        self.assertEqual(result['humidity']['recordTime'],  "2025-06-07T22:00:00+08:00",)        
-        self.assertEqual(result['rainfall']['value'], 0)
-        self.assertEqual(result['rainfall']['startTime'], "2025-06-07T20:45:00+08:00")
-        self.assertEqual(result['rainfall']['endTime'], "2025-06-07T21:45:00+08:00")          
-        self.assertEqual(result['warning'], 'The Very Hot weather Warning is now in force. Prolonged heat alert! Please drink sufficient water. If feeling unwell, take rest or seek help immediately. If needed, seek medical advice as soon as possible.')    
+        result = get_current_weather("Cheung Chau", lang="en")
+        self.assertEqual(result['weatherObservation']['temperature']['value'], 27)
+        self.assertEqual(result['weatherObservation']['temperature']['unit'], "C")
+        self.assertEqual(result['weatherObservation']['temperature']['recordTime'], "2025-06-07T22:00:00+08:00")
+        self.assertEqual(result['weatherObservation']['humidity']['value'], 79)
+        self.assertEqual(result['weatherObservation']['humidity']['unit'], "percent")
+        self.assertEqual(result['weatherObservation']['humidity']['recordTime'], "2025-06-07T22:00:00+08:00")
+        self.assertEqual(result['weatherObservation']['rainfall']['value'], 0)
+        self.assertEqual(result['weatherObservation']['rainfall']['startTime'], "2025-06-07T20:45:00+08:00")
+        self.assertEqual(result['weatherObservation']['rainfall']['endTime'], "2025-06-07T21:45:00+08:00")
+        self.assertEqual(result['generalSituation'], 'The Very Hot weather Warning is now in force. Prolonged heat alert! Please drink sufficient water. If feeling unwell, take rest or seek help immediately. If needed, seek medical advice as soon as possible.')
         mock_get.assert_called_once_with(
-            "https://data.weather.gov.hk/weatherAPI/opendata/weather.php?dataType=rhrread"
+            "https://data.weather.gov.hk/weatherAPI/opendata/weather.php?dataType=rhrread&lang=en"
         )
 
     @patch("requests.get")
@@ -201,6 +207,86 @@ class TestWeatherTools(unittest.TestCase):
         self.assertEqual(result["weatherForecast"][0]["week"], "Friday")
         self.assertEqual(result["weatherForecast"][0]["forecastWind"], "South force 3 to 4.")
         self.assertEqual(result["weatherForecast"][0]["forecastWeather"], "Mainly cloudy with occasional showers.")
+
+    @patch("requests.get")
+    def test_get_local_weather_forecast(self, mock_get):
+        example_json = {
+            "generalSituation": "A southerly airstream is bringing showers to the coast of Guangdong and the northern part of the South China Sea. Locally, around 5 millimetres of rainfall were recorded over many places in the past couple of hours.",
+            "forecastPeriod": "Weather forecast for today",
+            "forecastDesc": "Mainly cloudy with a few showers. More showers with isolated thunderstorms at first. Hot with sunny periods during the day with a maximum temperature of around 32 degrees. Moderate southerly winds.",
+            "outlook": "Mainly fine and very hot in the next couple of days. Showers will increase gradually in the middle and latter parts of next week.",
+            "updateTime": "2025-06-21T07:45:00+08:00"
+        }
+        mock_response = MagicMock()
+        mock_response.json.return_value = example_json
+        mock_get.return_value = mock_response
+
+        result = get_local_weather_forecast()
+        self.assertEqual(result["forecastDesc"], example_json["forecastDesc"])
+        self.assertEqual(result["outlook"], example_json["outlook"])
+        self.assertEqual(result["updateTime"], example_json["updateTime"])
+        self.assertEqual(result["forecastPeriod"], example_json["forecastPeriod"])
+        self.assertEqual(result["generalSituation"], example_json["generalSituation"])
+        mock_get.assert_called_once_with(
+            "https://data.weather.gov.hk/weatherAPI/opendata/weather.php?dataType=flw&lang=en"
+        )
+
+    @patch("requests.get")
+    def test_get_weather_warning_summary(self, mock_get):
+        example_json = {
+            "warningMessage": [
+                "The Very Hot Weather Warning is in force.",
+                "Thunderstorm Warning is in force."
+            ],
+            "updateTime": "2025-06-20T07:50:00+08:00"
+        }
+        mock_response = MagicMock()
+        mock_response.json.return_value = example_json
+        mock_get.return_value = mock_response
+
+        result = get_weather_warning_summary()
+        self.assertEqual(result["warningMessage"], example_json["warningMessage"])
+        self.assertEqual(result["updateTime"], example_json["updateTime"])
+        mock_get.assert_called_once_with(
+            "https://data.weather.gov.hk/weatherAPI/opendata/weather.php?dataType=warnsum&lang=en"
+        )
+
+    @patch("requests.get")
+    def test_get_weather_warning_info(self, mock_get):
+        example_json = {
+            "warningStatement": "The Thunderstorm Warning was issued at 7:50 a.m.",
+            "updateTime": "2025-06-20T07:50:00+08:00"
+        }
+        mock_response = MagicMock()
+        mock_response.json.return_value = example_json
+        mock_get.return_value = mock_response
+
+        result = get_weather_warning_info()
+        self.assertEqual(result["warningStatement"], example_json["warningStatement"])
+        self.assertEqual(result["updateTime"], example_json["updateTime"])
+        mock_get.assert_called_once_with(
+            "https://data.weather.gov.hk/weatherAPI/opendata/weather.php?dataType=warningInfo&lang=en"
+        )
+
+    @patch("requests.get")
+    def test_get_special_weather_tips(self, mock_get):
+        example_json = {
+            "specialWeatherTips": [
+                "Hot weather may cause heat stroke. Avoid prolonged exposure to sunlight.",
+                "Heavy rain may cause flooding in low-lying areas."
+            ],
+            "updateTime": "2025-06-20T07:50:00+08:00"
+        }
+        mock_response = MagicMock()
+        mock_response.json.return_value = example_json
+        mock_get.return_value = mock_response
+
+        result = get_special_weather_tips()
+        self.assertEqual(result["specialWeatherTips"], example_json["specialWeatherTips"])
+        self.assertEqual(result["updateTime"], example_json["updateTime"])
+        mock_get.assert_called_once_with(
+            "https://data.weather.gov.hk/weatherAPI/opendata/weather.php?dataType=swt&lang=en"
+        )
 
 if __name__ == "__main__":
     unittest.main()
