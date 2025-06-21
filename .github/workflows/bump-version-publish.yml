@@ -76,6 +76,7 @@ jobs:
         fi
 
     - name: Build package
+      if: env.PUBLISH == 'true'
       run: python -m build
 
     - name: Publish to PyPI
