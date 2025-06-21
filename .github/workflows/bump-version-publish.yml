@@ -52,16 +52,17 @@ jobs:
     - name: Bump version
       if: env.BUMP_TYPE != 'none'
       run: |
+        git config --global user.name 'GitHub Action'
+        git config --global user.email 'action@github.com'
         if [[ "${{ env.BUMP_TYPE }}" == "minor" ]]; then
           python -c "import toml; config = toml.load('pyproject.toml'); version = config['project']['version']; major, minor, patch = map(int, version.split('.')); config['project']['version'] = f'{major}.{minor+1}.0'; toml.dump(config, open('pyproject.toml', 'w'))"
+          git add pyproject.toml
           git commit -m 'Bump minor version'
         elif [[ "${{ env.BUMP_TYPE }}" == "patch" ]]; then
           python -c "import toml; config = toml.load('pyproject.toml'); version = config['project']['version']; major, minor, patch = map(int, version.split('.')); config['project']['version'] = f'{major}.{minor}.{patch+1}'; toml.dump(config, open('pyproject.toml', 'w'))"
+          git add pyproject.toml
           git commit -m 'Bump patch version'
         fi
-        git config --global user.name 'GitHub Action'
-        git config --global user.email 'action@github.com'
-        git add pyproject.toml
         git push origin main
 
     - name: Create Tag
