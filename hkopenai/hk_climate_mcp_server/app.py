@@ -17,8 +17,32 @@ def create_mcp_server():
     @mcp.tool(
         description="Get the 9-day weather forecast for Hong Kong including general situation, daily forecasts, sea and soil temperatures",
     )
-    def get_9_day_weather_forecast() -> Dict:
-        return tool_weather.get_9_day_weather_forecast()
+    def get_9_day_weather_forecast(lang: str = "en") -> Dict:
+        return tool_weather.get_9_day_weather_forecast(lang)
+
+    @mcp.tool(
+        description="Get local weather forecast for Hong Kong including forecast description, outlook and update time",
+    )
+    def get_local_weather_forecast(lang: str = "en") -> Dict:
+        return tool_weather.get_local_weather_forecast(lang)
+
+    @mcp.tool(
+        description="Get weather warning summary for Hong Kong including warning messages and update time",
+    )
+    def get_weather_warning_summary(lang: str = "en") -> Dict:
+        return tool_weather.get_weather_warning_summary(lang)
+
+    @mcp.tool(
+        description="Get detailed weather warning information for Hong Kong including warning statement and update time",
+    )
+    def get_weather_warning_info(lang: str = "en") -> Dict:
+        return tool_weather.get_weather_warning_info(lang)
+
+    @mcp.tool(
+        description="Get special weather tips for Hong Kong including tips list and update time",
+    )
+    def get_special_weather_tips(lang: str = "en") -> Dict:
+        return tool_weather.get_special_weather_tips(lang)
     
     return mcp
 
