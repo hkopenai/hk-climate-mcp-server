@@ -1,7 +1,7 @@
 import requests
-from typing import Dict
+from typing import Dict, List, Any
 
-def  get_current_weather(region: str = "Hong Kong Observatory") -> Dict:
+def get_current_weather(region: str = "Hong Kong Observatory") -> Dict:
         """
         Get current weather observations for a specific region in Hong Kong
 
@@ -86,3 +86,44 @@ def  get_current_weather(region: str = "Hong Kong Observatory") -> Dict:
             },
             "rainfall": {"value": rainfall, "startTime": rainfall_start, "endTime": rainfall_end},
         }
+
+def get_9_day_weather_forecast() -> Dict[str, Any]:
+    """
+    Get the 9-day weather forecast for Hong Kong.
+
+    Returns:
+        Dict containing:
+            - generalSituation: General weather situation
+            - weatherForecast: List of daily forecast dicts (date, week, wind, weather, temp/humidity, etc.)
+            - updateTime: Last update time
+            - seaTemp: Sea temperature info
+            - soilTemp: List of soil temperature info
+    """
+    url = "https://data.weather.gov.hk/weatherAPI/opendata/weather.php?dataType=fnd&lang=en"
+    response = requests.get(url)
+    data = response.json()
+
+    # Structure the output
+    forecast = {
+        "generalSituation": data.get("generalSituation", ""),
+        "weatherForecast": [],
+        "updateTime": data.get("updateTime", ""),
+        "seaTemp": data.get("seaTemp", {}),
+        "soilTemp": data.get("soilTemp", []),
+    }
+
+    # Extract 9-day forecast
+    for day in data.get("weatherForecast", []):
+        forecast["weatherForecast"].append({
+            "forecastDate": day.get("forecastDate", ""),
+            "week": day.get("week", ""),
+            "forecastWind": day.get("forecastWind", ""),
+            "forecastWeather": day.get("forecastWeather", ""),
+            "forecastMaxtemp": day.get("forecastMaxtemp", {}),
+            "forecastMintemp": day.get("forecastMintemp", {}),
+            "forecastMaxrh": day.get("forecastMaxrh", {}),
+            "forecastMinrh": day.get("forecastMinrh", {}),
+            "ForecastIcon": day.get("ForecastIcon", ""),
+            "PSR": day.get("PSR", ""),
+        })
+    return forecast
