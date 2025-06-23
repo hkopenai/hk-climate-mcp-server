@@ -12,8 +12,13 @@
 ## What's Left to Build
 - Caching layer for HKO API responses
 - Rate limiting implementation
-- Additional data sources beyond HKO
-- Historical weather data support
+- Implement new data sources:
+  - Tidal data (astronomical tides, high/low tides)
+  - Sun/moon times (sunrise/sunset, moonrise/moonset)
+  - Lightning data
+  - Visibility data
+  - Temperature data (mean, max, min)
+  - Weather and radiation reports
 
 ## Current Status
 - Core functionality complete and operational
@@ -24,6 +29,7 @@
 - No caching means repeated API calls to HKO
 - No rate limiting implemented yet
 - Limited error handling for HKO API failures
+- New data sources not yet implemented
 
 ## Evolution of Decisions
 - Originally planned database caching → Changed to direct API calls

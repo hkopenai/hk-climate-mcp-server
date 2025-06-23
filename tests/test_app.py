@@ -37,34 +37,48 @@ class TestApp(unittest.TestCase):
         self.assertEqual(server, mock_server)
 
         # Verify all tools were decorated
-        self.assertEqual(len(decorator_calls), 6)
-        self.assertEqual(len(decorated_funcs), 6)
+        self.assertEqual(len(decorator_calls), 17)
+        self.assertEqual(len(decorated_funcs), 17)
         
         # Test all tools
         for func in decorated_funcs:
+            func_name = func.__name__
             try:
-                # Try calling with region parameter (for get_current_weather)
-                result = func(region="test")
-                mock_tool_weather.get_current_weather.assert_called_once_with("test")
-            except TypeError:
-                try:
-                    # Try calling with lang parameter
+                if func_name == "get_current_weather":
+                    result = func(region="test")
+                    mock_tool_weather.get_current_weather.assert_called_once_with("test")
+                elif func_name in ["get_9_day_weather_forecast", "get_local_weather_forecast",
+                                 "get_weather_warning_summary", "get_weather_warning_info",
+                                 "get_special_weather_tips"]:
                     result = func(lang="en")
-                    if func.__name__ == "get_9_day_weather_forecast":
-                        mock_tool_weather.get_9_day_weather_forecast.assert_called_once_with("en")
-                    elif func.__name__ == "get_local_weather_forecast":
-                        mock_tool_weather.get_local_weather_forecast.assert_called_once_with("en")
-                    elif func.__name__ == "get_weather_warning_summary":
-                        mock_tool_weather.get_weather_warning_summary.assert_called_once_with("en")
-                    elif func.__name__ == "get_weather_warning_info":
-                        mock_tool_weather.get_weather_warning_info.assert_called_once_with("en")
-                    elif func.__name__ == "get_special_weather_tips":
-                        mock_tool_weather.get_special_weather_tips.assert_called_once_with("en")
-                except TypeError:
-                    # If TypeError, it's a tool without required params
+                    getattr(mock_tool_weather, func_name).assert_called_once_with("en")
+                elif func_name == "get_lightning_data":
+                    result = func(lang="en", rformat="json")
+                    getattr(mock_tool_weather, func_name).assert_called_once_with("en", "json")
+                elif func_name == "get_visibility_data":
+                    result = func(lang="en", rformat="json")
+                    getattr(mock_tool_weather, func_name).assert_called_once_with("en", "json")
+                elif func_name in ["get_moon_times", "get_sunrise_sunset_times",
+                                 "get_gregorian_lunar_calendar"]:
+                    result = func(year=2023, month=None, day=None, lang="en", rformat="json")
+                    getattr(mock_tool_weather, func_name).assert_called_once_with(
+                        year=2023, month=None, day=None, lang="en", rformat="json")
+                elif func_name in ["get_hourly_tides", "get_high_low_tides"]:
+                    result = func(station="HKO", year=2023, month=None, day=None, hour=None, lang="en", rformat="json")
+                    getattr(mock_tool_weather, func_name).assert_called_once_with(
+                        station="HKO", year=2023, month=None, day=None, hour=None, lang="en", rformat="json")
+                elif func_name in ["get_daily_mean_temperature", "get_daily_max_temperature",
+                                 "get_daily_min_temperature"]:
+                    result = func(station="HKO", year=None, month=None, lang="en", rformat="json")
+                    getattr(mock_tool_weather, func_name).assert_called_once_with(
+                        station="HKO", year=None, month=None, lang="en", rformat="json")
+                elif func_name == "get_weather_radiation_report":
                     result = func()
-                    if func.__name__ == "get_9_day_weather_forecast":
-                        mock_tool_weather.get_9_day_weather_forecast.assert_called_once()
+                    getattr(mock_tool_weather, func_name).assert_called_once()
+                else:
+                    result = func()
+            except Exception as e:
+                raise AssertionError(f"Failed to call {func_name}: {str(e)}")
 
 if __name__ == "__main__":
     unittest.main()

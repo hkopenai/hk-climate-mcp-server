@@ -6,7 +6,12 @@ from hkopenai.hk_climate_mcp_server import (
     get_local_weather_forecast,
     get_weather_warning_summary,
     get_weather_warning_info,
-    get_special_weather_tips
+    get_special_weather_tips,
+    get_visibility_data,
+    get_lightning_data,
+    get_moon_times,
+    get_hourly_tides,
+    get_high_low_tides
 )
 
 class TestWeatherTools(unittest.TestCase):
@@ -286,6 +291,129 @@ class TestWeatherTools(unittest.TestCase):
         self.assertEqual(result["updateTime"], example_json["updateTime"])
         mock_get.assert_called_once_with(
             "https://data.weather.gov.hk/weatherAPI/opendata/weather.php?dataType=swt&lang=en"
+        )
+
+    @patch("requests.get")
+    def test_get_visibility_data(self, mock_get):
+        example_json = {
+            "fields": ["Date time", "Automatic Weather Station", "10 minute mean visibility"],
+            "data": [
+                ["202506231320", "Central", "35 km"],
+                ["202506231320", "Chek Lap Kok", "50 km"]
+            ]
+        }
+        mock_response = MagicMock()
+        mock_response.json.return_value = example_json
+        mock_get.return_value = mock_response
+
+        result = get_visibility_data()
+        self.assertEqual(result["fields"], example_json["fields"])
+        self.assertEqual(result["data"], example_json["data"])
+        mock_get.assert_called_once_with(
+            "https://data.weather.gov.hk/weatherAPI/opendata/opendata.php?dataType=LTMV&lang=en&rformat=json"
+        )
+
+    @patch("requests.get")
+    def test_get_lightning_data(self, mock_get):
+        example_json = {
+            "fields": ["DateTime", "Type", "Region", "lightning count"],
+            "data": [
+                ["202506231200-202506231259", "Cloud-to-ground", "New Territories West", "0"],
+                ["202506231200-202506231259", "Cloud-to-ground", "Hong Kong Island and Kowloon", "0"]
+            ]
+        }
+        mock_response = MagicMock()
+        mock_response.json.return_value = example_json
+        mock_get.return_value = mock_response
+
+        result = get_lightning_data()
+        self.assertEqual(result["fields"], example_json["fields"])
+        self.assertEqual(result["data"], example_json["data"])
+        mock_get.assert_called_once_with(
+            "https://data.weather.gov.hk/weatherAPI/opendata/opendata.php?dataType=LHL&lang=en&rformat=json"
+        )
+
+    @patch("requests.get")
+    def test_get_moon_times(self, mock_get):
+        example_json = {
+            "fields": ["Date", "Moonrise", "Moon transit", "Moonset"],
+            "data": [
+                ["2025-06-23", "05:30", "12:45", "20:00"],
+                ["2025-06-24", "06:15", "13:30", "21:15"]
+            ]
+        }
+        mock_response = MagicMock()
+        mock_response.json.return_value = example_json
+        mock_get.return_value = mock_response
+
+        result = get_moon_times(year=2025, month=6)
+        self.assertEqual(result["fields"], example_json["fields"])
+        self.assertEqual(result["data"], example_json["data"])
+        mock_get.assert_called_once_with(
+            "https://data.weather.gov.hk/weatherAPI/opendata/opendata.php",
+            params={
+                'dataType': 'MRS',
+                'lang': 'en',
+                'rformat': 'json',
+                'year': 2025,
+                'month': 6
+            }
+        )
+
+    @patch("requests.get")
+    def test_get_hourly_tides(self, mock_get):
+        example_json = {
+            "fields": ["Date time", "Station", "Height"],
+            "data": [
+                ["2025-06-23 01:00", "CCH", "1.2"],
+                ["2025-06-23 02:00", "CCH", "1.5"]
+            ]
+        }
+        mock_response = MagicMock()
+        mock_response.json.return_value = example_json
+        mock_get.return_value = mock_response
+
+        result = get_hourly_tides(station="CCH", year=2025, month=6)
+        self.assertEqual(result["fields"], example_json["fields"])
+        self.assertEqual(result["data"], example_json["data"])
+        mock_get.assert_called_once_with(
+            "https://data.weather.gov.hk/weatherAPI/opendata/opendata.php",
+            params={
+                'dataType': 'HHOT',
+                'lang': 'en',
+                'rformat': 'json',
+                'station': 'CCH',
+                'year': 2025,
+                'month': 6
+            }
+        )
+
+    @patch("requests.get")
+    def test_get_high_low_tides(self, mock_get):
+        example_json = {
+            "fields": ["Date time", "Station", "Type", "Height"],
+            "data": [
+                ["2025-06-23 06:30", "CCH", "High", "2.1"],
+                ["2025-06-23 12:45", "CCH", "Low", "0.8"]
+            ]
+        }
+        mock_response = MagicMock()
+        mock_response.json.return_value = example_json
+        mock_get.return_value = mock_response
+
+        result = get_high_low_tides(station="CCH", year=2025, month=6)
+        self.assertEqual(result["fields"], example_json["fields"])
+        self.assertEqual(result["data"], example_json["data"])
+        mock_get.assert_called_once_with(
+            "https://data.weather.gov.hk/weatherAPI/opendata/opendata.php",
+            params={
+                'dataType': 'HLT',
+                'lang': 'en',
+                'rformat': 'json',
+                'station': 'CCH',
+                'year': 2025,
+                'month': 6
+            }
         )
 
 if __name__ == "__main__":
