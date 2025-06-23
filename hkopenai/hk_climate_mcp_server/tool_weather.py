@@ -1,5 +1,5 @@
 import requests
-from typing import Dict, List, Any
+from typing import Dict, List, Any, Optional
 
 def get_current_weather(region: str = "Hong Kong Observatory", lang: str = "en") -> Dict:
     """
@@ -239,3 +239,362 @@ def get_special_weather_tips(lang: str = "en") -> Dict[str, Any]:
         "specialWeatherTips": data.get("specialWeatherTips", []),
         "updateTime": data.get("updateTime", ""),
     }
+
+def get_visibility_data(lang: str = "en", rformat: str = "json") -> Dict[str, Any]:
+    """
+    Get latest 10-minute mean visibility data for Hong Kong.
+
+    Args:
+        lang: Language code (en/tc/sc, default: en)
+        rformat: Return format (json/csv, default: json)
+
+    Returns:
+        Dict containing visibility data with fields and data arrays
+    """
+    url = f"https://data.weather.gov.hk/weatherAPI/opendata/opendata.php?dataType=LTMV&lang={lang}&rformat={rformat}"
+    response = requests.get(url)
+    return response.json() if rformat == "json" else {"data": response.text}
+
+def get_weather_radiation_report(
+    date: Optional[str] = None,
+    station: Optional[str] = None,
+    lang: str = "en",
+    rformat: str = "json"
+) -> Dict[str, Any]:
+    """
+    Get weather and radiation level report for Hong Kong.
+
+    Args:
+        date: Optional date in YYYYMMDD format (default: yesterday)
+        station: Optional station code (e.g. 'HKO' for Hong Kong Observatory)
+        lang: Language code (en/tc/sc, default: en)
+        rformat: Return format (json/csv, default: json)
+
+    Returns:
+        Dict containing weather and radiation data
+    """
+    params = {
+        'dataType': 'RYES',
+        'lang': lang,
+        'rformat': rformat
+    }
+    if date: params['date'] = date
+    if station: params['station'] = station
+
+    response = requests.get(
+        'https://data.weather.gov.hk/weatherAPI/opendata/opendata.php',
+        params=params
+    )
+    response.raise_for_status()
+    return response.json() if rformat == "json" else {"data": response.text}
+
+def get_daily_mean_temperature(
+    station: str,
+    year: Optional[int] = None,
+    month: Optional[int] = None,
+    lang: str = "en",
+    rformat: str = "json"
+) -> Dict[str, Any]:
+    """
+    Get daily mean temperature data for a specific station.
+
+    Args:
+        station: Station code (e.g. 'HKO' for Hong Kong Observatory)
+        year: Optional year (varies by station)
+        month: Optional month (1-12)
+        lang: Language code (en/tc/sc, default: en)
+        rformat: Return format (json/csv, default: json)
+
+    Returns:
+        Dict containing temperature data with fields and data arrays
+    """
+    params = {
+        'dataType': 'CLMTEMP',
+        'lang': lang,
+        'rformat': rformat,
+        'station': station
+    }
+    if year: params['year'] = year
+    if month: params['month'] = month
+
+    response = requests.get(
+        'https://data.weather.gov.hk/weatherAPI/opendata/opendata.php',
+        params=params
+    )
+    response.raise_for_status()
+    return response.json() if rformat == "json" else {"data": response.text}
+
+def get_daily_max_temperature(
+    station: str,
+    year: Optional[int] = None,
+    month: Optional[int] = None,
+    lang: str = "en",
+    rformat: str = "json"
+) -> Dict[str, Any]:
+    """
+    Get daily maximum temperature data for a specific station.
+
+    Args:
+        station: Station code (e.g. 'HKO' for Hong Kong Observatory)
+        year: Optional year (varies by station)
+        month: Optional month (1-12)
+        lang: Language code (en/tc/sc, default: en)
+        rformat: Return format (json/csv, default: json)
+
+    Returns:
+        Dict containing temperature data with fields and data arrays
+    """
+    params = {
+        'dataType': 'CLMMAXT',
+        'lang': lang,
+        'rformat': rformat,
+        'station': station
+    }
+    if year: params['year'] = year
+    if month: params['month'] = month
+
+    response = requests.get(
+        'https://data.weather.gov.hk/weatherAPI/opendata/opendata.php',
+        params=params
+    )
+    response.raise_for_status()
+    return response.json() if rformat == "json" else {"data": response.text}
+
+def get_daily_min_temperature(
+    station: str,
+    year: Optional[int] = None,
+    month: Optional[int] = None,
+    lang: str = "en",
+    rformat: str = "json"
+) -> Dict[str, Any]:
+    """
+    Get daily minimum temperature data for a specific station.
+
+    Args:
+        station: Station code (e.g. 'HKO' for Hong Kong Observatory)
+        year: Optional year (varies by station)
+        month: Optional month (1-12)
+        lang: Language code (en/tc/sc, default: en)
+        rformat: Return format (json/csv, default: json)
+
+    Returns:
+        Dict containing temperature data with fields and data arrays
+    """
+    params = {
+        'dataType': 'CLMMINT',
+        'lang': lang,
+        'rformat': rformat,
+        'station': station
+    }
+    if year: params['year'] = year
+    if month: params['month'] = month
+
+    response = requests.get(
+        'https://data.weather.gov.hk/weatherAPI/opendata/opendata.php',
+        params=params
+    )
+    response.raise_for_status()
+    return response.json() if rformat == "json" else {"data": response.text}
+
+def get_lightning_data(lang: str = "en", rformat: str = "json") -> Dict[str, Any]:
+    """
+    Get cloud-to-ground and cloud-to-cloud lightning count data.
+
+    Args:
+        lang: Language code (en/tc/sc, default: en)
+        rformat: Return format (json/csv, default: json)
+
+    Returns:
+        Dict containing lightning data with fields and data arrays
+    """
+    url = f"https://data.weather.gov.hk/weatherAPI/opendata/opendata.php?dataType=LHL&lang={lang}&rformat={rformat}"
+    response = requests.get(url)
+    return response.json() if rformat == "json" else {"data": response.text}
+
+def get_moon_times(year: int, month: Optional[int] = None, 
+                  day: Optional[int] = None, lang: str = "en",
+                  rformat: str = "json") -> Dict[str, Any]:
+    """
+    Get times of moonrise, moon transit and moonset.
+
+    Args:
+        year: Year (2018-2024)
+        month: Optional month (1-12)
+        day: Optional day (1-31)
+        lang: Language code (en/tc/sc, default: en)
+        rformat: Return format (json/csv, default: json)
+
+    Returns:
+        Dict containing moon times data with fields and data arrays
+    """
+    params = {
+        'dataType': 'MRS',
+        'lang': lang,
+        'rformat': rformat,
+        'year': year
+    }
+    if month: params['month'] = month
+    if day: params['day'] = day
+
+    response = requests.get(
+        'https://data.weather.gov.hk/weatherAPI/opendata/opendata.php',
+        params=params
+    )
+    response.raise_for_status()
+    return response.json() if rformat == "json" else {"data": response.text}
+
+def get_hourly_tides(
+    station: str,
+    year: int,
+    month: Optional[int] = None,
+    day: Optional[int] = None,
+    hour: Optional[int] = None,
+    lang: str = "en",
+    rformat: str = "json"
+) -> Dict[str, Any]:
+    """
+    Get hourly heights of astronomical tides for a specific station in Hong Kong.
+
+    Args:
+        station: Station code (e.g. 'CCH' for Cheung Chau)
+        year: Year (2022-2024)
+        month: Optional month (1-12)
+        day: Optional day (1-31)
+        hour: Optional hour (1-24)
+        lang: Language code (en/tc/sc, default: en)
+        rformat: Return format (json/csv, default: json)
+
+    Returns:
+        Dict containing tide data with fields and data arrays
+    """
+    params = {
+        'dataType': 'HHOT',
+        'lang': lang,
+        'rformat': rformat,
+        'station': station,
+        'year': year
+    }
+    if month: params['month'] = month
+    if day: params['day'] = day
+    if hour: params['hour'] = hour
+
+    response = requests.get(
+        'https://data.weather.gov.hk/weatherAPI/opendata/opendata.php',
+        params=params
+    )
+    response.raise_for_status()
+    return response.json() if rformat == "json" else {"data": response.text}
+
+def get_high_low_tides(
+    station: str,
+    year: int,
+    month: Optional[int] = None,
+    day: Optional[int] = None,
+    hour: Optional[int] = None,
+    lang: str = "en",
+    rformat: str = "json"
+) -> Dict[str, Any]:
+    """
+    Get times and heights of astronomical high and low tides for a specific station.
+
+    Args:
+        station: Station code (e.g. 'CCH' for Cheung Chau)
+        year: Year (2022-2024)
+        month: Optional month (1-12)
+        day: Optional day (1-31)
+        hour: Optional hour (1-24)
+        lang: Language code (en/tc/sc, default: en)
+        rformat: Return format (json/csv, default: json)
+
+    Returns:
+        Dict containing tide data with fields and data arrays
+    """
+    params = {
+        'dataType': 'HLT',
+        'lang': lang,
+        'rformat': rformat,
+        'station': station,
+        'year': year
+    }
+    if month: params['month'] = month
+    if day: params['day'] = day
+    if hour: params['hour'] = hour
+
+    response = requests.get(
+        'https://data.weather.gov.hk/weatherAPI/opendata/opendata.php',
+        params=params
+    )
+    response.raise_for_status()
+    return response.json() if rformat == "json" else {"data": response.text}
+
+def get_sunrise_sunset_times(
+    year: int,
+    month: Optional[int] = None,
+    day: Optional[int] = None,
+    lang: str = "en",
+    rformat: str = "json"
+) -> Dict[str, Any]:
+    """
+    Get times of sunrise, sun transit and sunset.
+
+    Args:
+        year: Year (2018-2024)
+        month: Optional month (1-12)
+        day: Optional day (1-31)
+        lang: Language code (en/tc/sc, default: en)
+        rformat: Return format (json/csv, default: json)
+
+    Returns:
+        Dict containing sun times data with fields and data arrays
+    """
+    params = {
+        'dataType': 'SRS',
+        'lang': lang,
+        'rformat': rformat,
+        'year': year
+    }
+    if month: params['month'] = month
+    if day: params['day'] = day
+
+    response = requests.get(
+        'https://data.weather.gov.hk/weatherAPI/opendata/opendata.php',
+        params=params
+    )
+    response.raise_for_status()
+    return response.json() if rformat == "json" else {"data": response.text}
+
+def get_gregorian_lunar_calendar(
+    year: int,
+    month: Optional[int] = None,
+    day: Optional[int] = None,
+    lang: str = "en",
+    rformat: str = "json"
+) -> Dict[str, Any]:
+    """
+    Get Gregorian-Lunar calendar conversion data.
+
+    Args:
+        year: Year (1901-2100)
+        month: Optional month (1-12)
+        day: Optional day (1-31)
+        lang: Language code (en/tc/sc, default: en)
+        rformat: Return format (json/csv, default: json)
+
+    Returns:
+        Dict containing calendar conversion data
+    """
+    params = {
+        'dataType': 'GLC',
+        'lang': lang,
+        'rformat': rformat,
+        'year': year
+    }
+    if month: params['month'] = month
+    if day: params['day'] = day
+
+    response = requests.get(
+        'https://data.weather.gov.hk/weatherAPI/opendata/opendata.php',
+        params=params
+    )
+    response.raise_for_status()
+    return response.json() if rformat == "json" else {"data": response.text}
