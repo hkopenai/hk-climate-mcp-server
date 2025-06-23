@@ -1,4 +1,4 @@
-# HKO MCP Server
+# HK Climate and Weather MCP Server
 
 [![GitHub Repository](https://img.shields.io/badge/GitHub-Repository-blue.svg)](https://github.com/hkopenai/hk-climate-mcp-server)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
@@ -176,7 +176,8 @@ To connect this MCP server to Cline using stdio:
     "type": "stdio",
     "command": "python",
     "args": [
-      "c:/Projects/hkopenai/hk-climate-mcp-server/app.py"
+      "-m",
+      "hkopenai.hk_climate_mcp_server"
     ]
   }
 }
