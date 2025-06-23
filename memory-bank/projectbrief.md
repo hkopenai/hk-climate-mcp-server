@@ -18,8 +18,13 @@
   - 9-day weather forecasts
   - Weather warnings and alerts
   - Special weather tips
+  - Tidal data (astronomical tides, high/low tides)
+  - Sun/moon times (sunrise/sunset, moonrise/moonset)
+  - Lightning data
+  - Visibility data
+  - Temperature data (mean, max, min)
+  - Weather and radiation reports
 - Excluded:
-  - Historical weather data
   - Weather data outside Hong Kong
   - Graphical weather visualizations
 
