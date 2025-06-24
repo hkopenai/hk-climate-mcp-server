@@ -146,6 +146,25 @@ This is an MCP server that provides access to climate and weather data through a
 - Returns:
   - Dict containing tide data with fields and data arrays
 
+### Weather and Radiation Report
+`get_weather_radiation_report(date: str = "Unknown", station: str = "Unknown", lang: str = "en", rformat: str = "json") -> Dict`
+- Get weather and radiation level report for Hong Kong
+- Parameters:
+  - date: Mandatory date in YYYYMMDD format (e.g., 20250618)
+  - station: Mandatory station code (e.g., 'HKO' for Hong Kong Observatory)
+  - lang: Language code (en/tc/sc, default: en)
+  - rformat: Return format (json/csv, default: json)
+- Returns:
+  - Dict containing weather and radiation data or error message if parameters are invalid
+
+### Valid Station Codes
+`get_valid_station_codes() -> Dict`
+- Get a list of valid station codes and their corresponding names for weather and radiation reports in Hong Kong
+- Parameters:
+  - None
+- Returns:
+  - Dict mapping station codes to station names
+
 ## Setup
 
 1. Clone this repository

@@ -26,13 +26,13 @@ def create_mcp_server():
         description="Get the 9-day weather forecast for Hong Kong including general situation, daily forecasts, sea and soil temperatures",
     )
     def get_9_day_weather_forecast(lang: str = "en") -> Dict:
-        return current_weather.get_9_day_weather_forecast(lang)
+        return forecast.get_9_day_weather_forecast(lang)
 
     @mcp.tool(
         description="Get local weather forecast for Hong Kong including forecast description, outlook and update time",
     )
     def get_local_weather_forecast(lang: str = "en") -> Dict:
-        return current_weather.get_local_weather_forecast(lang)
+        return forecast.get_local_weather_forecast(lang)
 
     @mcp.tool(
         description="Get weather warning summary for Hong Kong including warning messages and update time",
@@ -217,11 +217,11 @@ def create_mcp_server():
         )
 
     @mcp.tool(
-        description="Get weather and radiation level report for Hong Kong",
+        description="Get weather and radiation level report for Hong Kong. Date must be in YYYYMMDD format and should be yesterday or before. Station must be a valid code like 'HKO' for Hong Kong Observatory.",
     )
     def get_weather_radiation_report(
-        date: Optional[str] = None,
-        station: Optional[str] = None,
+        date: str = "Unknown",
+        station: str = "Unknown",
         lang: str = "en",
         rformat: str = "json"
     ) -> Dict:
@@ -231,6 +231,12 @@ def create_mcp_server():
             lang=lang,
             rformat=rformat
         )
+
+    @mcp.tool(
+        description="Get a list of valid station codes and their corresponding names for weather and radiation reports in Hong Kong.",
+    )
+    def get_valid_station_codes() -> Dict:
+        return radiation.get_valid_station_codes()
     
     return mcp
 
