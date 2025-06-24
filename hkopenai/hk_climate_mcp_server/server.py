@@ -6,7 +6,7 @@ from hkopenai.hk_climate_mcp_server.tools import astronomical
 from hkopenai.hk_climate_mcp_server.tools import current_weather
 from hkopenai.hk_climate_mcp_server.tools import forecast
 from hkopenai.hk_climate_mcp_server.tools import lightning
-from hkopenai.hk_climate_mcp_server.tools import radiation
+from hkopenai.hk_climate_mcp_server.tools import radiation, station_codes
 from hkopenai.hk_climate_mcp_server.tools import temperature
 from hkopenai.hk_climate_mcp_server.tools import tides
 from hkopenai.hk_climate_mcp_server.tools import visibility
@@ -215,10 +215,10 @@ def create_mcp_server():
         )
 
     @mcp.tool(
-        description="Get a list of valid station codes and their corresponding names for weather and radiation reports in Hong Kong.",
+        description="Get a list of station codes and their corresponding names for weather and radiation reports in Hong Kong.",
     )
-    def get_valid_station_codes() -> Dict:
-        return radiation.get_valid_station_codes()
+    def get_station_codes() -> Dict:
+        return station_codes.get_station_codes()
     
     return mcp
 

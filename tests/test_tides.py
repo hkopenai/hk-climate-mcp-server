@@ -42,7 +42,7 @@ class TestTidesTools(unittest.TestCase):
         self.assertEqual(result["data"], example_json["data"])
         mock_get.assert_called_once_with(
             'https://data.weather.gov.hk/weatherAPI/opendata/opendata.php',
-            params={'dataType': 'HLT', 'lang': 'en', 'rformat': 'json', 'station': 'CCH', 'year': 2025}
+            params={'dataType': 'HLT', 'lang': 'en', 'station': 'CCH', 'year': 2025}
         )
 
 if __name__ == "__main__":

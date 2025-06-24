@@ -7,8 +7,7 @@ def get_hourly_tides(
     month: Optional[int] = None,
     day: Optional[int] = None,
     hour: Optional[int] = None,
-    lang: str = "en",
-    rformat: str = "json"
+    lang: str = "en"
 ) -> Dict[str, Any]:
     """
     Get hourly heights of astronomical tides for a specific station in Hong Kong.
@@ -20,7 +19,6 @@ def get_hourly_tides(
         day: Optional day (1-31)
         hour: Optional hour (1-24)
         lang: Language code (en/tc/sc, default: en)
-        rformat: Return format (json/csv, default: json)
 
     Returns:
         Dict containing tide data with fields and data arrays
@@ -28,7 +26,7 @@ def get_hourly_tides(
     params = {
         'dataType': 'HHOT',
         'lang': lang,
-        'rformat': rformat,
+        'rformat': 'json',
         'station': station,
         'year': year
     }
@@ -41,7 +39,7 @@ def get_hourly_tides(
         params=params
     )
     response.raise_for_status()
-    return response.json() if rformat == "json" else {"data": response.text}
+    return response.json() 
 
 def get_high_low_tides(
     station: str,
@@ -50,7 +48,6 @@ def get_high_low_tides(
     day: Optional[int] = None,
     hour: Optional[int] = None,
     lang: str = "en",
-    rformat: str = "json"
 ) -> Dict[str, Any]:
     """
     Get times and heights of astronomical high and low tides for a specific station.
@@ -62,7 +59,6 @@ def get_high_low_tides(
         day: Optional day (1-31)
         hour: Optional hour (1-24)
         lang: Language code (en/tc/sc, default: en)
-        rformat: Return format (json/csv, default: json)
 
     Returns:
         Dict containing tide data with fields and data arrays
@@ -70,7 +66,6 @@ def get_high_low_tides(
     params = {
         'dataType': 'HLT',
         'lang': lang,
-        'rformat': rformat,
         'station': station,
         'year': year
     }
@@ -83,4 +78,4 @@ def get_high_low_tides(
         params=params
     )
     response.raise_for_status()
-    return response.json() if rformat == "json" else {"data": response.text}
+    return response.json() 

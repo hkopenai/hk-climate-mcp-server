@@ -29,7 +29,7 @@ class TestRadiationTools(unittest.TestCase):
         result = get_weather_radiation_report(date="20250623", station="HKO")
         mock_get.assert_called_once_with(
             "https://data.weather.gov.hk/weatherAPI/opendata/opendata.php",
-            params={"dataType": "RYES", "lang": "en", "rformat": "json", "date": "20250623", "station": "HKO"},
+            params={"dataType": "RYES", "lang": "en", 'rformat': 'json', "date": "20250623", "station": "HKO"},
         )
         self.assertIsNotNone(result)
         self.assertIsInstance(result, dict, "Result should be a dictionary")
@@ -39,13 +39,11 @@ class TestRadiationTools(unittest.TestCase):
         result = get_weather_radiation_report(date="20250623", station="")
         self.assertIsInstance(result, dict, "Result should be a dictionary")
         self.assertIn("error", result, "Result should contain error message for missing station")
-        self.assertIn("stations", result, "Result should contain list of valid stations")
 
     def test_get_weather_radiation_report_invalid_station(self):
         result = get_weather_radiation_report(date="20250623", station="INVALID")
         self.assertIsInstance(result, dict, "Result should be a dictionary")
         self.assertIn("error", result, "Result should contain error message for invalid station")
-        self.assertIn("stations", result, "Result should contain list of valid stations")
 
     def test_get_weather_radiation_report_missing_date(self):
         result = get_weather_radiation_report(date="", station="HKO")
@@ -68,7 +66,7 @@ class TestRadiationTools(unittest.TestCase):
         result = get_weather_radiation_report(date="20250623", station="HKO")
         mock_get.assert_called_once_with(
             "https://data.weather.gov.hk/weatherAPI/opendata/opendata.php",
-            params={"dataType": "RYES", "lang": "en", "rformat": "json", "date": "20250623", "station": "HKO"},
+            params={"dataType": "RYES", "lang": "en", 'rformat': 'json', "date": "20250623", "station": "HKO"},
         )
         self.assertIsNotNone(result)
         self.assertIsInstance(result, dict, "Result should be a dictionary")
@@ -105,7 +103,6 @@ class TestRadiationTools(unittest.TestCase):
         result = get_weather_radiation_report(date="20230618", station="HKO")
         self.assertIn("error", result)
         self.assertTrue(result["error"].startswith("Failed to fetch data: Network error"))
-
 
 if __name__ == "__main__":
     unittest.main()

@@ -13,12 +13,11 @@ def get_weather_radiation_report(
     Args:
         date: Mandatory date in YYYYMMDD format (e.g., 20250618)
         station: Mandatory station code (e.g., 'HKO' for Hong Kong Observatory). 
-                 If not provided or invalid, returns a list of valid station codes.
+                 If not provided or invalid, returns an error message.
         lang: Language code (en/tc/sc, default: en)
-        rformat: Return format (json/csv, default: json)
 
     Returns:
-        Dict containing weather and radiation data or a list of valid station codes if station is invalid
+        Dict containing weather and radiation data or an error message if station is invalid
     """
     valid_stations = {
         'CCH': 'Cheung Chau',
@@ -58,7 +57,7 @@ def get_weather_radiation_report(
     }
     
     if not station or station not in valid_stations:
-        return {"error": "Invalid or missing station code. Valid station codes are:", "stations": valid_stations}
+        return {"error": "Invalid or missing station code. Use the 'get_station_codes' tool to retrieve the list of valid station codes."}
         
     if not date:
         return {"error": "Date parameter is mandatory in YYYYMMDD format (e.g., 20250618)"}
@@ -111,48 +110,3 @@ def is_date_in_future(date_str: str) -> bool:
         return input_date >= today
     except ValueError:
         return False
-
-
-def get_valid_station_codes() -> Dict[str, str]:
-    """
-    Get a dictionary of valid station codes and their corresponding names for weather and radiation reports in Hong Kong.
-    
-    Returns:
-        Dict mapping station codes to station names.
-    """
-    return {
-        'CCH': 'Cheung Chau',
-        'CLK': 'Chek Lap Kok',
-        'EPC': 'Ping Chau',
-        'HKO': 'Hong Kong Observatory',
-        'HKP': 'Hong Kong Park',
-        'HKS': 'Wong Chuk Hang',
-        'HPV': 'Happy Valley',
-        'JKB': 'Tseung Kwan O',
-        'KAT': 'Kat O',
-        'KLT': 'Kowloon City',
-        'KP': 'Kings Park',
-        'KTG': 'Kwun Tong',
-        'LFS': 'Lau Fau Shan',
-        'PLC': 'Tai Mei Tuk',
-        'SE1': 'Kai Tak Runway Park',
-        'SEK': 'Shek Kong',
-        'SHA': 'Sha Tin',
-        'SKG': 'Sai Kung',
-        'SKW': 'Shau Kei Wan',
-        'SSP': 'Sham Shui Po',
-        'STK': 'Sha Tau Kok',
-        'STY': 'Stanley',
-        'SWH': 'Sai Wan Ho',
-        'TAP': 'Tap Mun',
-        'TBT': 'Tsim Bei Tsui',
-        'TKL': 'Ta Kwu Ling',
-        'TUN': 'Tuen Mun',
-        'TW': 'Tsuen Wan Shing Mun Valley',
-        'TWN': 'Tsuen Wan Ho Koon',
-        'TY1': 'Tsing Yi',
-        'WTS': 'Wong Tai Sin',
-        'YCT': 'Tai Po',
-        'YLP': 'Yuen Long Park',
-        'YNF': 'Yuen Ng Fan'
-    }

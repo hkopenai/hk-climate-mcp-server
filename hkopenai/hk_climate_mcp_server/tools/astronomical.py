@@ -2,8 +2,7 @@ import requests
 from typing import Dict, Any, Optional
 
 def get_moon_times(year: int, month: Optional[int] = None, 
-                  day: Optional[int] = None, lang: str = "en",
-                  rformat: str = "json") -> Dict[str, Any]:
+                  day: Optional[int] = None, lang: str = "en") -> Dict[str, Any]:
     """
     Get times of moonrise, moon transit and moonset.
 
@@ -12,7 +11,6 @@ def get_moon_times(year: int, month: Optional[int] = None,
         month: Optional month (1-12)
         day: Optional day (1-31)
         lang: Language code (en/tc/sc, default: en)
-        rformat: Return format (json/csv, default: json)
 
     Returns:
         Dict containing moon times data with fields and data arrays
@@ -20,7 +18,7 @@ def get_moon_times(year: int, month: Optional[int] = None,
     params = {
         'dataType': 'MRS',
         'lang': lang,
-        'rformat': rformat,
+        'rformat': 'json',
         'year': year
     }
     if month: params['month'] = str(month)
@@ -31,14 +29,13 @@ def get_moon_times(year: int, month: Optional[int] = None,
         params=params
     )
     response.raise_for_status()
-    return response.json() if rformat == "json" else {"data": response.text}
+    return response.json()
 
 def get_sunrise_sunset_times(
     year: int,
     month: Optional[int] = None,
     day: Optional[int] = None,
-    lang: str = "en",
-    rformat: str = "json"
+    lang: str = "en"
 ) -> Dict[str, Any]:
     """
     Get times of sunrise, sun transit and sunset.
@@ -48,7 +45,6 @@ def get_sunrise_sunset_times(
         month: Optional month (1-12)
         day: Optional day (1-31)
         lang: Language code (en/tc/sc, default: en)
-        rformat: Return format (json/csv, default: json)
 
     Returns:
         Dict containing sun times data with fields and data arrays
@@ -56,7 +52,7 @@ def get_sunrise_sunset_times(
     params = {
         'dataType': 'SRS',
         'lang': lang,
-        'rformat': rformat,
+        'rformat': 'json',
         'year': year
     }
     if month: params['month'] = str(month)
@@ -67,14 +63,13 @@ def get_sunrise_sunset_times(
         params=params
     )
     response.raise_for_status()
-    return response.json() if rformat == "json" else {"data": response.text}
+    return response.json()
 
 def get_gregorian_lunar_calendar(
     year: int,
     month: Optional[int] = None,
     day: Optional[int] = None,
-    lang: str = "en",
-    rformat: str = "json"
+    lang: str = "en"
 ) -> Dict[str, Any]:
     """
     Get Gregorian-Lunar calendar conversion data.
@@ -84,7 +79,6 @@ def get_gregorian_lunar_calendar(
         month: Optional month (1-12)
         day: Optional day (1-31)
         lang: Language code (en/tc/sc, default: en)
-        rformat: Return format (json/csv, default: json)
 
     Returns:
         Dict containing calendar conversion data
@@ -92,7 +86,7 @@ def get_gregorian_lunar_calendar(
     params = {
         'dataType': 'GLC',
         'lang': lang,
-        'rformat': rformat,
+        'rformat': 'json',
         'year': year
     }
     if month: params['month'] = str(month)
@@ -103,4 +97,4 @@ def get_gregorian_lunar_calendar(
         params=params
     )
     response.raise_for_status()
-    return response.json() if rformat == "json" else {"data": response.text}
+    return response.json()
