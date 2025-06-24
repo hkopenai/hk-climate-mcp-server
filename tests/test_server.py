@@ -4,10 +4,18 @@ from hkopenai.hk_climate_mcp_server.server import create_mcp_server
 
 class TestApp(unittest.TestCase):
     @patch('hkopenai.hk_climate_mcp_server.server.FastMCP')
-    @patch('hkopenai.hk_climate_mcp_server.server.tool_weather')
-    def test_create_mcp_server(self, mock_tool_weather, mock_fastmcp):
+    @patch('hkopenai.hk_climate_mcp_server.tools.current_weather')
+    @patch('hkopenai.hk_climate_mcp_server.tools.forecast')
+    @patch('hkopenai.hk_climate_mcp_server.tools.warnings')
+    @patch('hkopenai.hk_climate_mcp_server.tools.lightning')
+    @patch('hkopenai.hk_climate_mcp_server.tools.visibility')
+    @patch('hkopenai.hk_climate_mcp_server.tools.tides')
+    @patch('hkopenai.hk_climate_mcp_server.tools.temperature')
+    @patch('hkopenai.hk_climate_mcp_server.tools.radiation')
+    @patch('hkopenai.hk_climate_mcp_server.tools.astronomical')
+    def test_create_mcp_server(self, mock_astronomical, mock_radiation, mock_temperature, mock_tides, mock_visibility, mock_lightning, mock_warnings, mock_forecast, mock_current_weather, mock_fastmcp):
         # Setup mocks
-        mock_server = unittest.mock.Mock()
+        mock_server = Mock()
         
         # Track decorator calls and capture decorated functions
         decorator_calls = []
@@ -27,7 +35,7 @@ class TestApp(unittest.TestCase):
         mock_server.tool = tool_decorator
         mock_server.tool.call_args = None  # Initialize call_args
         mock_fastmcp.return_value = mock_server
-        mock_tool_weather.get_current_weather.return_value = {'test': 'data'}
+        mock_current_weather.get_current_weather.return_value = {'test': 'data'}
 
         # Test server creation
         server = create_mcp_server()
@@ -46,35 +54,34 @@ class TestApp(unittest.TestCase):
             try:
                 if func_name == "get_current_weather":
                     result = func(region="test")
-                    mock_tool_weather.get_current_weather.assert_called_once_with("test")
-                elif func_name in ["get_9_day_weather_forecast", "get_local_weather_forecast",
-                                 "get_weather_warning_summary", "get_weather_warning_info",
-                                 "get_special_weather_tips"]:
+                    mock_current_weather.get_current_weather.assert_called_once_with("test")
+                elif func_name in ["get_9_day_weather_forecast", "get_local_weather_forecast"]:
                     result = func(lang="en")
-                    getattr(mock_tool_weather, func_name).assert_called_once_with("en")
+                    getattr(mock_forecast, func_name).assert_called_once_with("en")
+                elif func_name in ["get_weather_warning_summary", "get_weather_warning_info", "get_special_weather_tips"]:
+                    result = func(lang="en")
+                    getattr(mock_warnings, func_name).assert_called_once_with("en")
                 elif func_name == "get_lightning_data":
                     result = func(lang="en", rformat="json")
-                    getattr(mock_tool_weather, func_name).assert_called_once_with("en", "json")
+                    getattr(mock_lightning, func_name).assert_called_once_with("en", "json")
                 elif func_name == "get_visibility_data":
                     result = func(lang="en", rformat="json")
-                    getattr(mock_tool_weather, func_name).assert_called_once_with("en", "json")
-                elif func_name in ["get_moon_times", "get_sunrise_sunset_times",
-                                 "get_gregorian_lunar_calendar"]:
+                    getattr(mock_visibility, func_name).assert_called_once_with("en", "json")
+                elif func_name in ["get_moon_times", "get_sunrise_sunset_times", "get_gregorian_lunar_calendar"]:
                     result = func(year=2023, month=None, day=None, lang="en", rformat="json")
-                    getattr(mock_tool_weather, func_name).assert_called_once_with(
+                    getattr(mock_astronomical, func_name).assert_called_once_with(
                         year=2023, month=None, day=None, lang="en", rformat="json")
                 elif func_name in ["get_hourly_tides", "get_high_low_tides"]:
                     result = func(station="HKO", year=2023, month=None, day=None, hour=None, lang="en", rformat="json")
-                    getattr(mock_tool_weather, func_name).assert_called_once_with(
+                    getattr(mock_tides, func_name).assert_called_once_with(
                         station="HKO", year=2023, month=None, day=None, hour=None, lang="en", rformat="json")
-                elif func_name in ["get_daily_mean_temperature", "get_daily_max_temperature",
-                                 "get_daily_min_temperature"]:
+                elif func_name in ["get_daily_mean_temperature", "get_daily_max_temperature", "get_daily_min_temperature"]:
                     result = func(station="HKO", year=None, month=None, lang="en", rformat="json")
-                    getattr(mock_tool_weather, func_name).assert_called_once_with(
+                    getattr(mock_temperature, func_name).assert_called_once_with(
                         station="HKO", year=None, month=None, lang="en", rformat="json")
                 elif func_name == "get_weather_radiation_report":
                     result = func()
-                    getattr(mock_tool_weather, func_name).assert_called_once()
+                    getattr(mock_radiation, func_name).assert_called_once()
                 else:
                     result = func()
             except Exception as e:

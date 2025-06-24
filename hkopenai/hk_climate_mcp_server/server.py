@@ -1,8 +1,17 @@
 import argparse
 from fastmcp import FastMCP
-from hkopenai.hk_climate_mcp_server import tool_weather
+import hkopenai.hk_climate_mcp_server.tools
 from typing import Dict, Annotated, Optional
 from pydantic import Field
+from hkopenai.hk_climate_mcp_server.tools import astronomical
+from hkopenai.hk_climate_mcp_server.tools import current_weather
+from hkopenai.hk_climate_mcp_server.tools import forecast
+from hkopenai.hk_climate_mcp_server.tools import lightning
+from hkopenai.hk_climate_mcp_server.tools import radiation
+from hkopenai.hk_climate_mcp_server.tools import temperature
+from hkopenai.hk_climate_mcp_server.tools import tides
+from hkopenai.hk_climate_mcp_server.tools import visibility
+from hkopenai.hk_climate_mcp_server.tools import warnings
 
 def create_mcp_server():
     """Create and configure the HKO MCP server"""
@@ -12,49 +21,49 @@ def create_mcp_server():
         description="Get current weather observations, warnings, temperature, humidity and rainfall in Hong Kong from Hong Kong Observatory, with optional region or place in Hong Kong",
     )
     def get_current_weather(region: str = "Hong Kong Observatory") -> Dict:
-        return tool_weather.get_current_weather(region)
+        return current_weather.get_current_weather(region)
 
     @mcp.tool(
         description="Get the 9-day weather forecast for Hong Kong including general situation, daily forecasts, sea and soil temperatures",
     )
     def get_9_day_weather_forecast(lang: str = "en") -> Dict:
-        return tool_weather.get_9_day_weather_forecast(lang)
+        return current_weather.get_9_day_weather_forecast(lang)
 
     @mcp.tool(
         description="Get local weather forecast for Hong Kong including forecast description, outlook and update time",
     )
     def get_local_weather_forecast(lang: str = "en") -> Dict:
-        return tool_weather.get_local_weather_forecast(lang)
+        return current_weather.get_local_weather_forecast(lang)
 
     @mcp.tool(
         description="Get weather warning summary for Hong Kong including warning messages and update time",
     )
     def get_weather_warning_summary(lang: str = "en") -> Dict:
-        return tool_weather.get_weather_warning_summary(lang)
+        return warnings.get_weather_warning_summary(lang)
 
     @mcp.tool(
         description="Get detailed weather warning information for Hong Kong including warning statement and update time",
     )
     def get_weather_warning_info(lang: str = "en") -> Dict:
-        return tool_weather.get_weather_warning_info(lang)
+        return warnings.get_weather_warning_info(lang)
 
     @mcp.tool(
         description="Get special weather tips for Hong Kong including tips list and update time",
     )
     def get_special_weather_tips(lang: str = "en") -> Dict:
-        return tool_weather.get_special_weather_tips(lang)
+        return warnings.get_special_weather_tips(lang)
 
     @mcp.tool(
         description="Get latest 10-minute mean visibility data for Hong Kong",
     )
     def get_visibility_data(lang: str = "en", rformat: str = "json") -> Dict:
-        return tool_weather.get_visibility_data(lang, rformat)
+        return visibility.get_visibility_data(lang, rformat)
 
     @mcp.tool(
         description="Get cloud-to-ground and cloud-to-cloud lightning count data",
     )
     def get_lightning_data(lang: str = "en", rformat: str = "json") -> Dict:
-        return tool_weather.get_lightning_data(lang, rformat)
+        return lightning.get_lightning_data(lang, rformat)
 
     @mcp.tool(
         description="Get times of moonrise, moon transit and moonset",
@@ -66,7 +75,7 @@ def create_mcp_server():
         lang: str = "en",
         rformat: str = "json"
     ) -> Dict:
-        return tool_weather.get_moon_times(
+        return astronomical.get_moon_times(
             year=year,
             month=month,
             day=day,
@@ -86,7 +95,7 @@ def create_mcp_server():
         lang: str = "en",
         rformat: str = "json"
     ) -> Dict:
-        return tool_weather.get_hourly_tides(
+        return tides.get_hourly_tides(
             station=station,
             year=year,
             month=month,
@@ -108,7 +117,7 @@ def create_mcp_server():
         lang: str = "en",
         rformat: str = "json"
     ) -> Dict:
-        return tool_weather.get_high_low_tides(
+        return tides.get_high_low_tides(
             station=station,
             year=year,
             month=month,
@@ -128,7 +137,7 @@ def create_mcp_server():
         lang: str = "en",
         rformat: str = "json"
     ) -> Dict:
-        return tool_weather.get_sunrise_sunset_times(
+        return astronomical.get_sunrise_sunset_times(
             year=year,
             month=month,
             day=day,
@@ -146,7 +155,7 @@ def create_mcp_server():
         lang: str = "en",
         rformat: str = "json"
     ) -> Dict:
-        return tool_weather.get_gregorian_lunar_calendar(
+        return astronomical.get_gregorian_lunar_calendar(
             year=year,
             month=month,
             day=day,
@@ -164,7 +173,7 @@ def create_mcp_server():
         lang: str = "en",
         rformat: str = "json"
     ) -> Dict:
-        return tool_weather.get_daily_mean_temperature(
+        return temperature.get_daily_mean_temperature(
             station=station,
             year=year,
             month=month,
@@ -182,7 +191,7 @@ def create_mcp_server():
         lang: str = "en",
         rformat: str = "json"
     ) -> Dict:
-        return tool_weather.get_daily_max_temperature(
+        return temperature.get_daily_max_temperature(
             station=station,
             year=year,
             month=month,
@@ -200,7 +209,7 @@ def create_mcp_server():
         lang: str = "en",
         rformat: str = "json"
     ) -> Dict:
-        return tool_weather.get_daily_min_temperature(
+        return temperature.get_daily_min_temperature(
             station=station,
             year=year,
             month=month,
@@ -217,7 +226,7 @@ def create_mcp_server():
         lang: str = "en",
         rformat: str = "json"
     ) -> Dict:
-        return tool_weather.get_weather_radiation_report(
+        return radiation.get_weather_radiation_report(
             date=date,
             station=station,
             lang=lang,
