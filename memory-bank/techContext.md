@@ -25,7 +25,7 @@
   - pytest-cov>=6.1.1 (test coverage)
 
 ## Tool Usage Patterns
-- Run server in stdio mode: `python app.py`
-- Run server in SSE mode: `python app.py --sse`
+- Run server in stdio mode: `python server.py`
+- Run server in SSE mode: `python server.py --sse`
 - Run tests: `pytest tests/`
 - Build package: `python -m build`

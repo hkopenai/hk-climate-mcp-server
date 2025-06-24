@@ -1,6 +1,6 @@
 import unittest
 from unittest.mock import patch, MagicMock
-from hkopenai.hk_climate_mcp_server import (
+from hkopenai.hk_climate_mcp_server.tool_weather import (
     get_current_weather,
     get_9_day_weather_forecast,
     get_local_weather_forecast,

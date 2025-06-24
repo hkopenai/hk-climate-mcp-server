@@ -5,7 +5,7 @@
 - Modular design with separate tool implementation (tool_weather.py)
 - REST API client pattern for HKO data access
 - Layered architecture:
-  1. Interface layer (app.py - FastMCP tools)
+  1. Interface layer (server.py - FastMCP tools)
   2. Service layer (tool_weather.py - data processing)
   3. Data layer (HKO API - raw weather data)
 
@@ -22,13 +22,13 @@
 - Strategy pattern: Different transport modes (stdio/SSE)
 
 ## Component Relationships
-- app.py depends on tool_weather.py for all weather data
+- server.py depends on tool_weather.py for all weather data
 - tool_weather.py depends on requests library for HTTP
 - Both depend on FastMCP framework
 - Independent of specific client implementation
 
 ## Critical Implementation Paths
-1. Tool registration in app.py
+1. Tool registration in server.py
 2. HTTP request/response handling in tool_weather.py
 3. Data transformation from HKO format to MCP format
 4. Error handling for API failures

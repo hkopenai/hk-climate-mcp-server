@@ -1,10 +1,10 @@
 import unittest
 from unittest.mock import patch, Mock
-from hkopenai.hk_climate_mcp_server.app import create_mcp_server
+from hkopenai.hk_climate_mcp_server.server import create_mcp_server
 
 class TestApp(unittest.TestCase):
-    @patch('hkopenai.hk_climate_mcp_server.app.FastMCP')
-    @patch('hkopenai.hk_climate_mcp_server.app.tool_weather')
+    @patch('hkopenai.hk_climate_mcp_server.server.FastMCP')
+    @patch('hkopenai.hk_climate_mcp_server.server.tool_weather')
     def test_create_mcp_server(self, mock_tool_weather, mock_fastmcp):
         # Setup mocks
         mock_server = unittest.mock.Mock()
