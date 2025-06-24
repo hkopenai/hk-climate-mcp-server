@@ -9,6 +9,7 @@
 - Both stdio and SSE transport modes supported
 - Language support for English, Traditional and Simplified Chinese
 - Unit test for `test_server.py` has been successfully fixed
+- Packaging issue resolved to include `tools` directory in built package
 
 ## What's Left to Build
 - Caching layer for HKO API responses
@@ -26,6 +27,7 @@
 - Documentation being finalized
 - Ready for production deployment
 - Unit test for `test_server.py` fixed and confirmed passing
+- Packaging configuration updated to include all tool files
 
 ## Known Issues
 - No caching means repeated API calls to HKO
@@ -37,3 +39,4 @@
 - Originally planned database caching → Changed to direct API calls
 - Initially only stdio mode → Added SSE support
 - Started with English only → Added Chinese language support
+- Updated packaging to include subdirectories explicitly

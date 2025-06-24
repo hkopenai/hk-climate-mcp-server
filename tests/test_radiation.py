@@ -2,27 +2,88 @@ import unittest
 from unittest.mock import patch, MagicMock
 from hkopenai.hk_climate_mcp_server.tools.radiation import get_weather_radiation_report
 
+
 class TestRadiationTools(unittest.TestCase):
+    EXAMPLE_JSON = {
+        "ChekLapKokLocationName": "Chek Lap Kok",
+        "ChekLapKokMaxTemp": "32.7",
+        "ChekLapKokMicrosieverts": "0.15",
+        "ChekLapKokMinTemp": "28.2",
+        "BulletinTime": "0015",
+        "BulletinDate": "20250624",
+        "ReportTimeInfoDate": "20250623",
+        "HongKongDesc": "Average ambient gamma radiation dose rate taken outdoors in Hong Kong ranged from 0.08 to 0.15 microsievert per hour.  These are within the normal range of fluctuation of the background radiation level in Hong Kong.",
+        "NoteDesc": "From readings taken at various locations in Hong Kong in the past, the hourly mean ambient gamma radiation dose rate may vary between 0.06 and 0.3 microsievert per hour. (1 microsievert = 0.000001 sievert = 0.001 millisievert)",
+        "NoteDesc1": "Temporal variations are generally caused by changes in meteorological conditions such as rainfall, wind and barometric pressure.",
+        "NoteDesc2": "Spatial variations are generally caused by differences in the radioactive content of local rock and soil.",
+        "NoteDesc3": "The data displayed is provisional. Only limited data validation has been carried out.",
+    }
+
     @patch("requests.get")
     def test_get_weather_radiation_report(self, mock_get):
-        example_json = {
-            "fields": ["Date", "Station", "Radiation Level (microsievert/hour)"],
-            "data": [
-                ["20250622", "HKO", "0.12"],
-                ["20250622", "KCP", "0.15"]
-            ]
-        }
         mock_response = MagicMock()
-        mock_response.json.return_value = example_json
+        mock_response.json.return_value = self.EXAMPLE_JSON
         mock_get.return_value = mock_response
 
-        result = get_weather_radiation_report()
-        self.assertEqual(result["fields"], example_json["fields"])
-        self.assertEqual(result["data"], example_json["data"])
+        result = get_weather_radiation_report(date="20250623", station="HKO")
         mock_get.assert_called_once_with(
-            'https://data.weather.gov.hk/weatherAPI/opendata/opendata.php',
-            params={'dataType': 'RYES', 'lang': 'en', 'rformat': 'json'}
+            "https://data.weather.gov.hk/weatherAPI/opendata/opendata.php",
+            params={"dataType": "RYES", "lang": "en", "rformat": "json", "date": "20250623", "station": "HKO"},
         )
+        self.assertIsNotNone(result)
+        self.assertIsInstance(result, dict, "Result should be a dictionary")
+        self.assertIn("ChekLapKokLocationName", result, "Result should contain expected keys")
+
+    def test_get_weather_radiation_report_missing_station(self):
+        result = get_weather_radiation_report(date="20250623", station="")
+        self.assertIsInstance(result, dict, "Result should be a dictionary")
+        self.assertIn("error", result, "Result should contain error message for missing station")
+        self.assertIn("stations", result, "Result should contain list of valid stations")
+
+    def test_get_weather_radiation_report_invalid_station(self):
+        result = get_weather_radiation_report(date="20250623", station="INVALID")
+        self.assertIsInstance(result, dict, "Result should be a dictionary")
+        self.assertIn("error", result, "Result should contain error message for invalid station")
+        self.assertIn("stations", result, "Result should contain list of valid stations")
+
+    def test_get_weather_radiation_report_missing_date(self):
+        result = get_weather_radiation_report(date="", station="HKO")
+        self.assertIsInstance(result, dict, "Result should be a dictionary")
+        self.assertIn("error", result, "Result should contain error message for missing date")
+
+    def test_get_weather_radiation_report_invalid_date_format(self):
+        result = get_weather_radiation_report(date="2025-06-23", station="HKO")
+        self.assertIsInstance(result, dict, "Result should be a dictionary")
+        self.assertIn("error", result, "Result should contain error message for invalid date format")
+
+    @patch("hkopenai.hk_climate_mcp_server.tools.radiation.is_date_in_future")
+    @patch("requests.get")
+    def test_get_weather_radiation_report_yesterday_valid(self, mock_get, mock_date_check):
+        mock_date_check.return_value = False
+        mock_response = MagicMock()
+        mock_response.json.return_value = self.EXAMPLE_JSON
+        mock_get.return_value = mock_response
+
+        result = get_weather_radiation_report(date="20250623", station="HKO")
+        mock_get.assert_called_once_with(
+            "https://data.weather.gov.hk/weatherAPI/opendata/opendata.php",
+            params={"dataType": "RYES", "lang": "en", "rformat": "json", "date": "20250623", "station": "HKO"},
+        )
+        self.assertIsNotNone(result)
+        self.assertIsInstance(result, dict, "Result should be a dictionary")
+        self.assertNotIn("error", result, "Result should not contain error for yesterday's date")
+        self.assertIn("ChekLapKokLocationName", result, "Result should contain expected keys")
+
+    @patch("hkopenai.hk_climate_mcp_server.tools.radiation.is_date_in_future")
+    def test_get_weather_radiation_report_date_in_future(self, mock_date_check):
+        mock_date_check.return_value = True
+        result = get_weather_radiation_report(date="20250625", station="HKO")
+        self.assertIsInstance(result, dict, "Result should be a dictionary")
+        self.assertIn("error", result, "Result should contain error message for date being in the future")
+        self.assertIn("Date must be yesterday or before", result["error"], "Error message should mention date must be yesterday or before")
+        self.assertIn("Expected", result["error"], "Error message should include expected date information")
+        self.assertIn("but got 20250625", result["error"], "Error message should include provided date")
+
 
 if __name__ == "__main__":
     unittest.main()

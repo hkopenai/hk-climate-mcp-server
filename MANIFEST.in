@@ -1,0 +1,3 @@
+include README.md
+include LICENSE
+recursive-include hkopenai/hk_climate_mcp_server/tools *.py

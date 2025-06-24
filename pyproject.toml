@@ -23,10 +23,13 @@ hk_climate_mcp_server = "hkopenai.hk_climate_mcp_server.app:main"
 
 [tool.setuptools]
 packages = [ "hkopenai.hk_climate_mcp_server",]
-include-package-data = false
+include-package-data = true
 
 [tool.bandit]
 exclude_dirs = [ "venv", ".venv", "tests",]
 
 [tool.hatch.build.targets.wheel]
 packages = [ "hkopenai",]
+
+[tool.pytest.ini_options]
+asyncio_default_fixture_loop_scope = "function"
