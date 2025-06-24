@@ -1,6 +1,5 @@
 import argparse
 from fastmcp import FastMCP
-import hkopenai.hk_climate_mcp_server.tools
 from typing import Dict, Annotated, Optional
 from pydantic import Field
 from hkopenai.hk_climate_mcp_server.tools import astronomical
