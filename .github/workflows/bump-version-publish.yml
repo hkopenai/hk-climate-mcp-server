@@ -1,4 +1,4 @@
-name: Bump Minor Version and Publish to PyPI
+name: Bump Version and Publish to PyPI
 
 on:
   workflow_dispatch:

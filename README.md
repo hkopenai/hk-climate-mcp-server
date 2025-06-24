@@ -118,7 +118,8 @@ To connect this MCP server to Cline using stdio:
     "type": "stdio",
     "command": "python",
     "args": [
-      "c:/Projects/hkopenai/hk-climate-mcp-server/app.py"
+       "-m",
+      "hkopenai.hk-climate-mcp-server"
     ]
   }
 }
