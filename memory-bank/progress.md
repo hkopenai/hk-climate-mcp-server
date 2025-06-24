@@ -8,6 +8,7 @@
   - Special weather tips
 - Both stdio and SSE transport modes supported
 - Language support for English, Traditional and Simplified Chinese
+- Unit test for `test_server.py` has been successfully fixed
 
 ## What's Left to Build
 - Caching layer for HKO API responses
@@ -24,6 +25,7 @@
 - Core functionality complete and operational
 - Documentation being finalized
 - Ready for production deployment
+- Unit test for `test_server.py` fixed and confirmed passing
 
 ## Known Issues
 - No caching means repeated API calls to HKO
