@@ -1,4 +1,5 @@
 import unittest
+import requests
 from unittest.mock import patch, MagicMock
 from hkopenai.hk_climate_mcp_server.tools.radiation import get_weather_radiation_report
 
@@ -83,6 +84,27 @@ class TestRadiationTools(unittest.TestCase):
         self.assertIn("Date must be yesterday or before", result["error"], "Error message should mention date must be yesterday or before")
         self.assertIn("Expected", result["error"], "Error message should include expected date information")
         self.assertIn("but got 20250625", result["error"], "Error message should include provided date")
+
+    @patch('requests.get')
+    def test_get_weather_radiation_report_non_json_response(self, mock_get):
+        """Test error handling for non-JSON response."""
+        mock_response = MagicMock()
+        mock_response.raise_for_status.return_value = None
+        mock_response.json.side_effect = ValueError("Invalid JSON")
+        mock_get.return_value = mock_response
+
+        result = get_weather_radiation_report(date="20230618", station="HKO")
+        self.assertIn("error", result)
+        self.assertEqual(result["error"], "Failed to parse response as JSON. This could be due to invalid parameters or data not being updated. Please try again later.")
+
+    @patch('requests.get')
+    def test_get_weather_radiation_report_request_exception(self, mock_get):
+        """Test error handling for request exceptions."""
+        mock_get.side_effect = requests.RequestException("Network error")
+
+        result = get_weather_radiation_report(date="20230618", station="HKO")
+        self.assertIn("error", result)
+        self.assertTrue(result["error"].startswith("Failed to fetch data: Network error"))
 
 
 if __name__ == "__main__":

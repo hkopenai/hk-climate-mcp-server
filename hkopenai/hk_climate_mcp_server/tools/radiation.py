@@ -80,12 +80,18 @@ def get_weather_radiation_report(
         'station': station
     }
 
-    response = requests.get(
-        'https://data.weather.gov.hk/weatherAPI/opendata/opendata.php',
-        params=params
-    )
-    response.raise_for_status()
-    return response.json()
+    try:
+        response = requests.get(
+            'https://data.weather.gov.hk/weatherAPI/opendata/opendata.php',
+            params=params
+        )
+        response.raise_for_status()
+        try:
+            return response.json()
+        except ValueError:
+            return {"error": "Failed to parse response as JSON. This could be due to invalid parameters or data not being updated. Please try again later."}
+    except requests.RequestException as e:
+        return {"error": f"Failed to fetch data: {str(e)}. Please try again later."}
 
 
 def is_date_in_future(date_str: str) -> bool:

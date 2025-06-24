@@ -55,14 +55,14 @@ def create_mcp_server():
     @mcp.tool(
         description="Get latest 10-minute mean visibility data for Hong Kong",
     )
-    def get_visibility_data(lang: str = "en", rformat: str = "json") -> Dict:
-        return visibility.get_visibility_data(lang, rformat)
+    def get_visibility_data(lang: str = "en") -> Dict:
+        return visibility.get_visibility_data(lang)
 
     @mcp.tool(
         description="Get cloud-to-ground and cloud-to-cloud lightning count data",
     )
-    def get_lightning_data(lang: str = "en", rformat: str = "json") -> Dict:
-        return lightning.get_lightning_data(lang, rformat)
+    def get_lightning_data(lang: str = "en") -> Dict:
+        return lightning.get_lightning_data(lang)
 
     @mcp.tool(
         description="Get times of moonrise, moon transit and moonset",
@@ -71,15 +71,13 @@ def create_mcp_server():
         year: int,
         month: Optional[int] = None,
         day: Optional[int] = None,
-        lang: str = "en",
-        rformat: str = "json"
+        lang: str = "en"
     ) -> Dict:
         return astronomical.get_moon_times(
             year=year,
             month=month,
             day=day,
-            lang=lang,
-            rformat=rformat
+            lang=lang
         )
 
     @mcp.tool(
@@ -91,8 +89,7 @@ def create_mcp_server():
         month: Optional[int] = None,
         day: Optional[int] = None,
         hour: Optional[int] = None,
-        lang: str = "en",
-        rformat: str = "json"
+        lang: str = "en"
     ) -> Dict:
         return tides.get_hourly_tides(
             station=station,
@@ -100,8 +97,7 @@ def create_mcp_server():
             month=month,
             day=day,
             hour=hour,
-            lang=lang,
-            rformat=rformat
+            lang=lang
         )
 
     @mcp.tool(
@@ -113,8 +109,7 @@ def create_mcp_server():
         month: Optional[int] = None,
         day: Optional[int] = None,
         hour: Optional[int] = None,
-        lang: str = "en",
-        rformat: str = "json"
+        lang: str = "en"
     ) -> Dict:
         return tides.get_high_low_tides(
             station=station,
@@ -122,8 +117,7 @@ def create_mcp_server():
             month=month,
             day=day,
             hour=hour,
-            lang=lang,
-            rformat=rformat
+            lang=lang
         )
 
     @mcp.tool(
@@ -133,15 +127,13 @@ def create_mcp_server():
         year: int,
         month: Optional[int] = None,
         day: Optional[int] = None,
-        lang: str = "en",
-        rformat: str = "json"
+        lang: str = "en"
     ) -> Dict:
         return astronomical.get_sunrise_sunset_times(
             year=year,
             month=month,
             day=day,
-            lang=lang,
-            rformat=rformat
+            lang=lang
         )
 
     @mcp.tool(
@@ -151,15 +143,13 @@ def create_mcp_server():
         year: int,
         month: Optional[int] = None,
         day: Optional[int] = None,
-        lang: str = "en",
-        rformat: str = "json"
+        lang: str = "en"
     ) -> Dict:
         return astronomical.get_gregorian_lunar_calendar(
             year=year,
             month=month,
             day=day,
-            lang=lang,
-            rformat=rformat
+            lang=lang
         )
 
     @mcp.tool(
@@ -169,15 +159,13 @@ def create_mcp_server():
         station: str,
         year: Optional[int] = None,
         month: Optional[int] = None,
-        lang: str = "en",
-        rformat: str = "json"
+        lang: str = "en"
     ) -> Dict:
         return temperature.get_daily_mean_temperature(
             station=station,
             year=year,
             month=month,
-            lang=lang,
-            rformat=rformat
+            lang=lang
         )
 
     @mcp.tool(
@@ -187,15 +175,13 @@ def create_mcp_server():
         station: str,
         year: Optional[int] = None,
         month: Optional[int] = None,
-        lang: str = "en",
-        rformat: str = "json"
+        lang: str = "en"
     ) -> Dict:
         return temperature.get_daily_max_temperature(
             station=station,
             year=year,
             month=month,
-            lang=lang,
-            rformat=rformat
+            lang=lang
         )
 
     @mcp.tool(
@@ -205,15 +191,13 @@ def create_mcp_server():
         station: str,
         year: Optional[int] = None,
         month: Optional[int] = None,
-        lang: str = "en",
-        rformat: str = "json"
+        lang: str = "en"
     ) -> Dict:
         return temperature.get_daily_min_temperature(
             station=station,
             year=year,
             month=month,
-            lang=lang,
-            rformat=rformat
+            lang=lang
         )
 
     @mcp.tool(
@@ -227,7 +211,7 @@ def create_mcp_server():
         return radiation.get_weather_radiation_report(
             date=date,
             station=station,
-            lang=lang
+            lang=lang or 'en'
         )
 
     @mcp.tool(

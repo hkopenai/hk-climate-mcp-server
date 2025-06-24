@@ -89,37 +89,34 @@ This is an MCP server that provides access to climate and weather data through a
     - updateTime: Last update time
 
 ### Visibility Data
-`get_visibility_data(lang: str = "en", rformat: str = "json") -> Dict`
+`get_visibility_data(lang: str = "en") -> Dict`
 - Get latest 10-minute mean visibility data for Hong Kong
 - Parameters:
   - lang: Language code (en/tc/sc, default: en)
-  - rformat: Return format (json/csv, default: json)
 - Returns:
   - Dict containing visibility data with fields and data arrays
 
 ### Lightning Data  
-`get_lightning_data(lang: str = "en", rformat: str = "json") -> Dict`
+`get_lightning_data(lang: str = "en") -> Dict`
 - Get cloud-to-ground and cloud-to-cloud lightning count data
 - Parameters:
   - lang: Language code (en/tc/sc, default: en)
-  - rformat: Return format (json/csv, default: json)
 - Returns:
   - Dict containing lightning data with fields and data arrays
 
 ### Moon Times
-`get_moon_times(year: int, month: Optional[int] = None, day: Optional[int] = None, lang: str = "en", rformat: str = "json") -> Dict`
+`get_moon_times(year: int, month: Optional[int] = None, day: Optional[int] = None, lang: str = "en") -> Dict`
 - Get times of moonrise, moon transit and moonset
 - Parameters:
   - year: Year (2018-2024)
   - month: Optional month (1-12)
   - day: Optional day (1-31)
   - lang: Language code (en/tc/sc, default: en)
-  - rformat: Return format (json/csv, default: json)
 - Returns:
   - Dict containing moon times data with fields and data arrays
 
 ### Hourly Tides
-`get_hourly_tides(station: str, year: int, month: Optional[int] = None, day: Optional[int] = None, hour: Optional[int] = None, lang: str = "en", rformat: str = "json") -> Dict`
+`get_hourly_tides(station: str, year: int, month: Optional[int] = None, day: Optional[int] = None, hour: Optional[int] = None, lang: str = "en") -> Dict`
 - Get hourly heights of astronomical tides for a specific station
 - Parameters:
   - station: Station code (e.g. 'CCH' for Cheung Chau)
@@ -128,12 +125,11 @@ This is an MCP server that provides access to climate and weather data through a
   - day: Optional day (1-31)
   - hour: Optional hour (1-24)
   - lang: Language code (en/tc/sc, default: en)
-  - rformat: Return format (json/csv, default: json)
 - Returns:
   - Dict containing tide data with fields and data arrays
 
 ### High/Low Tides
-`get_high_low_tides(station: str, year: int, month: Optional[int] = None, day: Optional[int] = None, hour: Optional[int] = None, lang: str = "en", rformat: str = "json") -> Dict`
+`get_high_low_tides(station: str, year: int, month: Optional[int] = None, day: Optional[int] = None, hour: Optional[int] = None, lang: str = "en") -> Dict`
 - Get times and heights of astronomical high and low tides
 - Parameters:
   - station: Station code (e.g. 'CCH' for Cheung Chau)
@@ -142,18 +138,16 @@ This is an MCP server that provides access to climate and weather data through a
   - day: Optional day (1-31)
   - hour: Optional hour (1-24)
   - lang: Language code (en/tc/sc, default: en)
-  - rformat: Return format (json/csv, default: json)
 - Returns:
   - Dict containing tide data with fields and data arrays
 
 ### Weather and Radiation Report
-`get_weather_radiation_report(date: str = "Unknown", station: str = "Unknown", lang: str = "en", rformat: str = "json") -> Dict`
+`get_weather_radiation_report(date: str, station: str, lang: str = "en") -> Dict`
 - Get weather and radiation level report for Hong Kong
 - Parameters:
   - date: Mandatory date in YYYYMMDD format (e.g., 20250618)
   - station: Mandatory station code (e.g., 'HKO' for Hong Kong Observatory)
   - lang: Language code (en/tc/sc, default: en)
-  - rformat: Return format (json/csv, default: json)
 - Returns:
   - Dict containing weather and radiation data or error message if parameters are invalid
 

@@ -45,8 +45,8 @@ class TestApp(unittest.TestCase):
         self.assertEqual(server, mock_server)
 
         # Verify all tools were decorated
-        self.assertEqual(len(decorator_calls), 17)
-        self.assertEqual(len(decorated_funcs), 17)
+        self.assertEqual(len(decorator_calls), 18)
+        self.assertEqual(len(decorated_funcs), 18)
         
         # Verify that tools are registered (we don't call them directly to avoid mock issues)
         # Instead, we check if the expected number of tools are decorated

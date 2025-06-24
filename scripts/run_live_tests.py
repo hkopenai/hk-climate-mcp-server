@@ -6,6 +6,7 @@ def run_live_tests(test_name=None):
     """
     Run live tests with pytest, setting the RUN_LIVE_TESTS environment variable.
     If test_name is provided, only the specified test will be run.
+    Otherwise, all live test files (with '_live' in the name) will be run.
     """
     # Set the environment variable to enable live tests
     os.environ['RUN_LIVE_TESTS'] = 'true'
@@ -14,9 +15,13 @@ def run_live_tests(test_name=None):
     pytest_args = ['pytest', '-v']
     if test_name:
         pytest_args.extend(['-k', test_name])
-    
-    # Add the path to the test files
-    pytest_args.append('tests/')
+    else:
+        # Find all live test files in the tests directory
+        test_files = [f for f in os.listdir('tests/') if '_live' in f and f.endswith('.py')]
+        if test_files:
+            pytest_args.extend(['tests/' + f for f in test_files])
+        else:
+            pytest_args.append('tests/')
     
     print(f"Running live tests with command: {' '.join(pytest_args)}")
     try:
