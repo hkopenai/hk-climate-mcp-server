@@ -1,8 +1,8 @@
 from typing import Dict
 
-def get_station_codes() -> Dict[str, str]:
+def get_radiation_station_codes() -> Dict[str, str]:
     """
-    Get a dictionary of station codes and their corresponding names for weather and radiation reports in Hong Kong.
+    Get a dictionary of station codes and their corresponding names for weather and radiation reports in Hong Kong used in radiation API.
     
     Returns:
         Dict mapping station codes to station names.

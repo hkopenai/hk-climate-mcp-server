@@ -215,10 +215,10 @@ def create_mcp_server():
         )
 
     @mcp.tool(
-        description="Get a list of station codes and their corresponding names for weather and radiation reports in Hong Kong.",
+        description="Get a list of weather station codes and their corresponding names for radiation reports in Hong Kong.",
     )
-    def get_station_codes() -> Dict:
-        return station_codes.get_station_codes()
+    def get_radiation_station_codes() -> Dict:
+        return station_codes.get_radiation_station_codes()
     
     return mcp
 
