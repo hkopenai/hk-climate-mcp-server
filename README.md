@@ -1,4 +1,4 @@
-# HKO MCP Server
+# HK Climate and Weather MCP Server
 
 [![GitHub Repository](https://img.shields.io/badge/GitHub-Repository-blue.svg)](https://github.com/hkopenai/hk-climate-mcp-server)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
@@ -88,6 +88,64 @@ This is an MCP server that provides access to climate and weather data through a
     - specialWeatherTips: List of special weather tips
     - updateTime: Last update time
 
+### Visibility Data
+`get_visibility_data(lang: str = "en", rformat: str = "json") -> Dict`
+- Get latest 10-minute mean visibility data for Hong Kong
+- Parameters:
+  - lang: Language code (en/tc/sc, default: en)
+  - rformat: Return format (json/csv, default: json)
+- Returns:
+  - Dict containing visibility data with fields and data arrays
+
+### Lightning Data  
+`get_lightning_data(lang: str = "en", rformat: str = "json") -> Dict`
+- Get cloud-to-ground and cloud-to-cloud lightning count data
+- Parameters:
+  - lang: Language code (en/tc/sc, default: en)
+  - rformat: Return format (json/csv, default: json)
+- Returns:
+  - Dict containing lightning data with fields and data arrays
+
+### Moon Times
+`get_moon_times(year: int, month: Optional[int] = None, day: Optional[int] = None, lang: str = "en", rformat: str = "json") -> Dict`
+- Get times of moonrise, moon transit and moonset
+- Parameters:
+  - year: Year (2018-2024)
+  - month: Optional month (1-12)
+  - day: Optional day (1-31)
+  - lang: Language code (en/tc/sc, default: en)
+  - rformat: Return format (json/csv, default: json)
+- Returns:
+  - Dict containing moon times data with fields and data arrays
+
+### Hourly Tides
+`get_hourly_tides(station: str, year: int, month: Optional[int] = None, day: Optional[int] = None, hour: Optional[int] = None, lang: str = "en", rformat: str = "json") -> Dict`
+- Get hourly heights of astronomical tides for a specific station
+- Parameters:
+  - station: Station code (e.g. 'CCH' for Cheung Chau)
+  - year: Year (2022-2024)
+  - month: Optional month (1-12)
+  - day: Optional day (1-31)
+  - hour: Optional hour (1-24)
+  - lang: Language code (en/tc/sc, default: en)
+  - rformat: Return format (json/csv, default: json)
+- Returns:
+  - Dict containing tide data with fields and data arrays
+
+### High/Low Tides
+`get_high_low_tides(station: str, year: int, month: Optional[int] = None, day: Optional[int] = None, hour: Optional[int] = None, lang: str = "en", rformat: str = "json") -> Dict`
+- Get times and heights of astronomical high and low tides
+- Parameters:
+  - station: Station code (e.g. 'CCH' for Cheung Chau)
+  - year: Year (2022-2024)
+  - month: Optional month (1-12)
+  - day: Optional day (1-31)
+  - hour: Optional hour (1-24)
+  - lang: Language code (en/tc/sc, default: en)
+  - rformat: Return format (json/csv, default: json)
+- Returns:
+  - Dict containing tide data with fields and data arrays
+
 ## Setup
 
 1. Clone this repository
@@ -118,8 +176,8 @@ To connect this MCP server to Cline using stdio:
     "type": "stdio",
     "command": "python",
     "args": [
-       "-m",
-      "hkopenai.hk-climate-mcp-server"
+      "-m",
+      "hkopenai.hk_climate_mcp_server"
     ]
   }
 }
