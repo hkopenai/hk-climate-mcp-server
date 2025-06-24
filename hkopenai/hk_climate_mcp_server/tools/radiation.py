@@ -5,8 +5,7 @@ from typing import Dict, Any, Optional
 def get_weather_radiation_report(
     date: str = "Unknown",
     station: str = "Unknown",
-    lang: str = "en",
-    rformat: str = "json"
+    lang: str = "en"
 ) -> Dict[str, Any]:
     """
     Get weather and radiation level report for Hong Kong.
@@ -76,7 +75,7 @@ def get_weather_radiation_report(
     params = {
         'dataType': 'RYES',
         'lang': lang,
-        'rformat': rformat,
+        'rformat': 'json',
         'date': date,
         'station': station
     }
@@ -86,7 +85,7 @@ def get_weather_radiation_report(
         params=params
     )
     response.raise_for_status()
-    return response.json() if rformat == "json" else {"data": response.text}
+    return response.json()
 
 
 def is_date_in_future(date_str: str) -> bool:

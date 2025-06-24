@@ -220,16 +220,14 @@ def create_mcp_server():
         description="Get weather and radiation level report for Hong Kong. Date must be in YYYYMMDD format and should be yesterday or before. Station must be a valid code like 'HKO' for Hong Kong Observatory.",
     )
     def get_weather_radiation_report(
-        date: str = "Unknown",
-        station: str = "Unknown",
-        lang: str = "en",
-        rformat: str = "json"
+        date: Annotated[str, Field(description="Date in yyyyMMdd format, eg, 20250618")],
+        station: Annotated[str, Field(description="Station code in 3 characters in capital letters, eg, HKO")],
+        lang: Annotated[Optional[str], Field(description="Language (en/tc/sc)", json_schema_extra={"enum": ["en", "tc", "sc"]})] = 'en',
     ) -> Dict:
         return radiation.get_weather_radiation_report(
             date=date,
             station=station,
-            lang=lang,
-            rformat=rformat
+            lang=lang
         )
 
     @mcp.tool(
