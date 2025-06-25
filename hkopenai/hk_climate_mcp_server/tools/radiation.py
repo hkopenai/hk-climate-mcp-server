@@ -57,7 +57,7 @@ def get_weather_radiation_report(
     }
     
     if not station or station not in valid_stations:
-        return {"error": "Invalid or missing station code. Use the 'get_station_codes' tool to retrieve the list of valid station codes."}
+        return {"error": "Invalid or missing station code. Use the 'get_radiation_station_codes' tool to retrieve the list of valid station codes."}
         
     if not date:
         return {"error": "Date parameter is mandatory in YYYYMMDD format (e.g., 20250618)"}

@@ -56,7 +56,7 @@ class TestApp(unittest.TestCase):
             "get_lightning_data", "get_visibility_data", "get_moon_times", "get_sunrise_sunset_times",
             "get_gregorian_lunar_calendar", "get_hourly_tides", "get_high_low_tides",
             "get_daily_mean_temperature", "get_daily_max_temperature", "get_daily_min_temperature",
-            "get_weather_radiation_report", "get_station_codes"
+            "get_weather_radiation_report", "get_radiation_station_codes"
         ]
         registered_tools = [func.__name__ for func in decorated_funcs]
         self.assertEqual(set(registered_tools), set(expected_tools), "Not all expected tools are registered")

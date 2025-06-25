@@ -152,7 +152,7 @@ This is an MCP server that provides access to climate and weather data through a
   - Dict containing weather and radiation data or error message if parameters are invalid
 
 ### Station Codes
-`get_station_codes() -> Dict`
+`get_radiation_station_codes() -> Dict`
 - Get a list of station codes and their corresponding names for weather and radiation reports in Hong Kong
 - Parameters:
   - None
