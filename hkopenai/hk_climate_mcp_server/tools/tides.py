@@ -92,9 +92,12 @@ def get_hourly_tides(
     )
     try:
         response.raise_for_status()
-        return response.json()
-    except requests.RequestException as e:
-        return {"error": f"Failed to fetch data: {str(e)}. Please try again later."}
+        # Decode response content with utf-8-sig to handle potential BOM
+        content = response.content.decode('utf-8-sig')
+        import json
+        return json.loads(content)
+    except (requests.RequestException, UnicodeDecodeError, ValueError) as e:
+        return {"error": f"Failed to fetch data: {str(e)}."}
 
 def get_tide_station_codes(lang: str = "en") -> Dict[str, str]:
     """
@@ -140,6 +143,7 @@ def get_high_low_tides(
     params = {
         'dataType': 'HLT',
         'lang': lang,
+        'rformat': 'json',
         'station': station,
         'year': year
     }
@@ -153,6 +157,9 @@ def get_high_low_tides(
     )
     try:
         response.raise_for_status()
-        return response.json()
-    except requests.RequestException as e:
-        return {"error": f"Failed to fetch data: {str(e)}. Please try again later."}
+        # Decode response content with utf-8-sig to handle potential BOM
+        content = response.content.decode('utf-8-sig')
+        import json
+        return json.loads(content)
+    except (requests.RequestException, UnicodeDecodeError, ValueError) as e:
+        return {"error": f"Failed to fetch data: {str(e)}."}
