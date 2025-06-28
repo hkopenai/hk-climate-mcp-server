@@ -121,6 +121,12 @@ def create_mcp_server():
         )
 
     @mcp.tool(
+        description="Get a list of tide station codes and their corresponding names for tide reports in Hong Kong.",
+    )
+    def get_tide_station_codes(lang: str = "en") -> Dict:
+        return tides.get_tide_station_codes(lang)
+
+    @mcp.tool(
         description="Get times of sunrise, sun transit and sunset for Hong Kong",
     )
     def get_sunrise_sunset_times(

@@ -1,6 +1,58 @@
 import requests
 from typing import Dict, Any, Optional
 
+# Station names for tide data in different languages: en (English), tc (Traditional Chinese), sc (Simplified Chinese)
+VALID_TIDE_STATIONS = {
+    'en': {
+        'CCH': 'Cheung Chau',
+        'CLK': 'Chek Lap Kok',
+        'CMW': 'Chi Ma Wan',
+        'KCT': 'Kwai Chung',
+        'KLW': 'Ko Lau Wan',
+        'LOP': 'Lok On Pai',
+        'MWC': 'Ma Wan',
+        'QUB': 'Quarry Bay',
+        'SPW': 'Shek Pik',
+        'TAO': 'Tai O',
+        'TBT': 'Tsim Bei Tsui',
+        'TMW': 'Tai Miu Wan',
+        'TPK': 'Tai Po Kau',
+        'WAG': 'Waglan Island'
+    },
+    'tc': {
+        'CCH': '長洲',
+        'CLK': '赤鱲角',
+        'CMW': '芝麻灣',
+        'KCT': '葵涌',
+        'KLW': '高流灣',
+        'LOP': '樂安排',
+        'MWC': '馬灣',
+        'QUB': '鰂魚涌',
+        'SPW': '石壁',
+        'TAO': '大澳',
+        'TBT': '尖鼻咀',
+        'TMW': '大廟灣',
+        'TPK': '大埔滘',
+        'WAG': '橫瀾島'
+    },
+    'sc': {
+        'CCH': '长洲',
+        'CLK': '赤鱲角',
+        'CMW': '芝麻湾',
+        'KCT': '葵涌',
+        'KLW': '高流湾',
+        'LOP': '乐安排',
+        'MWC': '马湾',
+        'QUB': '鲗鱼涌',
+        'SPW': '石壁',
+        'TAO': '大澳',
+        'TBT': '尖鼻咀',
+        'TMW': '大庙湾',
+        'TPK': '大埔滘',
+        'WAG': '横澜岛'
+    }
+}
+
 def get_hourly_tides(
     station: str,
     year: int,
@@ -38,8 +90,24 @@ def get_hourly_tides(
         'https://data.weather.gov.hk/weatherAPI/opendata/opendata.php',
         params=params
     )
-    response.raise_for_status()
-    return response.json() 
+    try:
+        response.raise_for_status()
+        return response.json()
+    except requests.RequestException as e:
+        return {"error": f"Failed to fetch data: {str(e)}. Please try again later."}
+
+def get_tide_station_codes(lang: str = "en") -> Dict[str, str]:
+    """
+    Get a dictionary of station codes and their corresponding names for tide reports in Hong Kong.
+    
+    Args:
+        lang: Language code (en/tc/sc, default: en)
+    
+    Returns:
+        Dict mapping station codes to station names in the specified language.
+    """
+    # Return the dictionary for the specified language, default to English
+    return VALID_TIDE_STATIONS.get(lang, VALID_TIDE_STATIONS['en'])
 
 def get_high_low_tides(
     station: str,
@@ -61,8 +129,14 @@ def get_high_low_tides(
         lang: Language code (en/tc/sc, default: en)
 
     Returns:
-        Dict containing tide data with fields and data arrays
+        Dict containing tide data with fields and data arrays or an error message if station is invalid
     """
+    # Select the station dictionary based on the language, default to English
+    stations_dict = VALID_TIDE_STATIONS.get(lang, VALID_TIDE_STATIONS['en'])
+    
+    if not station or station not in stations_dict:
+        return {"error": "Invalid or missing station code. Use the 'get_tide_station_codes' tool to retrieve the list of valid station codes."}
+        
     params = {
         'dataType': 'HLT',
         'lang': lang,
@@ -77,5 +151,8 @@ def get_high_low_tides(
         'https://data.weather.gov.hk/weatherAPI/opendata/opendata.php',
         params=params
     )
-    response.raise_for_status()
-    return response.json() 
+    try:
+        response.raise_for_status()
+        return response.json()
+    except requests.RequestException as e:
+        return {"error": f"Failed to fetch data: {str(e)}. Please try again later."}

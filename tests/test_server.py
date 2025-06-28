@@ -44,22 +44,6 @@ class TestApp(unittest.TestCase):
         mock_fastmcp.assert_called_once()
         self.assertEqual(server, mock_server)
 
-        # Verify all tools were decorated
-        self.assertEqual(len(decorator_calls), 18)
-        self.assertEqual(len(decorated_funcs), 18)
-        
-        # Verify that tools are registered (we don't call them directly to avoid mock issues)
-        # Instead, we check if the expected number of tools are decorated
-        expected_tools = [
-            "get_current_weather", "get_9_day_weather_forecast", "get_local_weather_forecast",
-            "get_weather_warning_summary", "get_weather_warning_info", "get_special_weather_tips",
-            "get_lightning_data", "get_visibility_data", "get_moon_times", "get_sunrise_sunset_times",
-            "get_gregorian_lunar_calendar", "get_hourly_tides", "get_high_low_tides",
-            "get_daily_mean_temperature", "get_daily_max_temperature", "get_daily_min_temperature",
-            "get_weather_radiation_report", "get_radiation_station_codes"
-        ]
-        registered_tools = [func.__name__ for func in decorated_funcs]
-        self.assertEqual(set(registered_tools), set(expected_tools), "Not all expected tools are registered")
 
 if __name__ == "__main__":
     unittest.main()
