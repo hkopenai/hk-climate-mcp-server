@@ -18,7 +18,11 @@ def get_9_day_weather_forecast(lang: str = "en") -> Dict[str, Any]:
     """
     url = f"https://data.weather.gov.hk/weatherAPI/opendata/weather.php?dataType=fnd&lang={lang}"
     response = requests.get(url)
-    data = response.json()
+    try:
+        response.raise_for_status()
+        data = response.json()
+    except (requests.RequestException, ValueError) as e:
+        return {"error": f"Failed to fetch data: {str(e)}."}
 
     # Structure the output
     forecast = {
@@ -62,7 +66,11 @@ def get_local_weather_forecast(lang: str = "en") -> Dict[str, Any]:
     """
     url = f"https://data.weather.gov.hk/weatherAPI/opendata/weather.php?dataType=flw&lang={lang}"
     response = requests.get(url)
-    data = response.json()
+    try:
+        response.raise_for_status()
+        data = response.json()
+    except (requests.RequestException, ValueError) as e:
+        return {"error": f"Failed to fetch data: {str(e)}."}
     
     return {
         "generalSituation": data.get("generalSituation", ""),

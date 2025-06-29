@@ -37,5 +37,19 @@ class TestTidesToolsLive(unittest.TestCase):
         # Check if the response contains an error field, which indicates a failure in data retrieval
         self.assertFalse('error' in result, result)
 
+    @unittest.skipUnless(os.environ.get('RUN_LIVE_TESTS') == 'true', "Set RUN_LIVE_TESTS=true to run live tests")
+    def test_get_high_low_tides_invalid_station_live(self):
+        """
+        Live test to check error handling for an invalid station code in get_high_low_tides.
+        """
+        from datetime import datetime
+        current_year = datetime.now().year
+        result = get_high_low_tides(station="INVALID", year=current_year)
+        
+        self.assertIsNotNone(result)
+        self.assertIsInstance(result, dict, "Result should be a dictionary")
+        self.assertTrue('error' in result, "Result should contain an error field for invalid station")
+        self.assertIn("Invalid or missing station code", result['error'])
+
 if __name__ == "__main__":
     unittest.main()

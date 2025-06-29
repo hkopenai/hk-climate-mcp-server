@@ -13,4 +13,8 @@ def get_lightning_data(lang: str = "en") -> Dict[str, Any]:
     """
     url = f"https://data.weather.gov.hk/weatherAPI/opendata/opendata.php?dataType=LHL&lang={lang}&rformat=json"
     response = requests.get(url)
-    return response.json() 
+    try:
+        response.raise_for_status()
+        return response.json()
+    except (requests.RequestException, ValueError) as e:
+        return {"error": f"Failed to fetch data: {str(e)}."} 

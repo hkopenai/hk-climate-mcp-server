@@ -32,8 +32,11 @@ def get_daily_mean_temperature(
         'https://data.weather.gov.hk/weatherAPI/opendata/opendata.php',
         params=params
     )
-    response.raise_for_status()
-    return response.json()
+    try:
+        response.raise_for_status()
+        return response.json()
+    except (requests.RequestException, ValueError) as e:
+        return {"error": f"Failed to fetch data: {str(e)}."}
 
 def get_daily_max_temperature(
     station: str,
@@ -66,8 +69,11 @@ def get_daily_max_temperature(
         'https://data.weather.gov.hk/weatherAPI/opendata/opendata.php',
         params=params
     )
-    response.raise_for_status()
-    return response.json()
+    try:
+        response.raise_for_status()
+        return response.json()
+    except (requests.RequestException, ValueError) as e:
+        return {"error": f"Failed to fetch data: {str(e)}."}
 
 def get_daily_min_temperature(
     station: str,
@@ -100,5 +106,8 @@ def get_daily_min_temperature(
         'https://data.weather.gov.hk/weatherAPI/opendata/opendata.php',
         params=params
     )
-    response.raise_for_status()
-    return response.json()
+    try:
+        response.raise_for_status()
+        return response.json()
+    except (requests.RequestException, ValueError) as e:
+        return {"error": f"Failed to fetch data: {str(e)}."}
