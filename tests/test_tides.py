@@ -1,5 +1,6 @@
 import unittest
 from unittest.mock import patch, MagicMock
+import json
 from hkopenai.hk_climate_mcp_server.tools.tides import get_hourly_tides, get_high_low_tides
 
 class TestTidesTools(unittest.TestCase):
@@ -13,7 +14,7 @@ class TestTidesTools(unittest.TestCase):
             ]
         }
         mock_response = MagicMock()
-        mock_response.json.return_value = example_json
+        mock_response.content = json.dumps(example_json).encode('utf-8')
         mock_get.return_value = mock_response
 
         result = get_hourly_tides(station="CCH", year=2025)
@@ -34,7 +35,7 @@ class TestTidesTools(unittest.TestCase):
             ]
         }
         mock_response = MagicMock()
-        mock_response.json.return_value = example_json
+        mock_response.content = json.dumps(example_json).encode('utf-8')
         mock_get.return_value = mock_response
 
         result = get_high_low_tides(station="CCH", year=2025)
@@ -42,7 +43,7 @@ class TestTidesTools(unittest.TestCase):
         self.assertEqual(result["data"], example_json["data"])
         mock_get.assert_called_once_with(
             'https://data.weather.gov.hk/weatherAPI/opendata/opendata.php',
-            params={'dataType': 'HLT', 'lang': 'en', 'station': 'CCH', 'year': 2025}
+            params={'dataType': 'HLT', 'lang': 'en', 'station': 'CCH', 'year': 2025, 'rformat': 'json'}
         )
 
 if __name__ == "__main__":
