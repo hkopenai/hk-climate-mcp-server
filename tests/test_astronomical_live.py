@@ -15,6 +15,9 @@ class TestAstronomicalToolsLive(unittest.TestCase):
         result = get_sunrise_sunset_times(year=current_year)
         self.assertIsNotNone(result)
         self.assertIsInstance(result, dict, "Result should be a dictionary")
+        
+        # Check if the response contains an error field, which indicates a failure in data retrieval
+        self.assertFalse('error' in result, result)
 
 if __name__ == "__main__":
     unittest.main()

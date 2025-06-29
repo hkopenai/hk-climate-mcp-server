@@ -13,6 +13,9 @@ class TestVisibilityToolsLive(unittest.TestCase):
         result = get_visibility_data(lang="en")
         self.assertIsNotNone(result)
         self.assertIsInstance(result, dict, "Result should be a dictionary")
+        
+        # Check if the response contains an error field, which indicates a failure in data retrieval
+        self.assertFalse('error' in result, result)
 
 if __name__ == "__main__":
     unittest.main()
