@@ -28,8 +28,11 @@ def get_moon_times(year: int, month: Optional[int] = None,
         'https://data.weather.gov.hk/weatherAPI/opendata/opendata.php',
         params=params
     )
-    response.raise_for_status()
-    return response.json()
+    try:
+        response.raise_for_status()
+        return response.json()
+    except (requests.RequestException, ValueError) as e:
+        return {"error": f"Failed to fetch data: {str(e)}."}
 
 def get_sunrise_sunset_times(
     year: int,
@@ -62,8 +65,11 @@ def get_sunrise_sunset_times(
         'https://data.weather.gov.hk/weatherAPI/opendata/opendata.php',
         params=params
     )
-    response.raise_for_status()
-    return response.json()
+    try:
+        response.raise_for_status()
+        return response.json()
+    except (requests.RequestException, ValueError) as e:
+        return {"error": f"Failed to fetch data: {str(e)}."}
 
 def get_gregorian_lunar_calendar(
     year: int,
@@ -96,5 +102,8 @@ def get_gregorian_lunar_calendar(
         'https://data.weather.gov.hk/weatherAPI/opendata/opendata.php',
         params=params
     )
-    response.raise_for_status()
-    return response.json()
+    try:
+        response.raise_for_status()
+        return response.json()
+    except (requests.RequestException, ValueError) as e:
+        return {"error": f"Failed to fetch data: {str(e)}."}

@@ -15,7 +15,11 @@ def get_weather_warning_summary(lang: str = "en") -> Dict[str, Any]:
     """
     url = f"https://data.weather.gov.hk/weatherAPI/opendata/weather.php?dataType=warnsum&lang={lang}"
     response = requests.get(url)
-    data = response.json()
+    try:
+        response.raise_for_status()
+        data = response.json()
+    except (requests.RequestException, ValueError) as e:
+        return {"error": f"Failed to fetch data: {str(e)}."}
     
     return {
         "warningMessage": data.get("warningMessage", []),
@@ -36,7 +40,11 @@ def get_weather_warning_info(lang: str = "en") -> Dict[str, Any]:
     """
     url = f"https://data.weather.gov.hk/weatherAPI/opendata/weather.php?dataType=warningInfo&lang={lang}"
     response = requests.get(url)
-    data = response.json()
+    try:
+        response.raise_for_status()
+        data = response.json()
+    except (requests.RequestException, ValueError) as e:
+        return {"error": f"Failed to fetch data: {str(e)}."}
     
     return {
         "warningStatement": data.get("warningStatement", ""),
@@ -57,7 +65,11 @@ def get_special_weather_tips(lang: str = "en") -> Dict[str, Any]:
     """
     url = f"https://data.weather.gov.hk/weatherAPI/opendata/weather.php?dataType=swt&lang={lang}"
     response = requests.get(url)
-    data = response.json()
+    try:
+        response.raise_for_status()
+        data = response.json()
+    except (requests.RequestException, ValueError) as e:
+        return {"error": f"Failed to fetch data: {str(e)}."}
     
     return {
         "specialWeatherTips": data.get("specialWeatherTips", []),

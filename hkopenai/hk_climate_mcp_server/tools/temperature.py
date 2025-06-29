@@ -35,7 +35,9 @@ def get_daily_mean_temperature(
     try:
         response.raise_for_status()
         return response.json()
-    except (requests.RequestException, ValueError) as e:
+    except requests.exceptions.JSONDecodeError as e:
+        return {"error": f"Failed to parse API response: {str(e)}. This might indicate invalid parameters or no data for the given request."}
+    except requests.RequestException as e:
         return {"error": f"Failed to fetch data: {str(e)}."}
 
 def get_daily_max_temperature(
@@ -72,7 +74,9 @@ def get_daily_max_temperature(
     try:
         response.raise_for_status()
         return response.json()
-    except (requests.RequestException, ValueError) as e:
+    except requests.exceptions.JSONDecodeError as e:
+        return {"error": f"Failed to parse API response: {str(e)}. This might indicate invalid parameters or no data for the given request."}
+    except requests.RequestException as e:
         return {"error": f"Failed to fetch data: {str(e)}."}
 
 def get_daily_min_temperature(
@@ -109,5 +113,7 @@ def get_daily_min_temperature(
     try:
         response.raise_for_status()
         return response.json()
-    except (requests.RequestException, ValueError) as e:
+    except requests.exceptions.JSONDecodeError as e:
+        return {"error": f"Failed to parse API response: {str(e)}. This might indicate invalid parameters or no data for the given request."}
+    except requests.RequestException as e:
         return {"error": f"Failed to fetch data: {str(e)}."}
