@@ -9,6 +9,8 @@ on:
         default: 'minor'
         type: choice
         options:
+        - fix_and_publish
+        - fix
         - minor_and_publish
         - minor
         - patch_and_publish
@@ -38,7 +40,7 @@ jobs:
       run: |
         if [[ "${{ github.event.inputs.version_type }}" == "minor_and_publish" || "${{ github.event.inputs.version_type }}" == "minor" ]]; then
           echo "BUMP_TYPE=minor" >> $GITHUB_ENV
-        elif [[ "${{ github.event.inputs.version_type }}" == "patch_and_publish" || "${{ github.event.inputs.version_type }}" == "patch" ]]; then
+        elif [[ "${{ github.event.inputs.version_type }}" == "patch_and_publish" || "${{ github.event.inputs.version_type }}" == "patch" || "${{ github.event.inputs.version_type }}" == "fix_and_publish" || "${{ github.event.inputs.version_type }}" == "fix" ]]; then
           echo "BUMP_TYPE=patch" >> $GITHUB_ENV
         else
           echo "BUMP_TYPE=none" >> $GITHUB_ENV
