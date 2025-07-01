@@ -8,6 +8,7 @@ import time
 import asyncio
 import socket
 import logging
+from datetime import datetime, timedelta
 
 # Configure logging
 log_level = os.environ.get("LOG_LEVEL", "INFO").upper()
@@ -47,7 +48,11 @@ class TestMCPClientSimulation(unittest.TestCase):
                 logger.debug(f"Waiting for server to start: {e}")
                 time.sleep(1)
         else:
-            self.fail("Server did not start listening on port 8000 in time.")
+            cls.server_process.terminate()
+            cls.server_process.wait(timeout=5)
+            if cls.server_process.poll() is None:
+                cls.server_process.kill()
+            raise Exception("Server did not start listening on port 8000 in time.")
 
         logger.debug(f"Server setup complete.")
 
@@ -71,37 +76,101 @@ class TestMCPClientSimulation(unittest.TestCase):
                     logger.debug("Server stderr (remaining): (empty)")
             logger.debug("Tear down complete.")
 
+    async def _call_tool_and_assert(self, tool_name, params):
+        async with streamablehttp_client(self.SERVER_URL) as (read_stream, write_stream, _):
+            async with ClientSession(read_stream, write_stream) as session:
+                await session.initialize()
+                response = await session.call_tool(tool_name, params)
+                logger.info(f"'{tool_name}' tool response: {str(response)[:500]}...")
+
+                json_text = response.content[0].text if response.content else "{}"
+                data = json.loads(json_text)
+
+                self.assertIsInstance(data, dict, f"Result for {tool_name} should be a dictionary")
+                self.assertNotIn("error", data, f"Result for {tool_name} should not contain an error: {data.get('error')}")
+                return data
+
     def test_get_current_weather_tool(self):
         logger.debug("Testing 'get_current_weather' tool...")
-        try:
-            async def _run_test():
-                async with streamablehttp_client(self.SERVER_URL) as (read_stream, write_stream, _):
-                    async with ClientSession(read_stream, write_stream) as session:
-                        await session.initialize()
-                        # Call the 'get_current_weather' tool
-                        response = await session.call_tool("get_current_weather", {})
-                        logger.info(f"'get_current_weather' tool response: {response}")
+        asyncio.run(self._call_tool_and_assert("get_current_weather", {}))
 
-                        # Extract the JSON text from the response content
-                        json_text = response.content[0].text if response.content else "{}"
-                        data = json.loads(json_text)
+    def test_get_9_day_weather_forecast_tool(self):
+        logger.debug("Testing 'get_9_day_weather_forecast' tool...")
+        asyncio.run(self._call_tool_and_assert("get_9_day_weather_forecast", {"lang": "en"}))
 
-                        # Assert that the response contains expected keys
-                        self.assertIn("generalSituation", data)
-                        self.assertIn("updateTime", data)
-                        self.assertIn("icon", data)
+    def test_get_local_weather_forecast_tool(self):
+        logger.debug("Testing 'get_local_weather_forecast' tool...")
+        asyncio.run(self._call_tool_and_assert("get_local_weather_forecast", {"lang": "en"}))
 
-                        # Further assert on nested structure
-                        self.assertIn("weatherObservation", data)
-                        self.assertIn("temperature", data["weatherObservation"])
-                        self.assertIn("place", data["weatherObservation"]["temperature"])
-                        self.assertIn("value", data["weatherObservation"]["temperature"])
-                        self.assertIn("unit", data["weatherObservation"]["temperature"])
+    def test_get_weather_warning_summary_tool(self):
+        logger.debug("Testing 'get_weather_warning_summary' tool...")
+        asyncio.run(self._call_tool_and_assert("get_weather_warning_summary", {"lang": "en"}))
 
-                        logger.debug("'get_current_weather' tool test passed.")
-            asyncio.run(_run_test())
-        except Exception as e:
-            self.fail(f"'get_current_weather' tool test failed: {e}")
+    def test_get_weather_warning_info_tool(self):
+        logger.debug("Testing 'get_weather_warning_info' tool...")
+        asyncio.run(self._call_tool_and_assert("get_weather_warning_info", {"lang": "en"}))
+
+    def test_get_special_weather_tips_tool(self):
+        logger.debug("Testing 'get_special_weather_tips' tool...")
+        asyncio.run(self._call_tool_and_assert("get_special_weather_tips", {"lang": "en"}))
+
+    def test_get_visibility_data_tool(self):
+        logger.debug("Testing 'get_visibility_data' tool...")
+        asyncio.run(self._call_tool_and_assert("get_visibility_data", {"lang": "en"}))
+
+    def test_get_lightning_data_tool(self):
+        logger.debug("Testing 'get_lightning_data' tool...")
+        asyncio.run(self._call_tool_and_assert("get_lightning_data", {"lang": "en"}))
+
+    def test_get_moon_times_tool(self):
+        logger.debug("Testing 'get_moon_times' tool...")
+        current_year = datetime.now().year
+        asyncio.run(self._call_tool_and_assert("get_moon_times", {"year": current_year, "lang": "en"}))
+
+    def test_get_hourly_tides_tool(self):
+        logger.debug("Testing 'get_hourly_tides' tool...")
+        current_year = datetime.now().year
+        asyncio.run(self._call_tool_and_assert("get_hourly_tides", {"station": "QUB", "year": current_year, "lang": "en"}))
+
+    def test_get_high_low_tides_tool(self):
+        logger.debug("Testing 'get_high_low_tides' tool...")
+        current_year = datetime.now().year
+        asyncio.run(self._call_tool_and_assert("get_high_low_tides", {"station": "QUB", "year": current_year, "lang": "en"}))
+
+    def test_get_tide_station_codes_tool(self):
+        logger.debug("Testing 'get_tide_station_codes' tool...")
+        asyncio.run(self._call_tool_and_assert("get_tide_station_codes", {"lang": "en"}))
+
+    def test_get_sunrise_sunset_times_tool(self):
+        logger.debug("Testing 'get_sunrise_sunset_times' tool...")
+        current_year = datetime.now().year
+        asyncio.run(self._call_tool_and_assert("get_sunrise_sunset_times", {"year": current_year, "lang": "en"}))
+
+    def test_get_gregorian_lunar_calendar_tool(self):
+        logger.debug("Testing 'get_gregorian_lunar_calendar' tool...")
+        current_year = datetime.now().year
+        asyncio.run(self._call_tool_and_assert("get_gregorian_lunar_calendar", {"year": current_year, "lang": "en"}))
+
+    def test_get_daily_mean_temperature_tool(self):
+        logger.debug("Testing 'get_daily_mean_temperature' tool...")
+        asyncio.run(self._call_tool_and_assert("get_daily_mean_temperature", {"station": "HKO", "lang": "en"}))
+
+    def test_get_daily_max_temperature_tool(self):
+        logger.debug("Testing 'get_daily_max_temperature' tool...")
+        asyncio.run(self._call_tool_and_assert("get_daily_max_temperature", {"station": "HKO", "lang": "en"}))
+
+    def test_get_daily_min_temperature_tool(self):
+        logger.debug("Testing 'get_daily_min_temperature' tool...")
+        asyncio.run(self._call_tool_and_assert("get_daily_min_temperature", {"station": "HKO", "lang": "en"}))
+
+    def test_get_weather_radiation_report_tool(self):
+        logger.debug("Testing 'get_weather_radiation_report' tool...")
+        yesterday = (datetime.now() - timedelta(days=1)).strftime('%Y%m%d')
+        asyncio.run(self._call_tool_and_assert("get_weather_radiation_report", {"date": yesterday, "station": "HKO", "lang": "en"}))
+
+    def test_get_radiation_station_codes_tool(self):
+        logger.debug("Testing 'get_radiation_station_codes' tool...")
+        asyncio.run(self._call_tool_and_assert("get_radiation_station_codes", {"lang": "en"}))
 
 if __name__ == "__main__":
     unittest.main()
