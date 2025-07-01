@@ -20,8 +20,7 @@ class TestCalendarTools(unittest.TestCase):
         self.assertEqual(result["fields"], example_json["fields"])
         self.assertEqual(result["data"], example_json["data"])
         mock_get.assert_called_once_with(
-            'https://data.weather.gov.hk/weatherAPI/opendata/opendata.php',
-            params={'dataType': 'GLC', 'lang': 'en', 'rformat': 'json', 'year': 2025}
+            'https://data.weather.gov.hk/weatherAPI/opendata/lunardate.php', params={'date': '2025-01-01'}
         )
 
 if __name__ == "__main__":
