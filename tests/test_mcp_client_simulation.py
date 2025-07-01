@@ -22,6 +22,7 @@ class TestMCPClientSimulation(unittest.TestCase):
     server_process = None
     SERVER_URL = "http://127.0.0.1:8000/mcp/" # Updated server URL for MCP API
 
+    # Need a fresh mcp server to avoid lock up
     def setUp(self):
         logger.debug("Starting MCP server subprocess for HTTP communication...")
         # Start the MCP server as a subprocess. It should expose an HTTP endpoint.
@@ -64,12 +65,15 @@ class TestMCPClientSimulation(unittest.TestCase):
                 self.server_process.kill()
             
             # Print any remaining stderr output from the server process
+            if self.server_process.stdout:
+                self.server_process.stdout.close()
             if self.server_process.stderr:
                 stderr_output = self.server_process.stderr.read()
                 if stderr_output:
                     logger.debug(f"Server stderr (remaining):\n{stderr_output}")
                 else:
                     logger.debug("Server stderr (remaining): (empty)")
+                self.server_process.stderr.close()
             logger.info("Tear down complete.")
 
     async def _call_tool_and_assert(self, tool_name, params):
