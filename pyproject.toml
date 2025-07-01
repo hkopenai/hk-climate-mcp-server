@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "hkopenai.hk_climate_mcp_server"
-version = "0.4.0"
+version = "0.4.1"
 description = "Hong Kong Weather MCP Server providing climate and weather data tools"
 readme = "README.md"
 requires-python = ">=3.10"
