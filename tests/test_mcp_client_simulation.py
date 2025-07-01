@@ -22,11 +22,10 @@ class TestMCPClientSimulation(unittest.TestCase):
     server_process = None
     SERVER_URL = "http://127.0.0.1:8000/mcp/" # Updated server URL for MCP API
 
-    @classmethod
-    def setUpClass(cls):
+    def setUp(self):
         logger.debug("Starting MCP server subprocess for HTTP communication...")
         # Start the MCP server as a subprocess. It should expose an HTTP endpoint.
-        cls.server_process = subprocess.Popen(
+        self.server_process = subprocess.Popen(
             [sys.executable, "-m", "hkopenai.hk_climate_mcp_server", "--sse"],
             # No stdin/stdout/stderr pipes needed for HTTP communication, but keep for server logs
             stdout=subprocess.PIPE,
@@ -47,27 +46,26 @@ class TestMCPClientSimulation(unittest.TestCase):
                 logger.debug(f"Waiting for server to start: {e}")
                 time.sleep(1)
         else:
-            cls.server_process.terminate()
-            cls.server_process.wait(timeout=5)
-            if cls.server_process.poll() is None:
-                cls.server_process.kill()
+            self.server_process.terminate()
+            self.server_process.wait(timeout=5)
+            if self.server_process.poll() is None:
+                self.server_process.kill()
             raise Exception("Server did not start listening on port 8000 in time.")
 
         logger.debug(f"Server setup complete.")
 
-    @classmethod
-    def tearDownClass(cls):
+    def tearDown(self):
         # Terminate the server process
-        if cls.server_process:
-            cls.server_process.terminate()
-            cls.server_process.wait(timeout=5)
-            if cls.server_process.poll() is None:
+        if self.server_process:
+            self.server_process.terminate()
+            self.server_process.wait(timeout=5)
+            if self.server_process.poll() is None:
                 logger.debug("Tear down complete.")
-                cls.server_process.kill()
+                self.server_process.kill()
             
             # Print any remaining stderr output from the server process
-            if cls.server_process.stderr:
-                stderr_output = cls.server_process.stderr.read()
+            if self.server_process.stderr:
+                stderr_output = self.server_process.stderr.read()
                 if stderr_output:
                     logger.debug(f"Server stderr (remaining):\n{stderr_output}")
                 else:
@@ -83,6 +81,8 @@ class TestMCPClientSimulation(unittest.TestCase):
 
                 json_text = response.content[0].text if response.content else "{}"
                 data = json.loads(json_text)
+                self.assertIsInstance(data, dict, f"Result should be a dictionary")
+                self.assertNotIn("error", data, f"Result should not contain an error: {data}")                
                 return data
 
     @unittest.skipUnless(os.environ.get('RUN_LIVE_TESTS') == 'true', "Set RUN_LIVE_TESTS=true to run live tests")
@@ -159,8 +159,6 @@ class TestMCPClientSimulation(unittest.TestCase):
         logger.debug("Testing 'get_gregorian_lunar_calendar' tool...")
         current_year = datetime.now().year
         data = asyncio.run(self._call_tool_and_assert("get_gregorian_lunar_calendar", {"year": current_year, "lang": "en"}))
-        # self.assertIsInstance(data, dict, f"Result should be a dictionary")
-        # self.assertNotIn("error", data, f"Result should not contain an error: {data}")
 
     @unittest.skipUnless(os.environ.get('RUN_LIVE_TESTS') == 'true', "Set RUN_LIVE_TESTS=true to run live tests")        
     def test_get_daily_mean_temperature_tool(self):
