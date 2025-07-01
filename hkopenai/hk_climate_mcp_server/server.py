@@ -228,20 +228,20 @@ def create_mcp_server():
     
     return mcp
 
-def main():
+def main(args):
     parser = argparse.ArgumentParser(description='HKO MCP Server')
     parser.add_argument('-s', '--sse', action='store_true',
                        help='Run in SSE mode instead of stdio')
+    parser.add_argument('-p', '--port', type=int, default=8000,
+                       help='Port to run the server on (default: 8000)')
     args = parser.parse_args()
 
+    print(f"[DEBUG] Parsed arguments: {args}")
     server = create_mcp_server()
     
     if args.sse:
-        server.run(transport="streamable-http")
-        print("HKO MCP Server running in SSE mode on port 8000")
+        server.run(transport="streamable-http", port=args.port)
+        print(f"HKO MCP Server running in SSE mode on port {args.port}")
     else:
         server.run()
         print("HKO MCP Server running in stdio mode")
-
-if __name__ == "__main__":
-    main()
