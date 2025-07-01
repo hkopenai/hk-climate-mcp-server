@@ -86,7 +86,7 @@ class TestMCPClientSimulation(unittest.TestCase):
                 json_text = response.content[0].text if response.content else "{}"
                 data = json.loads(json_text)
                 self.assertIsInstance(data, dict, f"Result should be a dictionary")
-                self.assertNotIn("error", data, f"Result should not contain an error: {data}")                
+                self.assertNotIn("error", data, f"Result should not contain an error: {data}")
                 return data
 
     @unittest.skipUnless(os.environ.get('RUN_LIVE_TESTS') == 'true', "Set RUN_LIVE_TESTS=true to run live tests")
@@ -161,8 +161,8 @@ class TestMCPClientSimulation(unittest.TestCase):
     @unittest.skipUnless(os.environ.get('RUN_LIVE_TESTS') == 'true', "Set RUN_LIVE_TESTS=true to run live tests")
     def test_get_gregorian_lunar_calendar_tool(self):
         logger.debug("Testing 'get_gregorian_lunar_calendar' tool...")
-        current_year = datetime.now().year
-        data = asyncio.run(self._call_tool_and_assert("get_gregorian_lunar_calendar", {"year": current_year, "lang": "en"}))
+        current_date = datetime.now()
+        asyncio.run(self._call_tool_and_assert("get_gregorian_lunar_calendar", {"year": current_date.year, "month": current_date.month, "day": current_date.day, "lang": "en"}))
 
     @unittest.skipUnless(os.environ.get('RUN_LIVE_TESTS') == 'true', "Set RUN_LIVE_TESTS=true to run live tests")        
     def test_get_daily_mean_temperature_tool(self):
