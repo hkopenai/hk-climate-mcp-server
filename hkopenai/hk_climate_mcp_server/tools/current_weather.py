@@ -1,3 +1,10 @@
+"""
+Current Weather Data Tools - Functions for fetching current weather data from HKO.
+
+This module provides tools to retrieve current weather information including temperature,
+humidity, rainfall, and weather warnings from the Hong Kong Observatory API.
+"""
+
 import requests
 from typing import Dict
 

@@ -1,3 +1,10 @@
+"""
+Lightning Data Tools - Functions for fetching lightning data from HKO.
+
+This module provides tools to retrieve lightning data including cloud-to-ground
+and cloud-to-cloud lightning counts from the Hong Kong Observatory API.
+"""
+
 import requests
 from typing import Dict, Any
 
@@ -17,4 +24,4 @@ def get_lightning_data(lang: str = "en") -> Dict[str, Any]:
         response.raise_for_status()
         return response.json()
     except (requests.RequestException, ValueError) as e:
-        return {"error": f"Failed to fetch data: {str(e)}."} 
+        return {"error": f"Failed to fetch data: {str(e)}."}

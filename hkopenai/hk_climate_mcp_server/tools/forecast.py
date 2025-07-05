@@ -1,3 +1,10 @@
+"""
+Weather Forecast Tools - Functions for fetching weather forecast data from HKO.
+
+This module provides tools to retrieve weather forecast information including 9-day
+forecasts and local weather forecasts from the Hong Kong Observatory API.
+"""
+
 import requests
 from typing import Dict, Any
 

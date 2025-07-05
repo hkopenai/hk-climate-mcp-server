@@ -1,3 +1,12 @@
+"""
+Astronomical Data Tools - Functions for fetching moon, sun, and calendar data from HKO.
+
+This module provides tools to retrieve astronomical data such as moonrise/moonset times,
+sunrise/sunset times, and Gregorian-Lunar calendar conversion data from the Hong Kong
+Observatory API.
+"""
+
+import datetime
 import requests
 from typing import Dict, Any, Optional
 
@@ -70,8 +79,6 @@ def get_sunrise_sunset_times(
         return response.json()
     except (requests.RequestException, ValueError) as e:
         return {"error": f"Failed to fetch data: {str(e)}."}
-
-import datetime
 
 def get_gregorian_lunar_calendar(
     year: int,
