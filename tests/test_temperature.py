@@ -1,3 +1,10 @@
+"""
+Unit tests for temperature data retrieval functionality.
+
+This module tests the temperature-related functions from the temperature tools module
+to ensure they correctly fetch and process temperature data from the HKO API.
+"""
+
 import unittest
 from unittest.mock import patch, MagicMock
 from hkopenai.hk_climate_mcp_server.tools.temperature import (
@@ -8,8 +15,15 @@ from hkopenai.hk_climate_mcp_server.tools.temperature import (
 
 
 class TestTemperatureTools(unittest.TestCase):
+    """Test case class for temperature data tools."""
     @patch("requests.get")
     def test_get_daily_mean_temperature(self, mock_get):
+        """
+        Test the retrieval of daily mean temperature data from HKO API.
+        
+        Args:
+            mock_get: Mock object for requests.get to simulate API response.
+        """
         example_json = {
             "fields": ["Date", "Mean Temperature (degree Celsius)"],
             "data": [["20250601", "26.5"], ["20250602", "27.0"]],
@@ -33,6 +47,12 @@ class TestTemperatureTools(unittest.TestCase):
 
     @patch("requests.get")
     def test_get_daily_max_temperature(self, mock_get):
+        """
+        Test the retrieval of daily maximum temperature data from HKO API.
+        
+        Args:
+            mock_get: Mock object for requests.get to simulate API response.
+        """
         example_json = {
             "fields": ["Date", "Maximum Temperature (degree Celsius)"],
             "data": [["20250601", "30.2"], ["20250602", "31.5"]],
@@ -56,6 +76,12 @@ class TestTemperatureTools(unittest.TestCase):
 
     @patch("requests.get")
     def test_get_daily_min_temperature(self, mock_get):
+        """
+        Test the retrieval of daily minimum temperature data from HKO API.
+        
+        Args:
+            mock_get: Mock object for requests.get to simulate API response.
+        """
         example_json = {
             "fields": ["Date", "Minimum Temperature (degree Celsius)"],
             "data": [["20250601", "23.1"], ["20250602", "24.0"]],

@@ -1,11 +1,25 @@
+"""
+Unit tests for visibility data retrieval functionality.
+
+This module tests the `get_visibility` function from the visibility tools module
+to ensure it correctly fetches and processes visibility data from the HKO API.
+"""
+
 import unittest
 from unittest.mock import patch, MagicMock
 from hkopenai.hk_climate_mcp_server.tools.visibility import get_visibility
 
 
 class TestVisibilityTools(unittest.TestCase):
+    """Test case class for visibility data tools."""
     @patch("requests.get")
     def test_get_visibility(self, mock_get):
+        """
+        Test the retrieval of visibility data from HKO API.
+        
+        Args:
+            mock_get: Mock object for requests.get to simulate API response.
+        """
         example_json = {
             "fields": [
                 "Date time",

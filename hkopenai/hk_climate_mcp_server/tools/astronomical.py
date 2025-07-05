@@ -39,7 +39,6 @@ def get_moon_times(
         return response.json()
     except (requests.RequestException, ValueError) as e:
         return {"error": f"Failed to fetch data: {str(e)}."}
-        
 
 
 def get_sunrise_sunset_times(

@@ -18,6 +18,12 @@ class TestCalendarTools(unittest.TestCase):
 
     @patch("requests.get")
     def test_get_gregorian_lunar_calendar(self, mock_get):
+        """
+        Test the retrieval of Gregorian-Lunar calendar data from HKO API.
+        
+        Args:
+            mock_get: Mock object for requests.get to simulate API response.
+        """
         example_json = {
             "fields": ["Gregorian Date", "Lunar Date"],
             "data": [

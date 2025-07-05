@@ -48,12 +48,12 @@ def run_live_tests(test_name=None):
 
 
 if __name__ == "__main__":
-    test_name = None
+    TEST_NAME = None
     if len(sys.argv) > 1:
-        test_name = sys.argv[1]
-        print(f"Running specific live test: {test_name}")
+        TEST_NAME = sys.argv[1]
+        print(f"Running specific live test: {TEST_NAME}")
     else:
         print(
             "Running all live tests. To run a specific test, provide the test name as argument."
         )
-    exit(run_live_tests(test_name))
+    exit(run_live_tests(TEST_NAME))

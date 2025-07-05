@@ -1,11 +1,25 @@
+"""
+Unit tests for moon times data retrieval functionality.
+
+This module tests the `get_moon_times` function from the astronomical tools module
+to ensure it correctly fetches and processes moon times data from the HKO API.
+"""
+
 import unittest
 from unittest.mock import patch, MagicMock
 from hkopenai.hk_climate_mcp_server.tools.astronomical import get_moon_times
 
 
 class TestMoonTimesTools(unittest.TestCase):
+    """Test case class for moon times data tools."""
     @patch("requests.get")
     def test_get_moon_times(self, mock_get):
+        """
+        Test the retrieval of moon times data from HKO API.
+        
+        Args:
+            mock_get: Mock object for requests.get to simulate API response.
+        """
         example_json = {
             "fields": ["Date", "Moonrise", "Moon Transit", "Moonset"],
             "data": [

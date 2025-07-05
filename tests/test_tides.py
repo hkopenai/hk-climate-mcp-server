@@ -1,3 +1,10 @@
+"""
+Unit tests for tides data retrieval functionality.
+
+This module tests the tides-related functions from the tides tools module
+to ensure they correctly fetch and process tides data from the HKO API.
+"""
+
 import unittest
 from unittest.mock import patch, MagicMock
 import json
@@ -8,8 +15,15 @@ from hkopenai.hk_climate_mcp_server.tools.tides import (
 
 
 class TestTidesTools(unittest.TestCase):
+    """Test case class for tides data tools."""
     @patch("requests.get")
     def test_get_hourly_tides(self, mock_get):
+        """
+        Test the retrieval of hourly tides data from HKO API.
+        
+        Args:
+            mock_get: Mock object for requests.get to simulate API response.
+        """
         example_json = {
             "fields": ["Date time", "Height (m)"],
             "data": [["202506010100", "1.2"], ["202506010200", "1.3"]],
@@ -34,6 +48,12 @@ class TestTidesTools(unittest.TestCase):
 
     @patch("requests.get")
     def test_get_high_low_tides(self, mock_get):
+        """
+        Test the retrieval of high and low tides data from HKO API.
+        
+        Args:
+            mock_get: Mock object for requests.get to simulate API response.
+        """
         example_json = {
             "fields": ["Date time", "Type", "Height (m)"],
             "data": [["202506010430", "High", "1.8"], ["202506011030", "Low", "0.5"]],

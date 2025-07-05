@@ -1,9 +1,17 @@
+"""
+Unit tests for MCP server creation functionality.
+
+This module tests the `create_mcp_server` function from the server module
+to ensure it correctly sets up the MCP server with all required tools.
+"""
+
 import unittest
 from unittest.mock import patch, Mock
 from hkopenai.hk_climate_mcp_server.server import create_mcp_server
 
 
 class TestApp(unittest.TestCase):
+    """Test case class for MCP server functionality."""
     @patch("hkopenai.hk_climate_mcp_server.server.FastMCP")
     @patch("hkopenai.hk_climate_mcp_server.server.current_weather")
     @patch("hkopenai.hk_climate_mcp_server.server.forecast")
@@ -27,6 +35,21 @@ class TestApp(unittest.TestCase):
         mock_current_weather,
         mock_fastmcp,
     ):
+        """
+        Test the creation of the MCP server and its tool integrations.
+        
+        Args:
+            mock_astronomical: Mock for astronomical module.
+            mock_radiation: Mock for radiation module.
+            mock_temperature: Mock for temperature module.
+            mock_tides: Mock for tides module.
+            mock_visibility: Mock for visibility module.
+            mock_lightning: Mock for lightning module.
+            mock_warnings: Mock for warnings module.
+            mock_forecast: Mock for forecast module.
+            mock_current_weather: Mock for current_weather module.
+            mock_fastmcp: Mock for FastMCP class.
+        """
         # Setup mocks
         mock_server = Mock()
 

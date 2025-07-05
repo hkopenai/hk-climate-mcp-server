@@ -1,11 +1,25 @@
+"""
+Unit tests for sunrise and sunset times data retrieval functionality.
+
+This module tests the `get_sunrise_sunset_times` function from the astronomical tools module
+to ensure it correctly fetches and processes sun times data from the HKO API.
+"""
+
 import unittest
 from unittest.mock import patch, MagicMock
 from hkopenai.hk_climate_mcp_server.tools.astronomical import get_sunrise_sunset_times
 
 
 class TestSunTimesTools(unittest.TestCase):
+    """Test case class for sun times data tools."""
     @patch("requests.get")
     def test_get_sunrise_sunset_times(self, mock_get):
+        """
+        Test the retrieval of sunrise and sunset times data from HKO API.
+        
+        Args:
+            mock_get: Mock object for requests.get to simulate API response.
+        """
         example_json = {
             "fields": ["Date", "Sunrise", "Sun Transit", "Sunset"],
             "data": [

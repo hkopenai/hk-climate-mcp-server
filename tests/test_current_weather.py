@@ -98,6 +98,12 @@ class TestCurrentWeatherTools(unittest.TestCase):
 
     @patch("requests.get")
     def test_get_current_weather(self, mock_get):
+        """
+        Test the retrieval of current weather data from HKO API.
+        
+        Args:
+            mock_get: Mock object for requests.get to simulate API response.
+        """
         # Setup mock response
         mock_response = MagicMock()
         mock_response.json.return_value = self.default_mock_response
@@ -136,6 +142,12 @@ class TestCurrentWeatherTools(unittest.TestCase):
 
     @patch("requests.get")
     def test_get_current_weather_with_region(self, mock_get):
+        """
+        Test the retrieval of current weather data for a specific region from HKO API.
+        
+        Args:
+            mock_get: Mock object for requests.get to simulate API response.
+        """
         # Setup mock response
         mock_response = MagicMock()
         mock_response.json.return_value = self.default_mock_response
