@@ -7,6 +7,7 @@ This module provides tools to retrieve visibility data from the Hong Kong Observ
 from typing import Dict, Any
 import requests
 
+
 def get_visibility(lang: str = "en") -> Dict[str, Any]:
     """
     Get latest 10-minute mean visibility data for Hong Kong.

@@ -8,14 +8,21 @@ import unittest
 from unittest.mock import patch, MagicMock
 from hkopenai.hk_climate_mcp_server.tools.current_weather import get_current_weather
 
+
 class TestCurrentWeatherTools(unittest.TestCase):
     """
     Test case class for testing current weather data fetching tools and functions.
     """
+
     default_mock_response = {
         "rainfall": {
             "data": [
-                {"unit": "mm", "place": "Central & Western District", "max": 0, "main": "FALSE"},
+                {
+                    "unit": "mm",
+                    "place": "Central & Western District",
+                    "max": 0,
+                    "main": "FALSE",
+                },
                 {"unit": "mm", "place": "Eastern District", "max": 0, "main": "FALSE"},
                 {"unit": "mm", "place": "Kwai Tsing", "max": 0, "main": "FALSE"},
                 {"unit": "mm", "place": "Islands District", "max": 0, "main": "FALSE"},
@@ -98,16 +105,31 @@ class TestCurrentWeatherTools(unittest.TestCase):
 
         # Test
         result = get_current_weather(lang="en")
-        self.assertEqual(result['weatherObservation']['temperature']['value'], 29)
-        self.assertEqual(result['weatherObservation']['temperature']['unit'], "C")
-        self.assertEqual(result['weatherObservation']['temperature']['recordTime'], "2025-06-07T22:00:00+08:00")
-        self.assertEqual(result['weatherObservation']['humidity']['value'], 79)
-        self.assertEqual(result['weatherObservation']['humidity']['unit'], "percent")
-        self.assertEqual(result['weatherObservation']['humidity']['recordTime'], "2025-06-07T22:00:00+08:00")
-        self.assertEqual(result['weatherObservation']['rainfall']['value'], 0)
-        self.assertEqual(result['weatherObservation']['rainfall']['startTime'], "2025-06-07T20:45:00+08:00")
-        self.assertEqual(result['weatherObservation']['rainfall']['endTime'], "2025-06-07T21:45:00+08:00")
-        self.assertEqual(result['generalSituation'], 'The Very Hot weather Warning is now in force. Prolonged heat alert! Please drink sufficient water. If feeling unwell, take rest or seek help immediately. If needed, seek medical advice as soon as possible.')
+        self.assertEqual(result["weatherObservation"]["temperature"]["value"], 29)
+        self.assertEqual(result["weatherObservation"]["temperature"]["unit"], "C")
+        self.assertEqual(
+            result["weatherObservation"]["temperature"]["recordTime"],
+            "2025-06-07T22:00:00+08:00",
+        )
+        self.assertEqual(result["weatherObservation"]["humidity"]["value"], 79)
+        self.assertEqual(result["weatherObservation"]["humidity"]["unit"], "percent")
+        self.assertEqual(
+            result["weatherObservation"]["humidity"]["recordTime"],
+            "2025-06-07T22:00:00+08:00",
+        )
+        self.assertEqual(result["weatherObservation"]["rainfall"]["value"], 0)
+        self.assertEqual(
+            result["weatherObservation"]["rainfall"]["startTime"],
+            "2025-06-07T20:45:00+08:00",
+        )
+        self.assertEqual(
+            result["weatherObservation"]["rainfall"]["endTime"],
+            "2025-06-07T21:45:00+08:00",
+        )
+        self.assertEqual(
+            result["generalSituation"],
+            "The Very Hot weather Warning is now in force. Prolonged heat alert! Please drink sufficient water. If feeling unwell, take rest or seek help immediately. If needed, seek medical advice as soon as possible.",
+        )
         mock_get.assert_called_once_with(
             "https://data.weather.gov.hk/weatherAPI/opendata/weather.php?dataType=rhrread&lang=en"
         )
@@ -121,19 +143,35 @@ class TestCurrentWeatherTools(unittest.TestCase):
 
         # Test
         result = get_current_weather("Cheung Chau", lang="en")
-        self.assertEqual(result['weatherObservation']['temperature']['value'], 27)
-        self.assertEqual(result['weatherObservation']['temperature']['unit'], "C")
-        self.assertEqual(result['weatherObservation']['temperature']['recordTime'], "2025-06-07T22:00:00+08:00")
-        self.assertEqual(result['weatherObservation']['humidity']['value'], 79)
-        self.assertEqual(result['weatherObservation']['humidity']['unit'], "percent")
-        self.assertEqual(result['weatherObservation']['humidity']['recordTime'], "2025-06-07T22:00:00+08:00")
-        self.assertEqual(result['weatherObservation']['rainfall']['value'], 0)
-        self.assertEqual(result['weatherObservation']['rainfall']['startTime'], "2025-06-07T20:45:00+08:00")
-        self.assertEqual(result['weatherObservation']['rainfall']['endTime'], "2025-06-07T21:45:00+08:00")
-        self.assertEqual(result['generalSituation'], 'The Very Hot weather Warning is now in force. Prolonged heat alert! Please drink sufficient water. If feeling unwell, take rest or seek help immediately. If needed, seek medical advice as soon as possible.')
+        self.assertEqual(result["weatherObservation"]["temperature"]["value"], 27)
+        self.assertEqual(result["weatherObservation"]["temperature"]["unit"], "C")
+        self.assertEqual(
+            result["weatherObservation"]["temperature"]["recordTime"],
+            "2025-06-07T22:00:00+08:00",
+        )
+        self.assertEqual(result["weatherObservation"]["humidity"]["value"], 79)
+        self.assertEqual(result["weatherObservation"]["humidity"]["unit"], "percent")
+        self.assertEqual(
+            result["weatherObservation"]["humidity"]["recordTime"],
+            "2025-06-07T22:00:00+08:00",
+        )
+        self.assertEqual(result["weatherObservation"]["rainfall"]["value"], 0)
+        self.assertEqual(
+            result["weatherObservation"]["rainfall"]["startTime"],
+            "2025-06-07T20:45:00+08:00",
+        )
+        self.assertEqual(
+            result["weatherObservation"]["rainfall"]["endTime"],
+            "2025-06-07T21:45:00+08:00",
+        )
+        self.assertEqual(
+            result["generalSituation"],
+            "The Very Hot weather Warning is now in force. Prolonged heat alert! Please drink sufficient water. If feeling unwell, take rest or seek help immediately. If needed, seek medical advice as soon as possible.",
+        )
         mock_get.assert_called_once_with(
             "https://data.weather.gov.hk/weatherAPI/opendata/weather.php?dataType=rhrread&lang=en"
         )
+
 
 if __name__ == "__main__":
     unittest.main()

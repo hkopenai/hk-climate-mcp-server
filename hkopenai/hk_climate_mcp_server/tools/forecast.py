@@ -8,6 +8,7 @@ This module provides tools to retrieve weather forecast information including
 from typing import Dict, Any
 import requests
 
+
 def get_9_day_weather_forecast(lang: str = "en") -> Dict[str, Any]:
     """
     Get the 9-day weather forecast for Hong Kong.
@@ -44,19 +45,22 @@ def get_9_day_weather_forecast(lang: str = "en") -> Dict[str, Any]:
 
     # Extract 9-day forecast
     for day in data.get("weatherForecast", []):
-        forecast["weatherForecast"].append({
-            "forecastDate": day.get("forecastDate", ""),
-            "week": day.get("week", ""),
-            "forecastWind": day.get("forecastWind", ""),
-            "forecastWeather": day.get("forecastWeather", ""),
-            "forecastMaxtemp": day.get("forecastMaxtemp", {}),
-            "forecastMintemp": day.get("forecastMintemp", {}),
-            "forecastMaxrh": day.get("forecastMaxrh", {}),
-            "forecastMinrh": day.get("forecastMinrh", {}),
-            "ForecastIcon": day.get("ForecastIcon", ""),
-            "PSR": day.get("PSR", ""),
-        })
+        forecast["weatherForecast"].append(
+            {
+                "forecastDate": day.get("forecastDate", ""),
+                "week": day.get("week", ""),
+                "forecastWind": day.get("forecastWind", ""),
+                "forecastWeather": day.get("forecastWeather", ""),
+                "forecastMaxtemp": day.get("forecastMaxtemp", {}),
+                "forecastMintemp": day.get("forecastMintemp", {}),
+                "forecastMaxrh": day.get("forecastMaxrh", {}),
+                "forecastMinrh": day.get("forecastMinrh", {}),
+                "ForecastIcon": day.get("ForecastIcon", ""),
+                "PSR": day.get("PSR", ""),
+            }
+        )
     return forecast
+
 
 def get_local_weather_forecast(lang: str = "en") -> Dict[str, Any]:
     """

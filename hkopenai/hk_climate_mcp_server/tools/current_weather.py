@@ -8,7 +8,10 @@ humidity, rainfall, and weather warnings from the Hong Kong Observatory API.
 from typing import Dict
 import requests
 
-def get_current_weather(region: str = "Hong Kong Observatory", lang: str = "en") -> Dict:
+
+def get_current_weather(
+    region: str = "Hong Kong Observatory", lang: str = "en"
+) -> Dict:
     """
     Get current weather observations for a specific region in Hong Kong
 
@@ -87,28 +90,28 @@ def get_current_weather(region: str = "Hong Kong Observatory", lang: str = "en")
     return {
         "generalSituation": warning,
         "weatherObservation": {
-        "temperature": {
-            "value": matched_temp["value"],
-            "unit": matched_temp["unit"],
-            "recordTime": matched_temp["recordTime"],
-            "place": matched_temp["place"],
-        },
-        "humidity": {
-            "value": humidity["value"],
-            "unit": humidity["unit"],
-            "recordTime": humidity["recordTime"],
-            "place": matched_temp["place"],
-        },
-        "rainfall": {
-            "value": rainfall,
-            "min": min(float(r.get("min", 0)) for r in data["rainfall"]["data"]),
-            "unit": "mm",
-            "startTime": rainfall_start,
-            "endTime": rainfall_end,
-        },
-            "uvindex": data.get("uvindex", {})
+            "temperature": {
+                "value": matched_temp["value"],
+                "unit": matched_temp["unit"],
+                "recordTime": matched_temp["recordTime"],
+                "place": matched_temp["place"],
+            },
+            "humidity": {
+                "value": humidity["value"],
+                "unit": humidity["unit"],
+                "recordTime": humidity["recordTime"],
+                "place": matched_temp["place"],
+            },
+            "rainfall": {
+                "value": rainfall,
+                "min": min(float(r.get("min", 0)) for r in data["rainfall"]["data"]),
+                "unit": "mm",
+                "startTime": rainfall_start,
+                "endTime": rainfall_end,
+            },
+            "uvindex": data.get("uvindex", {}),
         },
         "updateTime": data["updateTime"],
         "icon": data.get("icon", []),
-        "iconUpdateTime": data.get("iconUpdateTime", "")
+        "iconUpdateTime": data.get("iconUpdateTime", ""),
     }

@@ -2,6 +2,7 @@ import unittest
 from unittest.mock import patch, MagicMock
 from hkopenai.hk_climate_mcp_server.tools.astronomical import get_sunrise_sunset_times
 
+
 class TestSunTimesTools(unittest.TestCase):
     @patch("requests.get")
     def test_get_sunrise_sunset_times(self, mock_get):
@@ -9,8 +10,8 @@ class TestSunTimesTools(unittest.TestCase):
             "fields": ["Date", "Sunrise", "Sun Transit", "Sunset"],
             "data": [
                 ["20250601", "05:40", "12:15", "18:50"],
-                ["20250602", "05:40", "12:15", "18:51"]
-            ]
+                ["20250602", "05:40", "12:15", "18:51"],
+            ],
         }
         mock_response = MagicMock()
         mock_response.json.return_value = example_json
@@ -20,9 +21,10 @@ class TestSunTimesTools(unittest.TestCase):
         self.assertEqual(result["fields"], example_json["fields"])
         self.assertEqual(result["data"], example_json["data"])
         mock_get.assert_called_once_with(
-            'https://data.weather.gov.hk/weatherAPI/opendata/opendata.php',
-            params={'dataType': 'SRS', 'lang': 'en', 'rformat': 'json', 'year': 2025}
+            "https://data.weather.gov.hk/weatherAPI/opendata/opendata.php",
+            params={"dataType": "SRS", "lang": "en", "rformat": "json", "year": 2025},
         )
+
 
 if __name__ == "__main__":
     unittest.main()

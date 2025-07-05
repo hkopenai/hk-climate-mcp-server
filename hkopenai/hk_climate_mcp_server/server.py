@@ -20,6 +20,7 @@ from hkopenai.hk_climate_mcp_server.tools import tides
 from hkopenai.hk_climate_mcp_server.tools import visibility
 from hkopenai.hk_climate_mcp_server.tools import warnings
 
+
 def create_mcp_server():
     """Create and configure the HKO MCP server"""
     mcp = FastMCP(name="HKOServer")
@@ -79,22 +80,15 @@ def create_mcp_server():
         year: int,
         month: Optional[int] = None,
         day: Optional[int] = None,
-        lang: str = "en"
+        lang: str = "en",
     ) -> Dict:
-        return astronomical.get_moon_times(
-            year=year,
-            month=month,
-            day=day,
-            lang=lang
-        )
+        return astronomical.get_moon_times(year=year, month=month, day=day, lang=lang)
 
     @mcp.tool(
         description="Get hourly heights of astronomical tides for a station in HK.",
     )
     def get_hourly_tides(
-        station: str,
-        year: int,
-        options: Optional[Dict] = None
+        station: str, year: int, options: Optional[Dict] = None
     ) -> Dict:
         params = {
             "station": station,
@@ -102,7 +96,7 @@ def create_mcp_server():
             "month": None,
             "day": None,
             "hour": None,
-            "lang": "en"
+            "lang": "en",
         }
         if options:
             params.update(options)
@@ -112,9 +106,7 @@ def create_mcp_server():
         description="Get times, heights of astronomical high/low tides for a station in HK.",
     )
     def get_high_low_tides(
-        station: str,
-        year: int,
-        options: Optional[Dict] = None
+        station: str, year: int, options: Optional[Dict] = None
     ) -> Dict:
         params = {
             "station": station,
@@ -122,7 +114,7 @@ def create_mcp_server():
             "month": None,
             "day": None,
             "hour": None,
-            "lang": "en"
+            "lang": "en",
         }
         if options:
             params.update(options)
@@ -141,13 +133,10 @@ def create_mcp_server():
         year: int,
         month: Optional[int] = None,
         day: Optional[int] = None,
-        lang: str = "en"
+        lang: str = "en",
     ) -> Dict:
         return astronomical.get_sunrise_sunset_times(
-            year=year,
-            month=month,
-            day=day,
-            lang=lang
+            year=year, month=month, day=day, lang=lang
         )
 
     @mcp.tool(
@@ -157,13 +146,10 @@ def create_mcp_server():
         year: int,
         month: Optional[int] = None,
         day: Optional[int] = None,
-        lang: str = "en"
+        lang: str = "en",
     ) -> Dict:
         return astronomical.get_gregorian_lunar_calendar(
-            year=year,
-            month=month,
-            day=day,
-            lang=lang
+            year=year, month=month, day=day, lang=lang
         )
 
     @mcp.tool(
@@ -173,13 +159,10 @@ def create_mcp_server():
         station: str,
         year: Optional[int] = None,
         month: Optional[int] = None,
-        lang: str = "en"
+        lang: str = "en",
     ) -> Dict:
         return temperature.get_daily_mean_temperature(
-            station=station,
-            year=year,
-            month=month,
-            lang=lang
+            station=station, year=year, month=month, lang=lang
         )
 
     @mcp.tool(
@@ -189,13 +172,10 @@ def create_mcp_server():
         station: str,
         year: Optional[int] = None,
         month: Optional[int] = None,
-        lang: str = "en"
+        lang: str = "en",
     ) -> Dict:
         return temperature.get_daily_max_temperature(
-            station=station,
-            year=year,
-            month=month,
-            lang=lang
+            station=station, year=year, month=month, lang=lang
         )
 
     @mcp.tool(
@@ -205,27 +185,24 @@ def create_mcp_server():
         station: str,
         year: Optional[int] = None,
         month: Optional[int] = None,
-        lang: str = "en"
+        lang: str = "en",
     ) -> Dict:
         return temperature.get_daily_min_temperature(
-            station=station,
-            year=year,
-            month=month,
-            lang=lang
+            station=station, year=year, month=month, lang=lang
         )
 
     @mcp.tool(
         description="Get weather, radiation report for HK. Date must be YYYYMMDD.",
     )
     def get_weather_radiation_report(
-        date: Annotated[str, Field(description="Date in yyyyMMdd format, e.g., 20250618")],
+        date: Annotated[
+            str, Field(description="Date in yyyyMMdd format, e.g., 20250618")
+        ],
         station: Annotated[str, Field(description="Station code, e.g., HKO")],
-        lang: Annotated[Optional[str], Field(description="Language (en/tc/sc)")] = 'en',
+        lang: Annotated[Optional[str], Field(description="Language (en/tc/sc)")] = "en",
     ) -> Dict:
         return radiation.get_weather_radiation_report(
-            date=date,
-            station=station,
-            lang=lang or 'en'
+            date=date, station=station, lang=lang or "en"
         )
 
     @mcp.tool(
@@ -233,20 +210,28 @@ def create_mcp_server():
     )
     def get_radiation_station_codes(lang: str = "en") -> Dict:
         return radiation.get_radiation_station_codes(lang)
+
     return mcp
+
 
 def main(args):
     """
     Main function to run the HKO MCP Server.
-    
+
     Args:
         args: Command line arguments passed to the function.
     """
-    parser = argparse.ArgumentParser(description='HKO MCP Server')
-    parser.add_argument('-s', '--sse', action='store_true',
-                       help='Run in SSE mode instead of stdio')
-    parser.add_argument('-p', '--port', type=int, default=8000,
-                       help='Port to run the server on (default: 8000)')
+    parser = argparse.ArgumentParser(description="HKO MCP Server")
+    parser.add_argument(
+        "-s", "--sse", action="store_true", help="Run in SSE mode instead of stdio"
+    )
+    parser.add_argument(
+        "-p",
+        "--port",
+        type=int,
+        default=8000,
+        help="Port to run the server on (default: 8000)",
+    )
     args = parser.parse_args()
 
     print(f"[DEBUG] Parsed arguments: {args}")

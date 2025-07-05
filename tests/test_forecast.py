@@ -1,6 +1,10 @@
 import unittest
 from unittest.mock import patch, MagicMock
-from hkopenai.hk_climate_mcp_server.tools.forecast import get_9_day_weather_forecast, get_local_weather_forecast
+from hkopenai.hk_climate_mcp_server.tools.forecast import (
+    get_9_day_weather_forecast,
+    get_local_weather_forecast,
+)
+
 
 class TestForecastTools(unittest.TestCase):
     @patch("requests.get")
@@ -18,7 +22,7 @@ class TestForecastTools(unittest.TestCase):
                     "forecastMaxrh": {"value": 95, "unit": "percent"},
                     "forecastMinrh": {"value": 70, "unit": "percent"},
                     "ForecastIcon": 54,
-                    "PSR": "Medium"
+                    "PSR": "Medium",
                 }
             ],
             "updateTime": "2025-06-20T07:50:00+08:00",
@@ -26,7 +30,7 @@ class TestForecastTools(unittest.TestCase):
                 "place": "North Point",
                 "value": 28,
                 "unit": "C",
-                "recordTime": "2025-06-20T07:00:00+08:00"
+                "recordTime": "2025-06-20T07:00:00+08:00",
             },
             "soilTemp": [
                 {
@@ -34,9 +38,9 @@ class TestForecastTools(unittest.TestCase):
                     "value": 29.2,
                     "unit": "C",
                     "recordTime": "2025-06-20T07:00:00+08:00",
-                    "depth": {"unit": "metre", "value": 0.5}
+                    "depth": {"unit": "metre", "value": 0.5},
                 }
-            ]
+            ],
         }
         mock_response = MagicMock()
         mock_response.json.return_value = example_json
@@ -50,8 +54,13 @@ class TestForecastTools(unittest.TestCase):
         self.assertIsInstance(result["weatherForecast"], list)
         self.assertEqual(result["weatherForecast"][0]["forecastDate"], "20250620")
         self.assertEqual(result["weatherForecast"][0]["week"], "Friday")
-        self.assertEqual(result["weatherForecast"][0]["forecastWind"], "South force 3 to 4.")
-        self.assertEqual(result["weatherForecast"][0]["forecastWeather"], "Mainly cloudy with occasional showers.")
+        self.assertEqual(
+            result["weatherForecast"][0]["forecastWind"], "South force 3 to 4."
+        )
+        self.assertEqual(
+            result["weatherForecast"][0]["forecastWeather"],
+            "Mainly cloudy with occasional showers.",
+        )
 
     @patch("requests.get")
     def test_get_local_weather_forecast(self, mock_get):
@@ -60,7 +69,7 @@ class TestForecastTools(unittest.TestCase):
             "forecastPeriod": "Weather forecast for today",
             "forecastDesc": "Mainly cloudy with a few showers. More showers with isolated thunderstorms at first. Hot with sunny periods during the day with a maximum temperature of around 32 degrees. Moderate southerly winds.",
             "outlook": "Mainly fine and very hot in the next couple of days. Showers will increase gradually in the middle and latter parts of next week.",
-            "updateTime": "2025-06-21T07:45:00+08:00"
+            "updateTime": "2025-06-21T07:45:00+08:00",
         }
         mock_response = MagicMock()
         mock_response.json.return_value = example_json
@@ -75,6 +84,7 @@ class TestForecastTools(unittest.TestCase):
         mock_get.assert_called_once_with(
             "https://data.weather.gov.hk/weatherAPI/opendata/weather.php?dataType=flw&lang=en"
         )
+
 
 if __name__ == "__main__":
     unittest.main()

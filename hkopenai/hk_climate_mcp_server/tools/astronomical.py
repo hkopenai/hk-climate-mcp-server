@@ -10,8 +10,10 @@ import datetime
 from typing import Dict, Any, Optional
 import requests
 
-def get_moon_times(year: int, month: Optional[int] = None,
-                  day: Optional[int] = None, lang: str = "en") -> Dict[str, Any]:
+
+def get_moon_times(
+    year: int, month: Optional[int] = None, day: Optional[int] = None, lang: str = "en"
+) -> Dict[str, Any]:
     """
     Get times of moonrise, moon transit and moonset.
 
@@ -24,18 +26,14 @@ def get_moon_times(year: int, month: Optional[int] = None,
     Returns:
         Dict containing moon times data with fields and data arrays
     """
-    params = {
-        'dataType': 'MRS',
-        'lang': lang,
-        'rformat': 'json',
-        'year': year
-    }
-    if month: params['month'] = str(month)
-    if day: params['day'] = str(day)
+    params = {"dataType": "MRS", "lang": lang, "rformat": "json", "year": year}
+    if month:
+        params["month"] = str(month)
+    if day:
+        params["day"] = str(day)
 
     response = requests.get(
-        'https://data.weather.gov.hk/weatherAPI/opendata/opendata.php',
-        params=params
+        "https://data.weather.gov.hk/weatherAPI/opendata/opendata.php", params=params
     )
     try:
         response.raise_for_status()
@@ -43,11 +41,9 @@ def get_moon_times(year: int, month: Optional[int] = None,
     except (requests.RequestException, ValueError) as e:
         return {"error": f"Failed to fetch data: {str(e)}."}
 
+
 def get_sunrise_sunset_times(
-    year: int,
-    month: Optional[int] = None,
-    day: Optional[int] = None,
-    lang: str = "en"
+    year: int, month: Optional[int] = None, day: Optional[int] = None, lang: str = "en"
 ) -> Dict[str, Any]:
     """
     Get times of sunrise, sun transit and sunset.
@@ -61,18 +57,14 @@ def get_sunrise_sunset_times(
     Returns:
         Dict containing sun times data with fields and data arrays
     """
-    params = {
-        'dataType': 'SRS',
-        'lang': lang,
-        'rformat': 'json',
-        'year': year
-    }
-    if month: params['month'] = str(month)
-    if day: params['day'] = str(day)
+    params = {"dataType": "SRS", "lang": lang, "rformat": "json", "year": year}
+    if month:
+        params["month"] = str(month)
+    if day:
+        params["day"] = str(day)
 
     response = requests.get(
-        'https://data.weather.gov.hk/weatherAPI/opendata/opendata.php',
-        params=params
+        "https://data.weather.gov.hk/weatherAPI/opendata/opendata.php", params=params
     )
     try:
         response.raise_for_status()
@@ -80,11 +72,9 @@ def get_sunrise_sunset_times(
     except (requests.RequestException, ValueError) as e:
         return {"error": f"Failed to fetch data: {str(e)}."}
 
+
 def get_gregorian_lunar_calendar(
-    year: int,
-    month: Optional[int] = None,
-    day: Optional[int] = None,
-    lang: str = "en"
+    year: int, month: Optional[int] = None, day: Optional[int] = None, lang: str = "en"
 ) -> Dict[str, Any]:
     """
     Get Gregorian-Lunar calendar conversion data.
@@ -109,13 +99,11 @@ def get_gregorian_lunar_calendar(
             # If only year is provided, use the first day of January
             date_str = f"{year:04d}-01-01"
 
-        params = {
-            'date': date_str
-        }
+        params = {"date": date_str}
 
         response = requests.get(
-            'https://data.weather.gov.hk/weatherAPI/opendata/lunardate.php',
-            params=params
+            "https://data.weather.gov.hk/weatherAPI/opendata/lunardate.php",
+            params=params,
         )
         response.raise_for_status()
         return response.json()

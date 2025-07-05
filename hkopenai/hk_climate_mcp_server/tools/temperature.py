@@ -8,11 +8,12 @@ This module provides tools to retrieve temperature data including daily mean,
 maximum, and minimum temperatures from the Hong Kong Observatory API.
 """
 
+
 def get_daily_mean_temperature(
     station: str,
     year: Optional[int] = None,
     month: Optional[int] = None,
-    lang: str = "en"
+    lang: str = "en",
 ) -> Dict[str, Any]:
     """
     Get daily mean temperature data for a specific station.
@@ -27,17 +28,18 @@ def get_daily_mean_temperature(
         Dict containing temperature data with fields and data arrays
     """
     params = {
-        'dataType': 'CLMTEMP',
-        'lang': lang,
-        'rformat': 'json',
-        'station': station
+        "dataType": "CLMTEMP",
+        "lang": lang,
+        "rformat": "json",
+        "station": station,
     }
-    if year: params['year'] = str(year)
-    if month: params['month'] = str(month)
+    if year:
+        params["year"] = str(year)
+    if month:
+        params["month"] = str(month)
 
     response = requests.get(
-        'https://data.weather.gov.hk/weatherAPI/opendata/opendata.php',
-        params=params
+        "https://data.weather.gov.hk/weatherAPI/opendata/opendata.php", params=params
     )
     try:
         response.raise_for_status()
@@ -53,11 +55,12 @@ def get_daily_mean_temperature(
     except requests.RequestException as e:
         return {"error": f"Failed to fetch data: {str(e)}."}
 
+
 def get_daily_max_temperature(
     station: str,
     year: Optional[int] = None,
     month: Optional[int] = None,
-    lang: str = "en"
+    lang: str = "en",
 ) -> Dict[str, Any]:
     """
     Get daily maximum temperature data for a specific station.
@@ -72,17 +75,18 @@ def get_daily_max_temperature(
         Dict containing temperature data with fields and data arrays
     """
     params = {
-        'dataType': 'CLMMAXT',
-        'lang': lang,
-        'rformat': 'json',
-        'station': station
+        "dataType": "CLMMAXT",
+        "lang": lang,
+        "rformat": "json",
+        "station": station,
     }
-    if year: params['year'] = str(year)
-    if month: params['month'] = str(month)
+    if year:
+        params["year"] = str(year)
+    if month:
+        params["month"] = str(month)
 
     response = requests.get(
-        'https://data.weather.gov.hk/weatherAPI/opendata/opendata.php',
-        params=params
+        "https://data.weather.gov.hk/weatherAPI/opendata/opendata.php", params=params
     )
     try:
         response.raise_for_status()
@@ -98,11 +102,12 @@ def get_daily_max_temperature(
     except requests.RequestException as e:
         return {"error": f"Failed to fetch data: {str(e)}."}
 
+
 def get_daily_min_temperature(
     station: str,
     year: Optional[int] = None,
     month: Optional[int] = None,
-    lang: str = "en"
+    lang: str = "en",
 ) -> Dict[str, Any]:
     """
     Get daily minimum temperature data for a specific station.
@@ -117,17 +122,18 @@ def get_daily_min_temperature(
         Dict containing temperature data with fields and data arrays
     """
     params = {
-        'dataType': 'CLMMINT',
-        'lang': lang,
-        'rformat': 'json',
-        'station': station
+        "dataType": "CLMMINT",
+        "lang": lang,
+        "rformat": "json",
+        "station": station,
     }
-    if year: params['year'] = str(year)
-    if month: params['month'] = str(month)
+    if year:
+        params["year"] = str(year)
+    if month:
+        params["month"] = str(month)
 
     response = requests.get(
-        'https://data.weather.gov.hk/weatherAPI/opendata/opendata.php',
-        params=params
+        "https://data.weather.gov.hk/weatherAPI/opendata/opendata.php", params=params
     )
     try:
         response.raise_for_status()

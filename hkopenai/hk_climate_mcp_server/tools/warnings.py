@@ -8,6 +8,7 @@ the Hong Kong Observatory API.
 from typing import Dict, Any
 import requests
 
+
 def get_weather_warning_summary(lang: str = "en") -> Dict[str, Any]:
     """
     Get weather warning summary for Hong Kong.
@@ -27,11 +28,12 @@ def get_weather_warning_summary(lang: str = "en") -> Dict[str, Any]:
         data = response.json()
     except (requests.RequestException, ValueError) as e:
         return {"error": f"Failed to fetch data: {str(e)}."}
-    
+
     return {
         "warningMessage": data.get("warningMessage", []),
         "updateTime": data.get("updateTime", ""),
     }
+
 
 def get_weather_warning_info(lang: str = "en") -> Dict[str, Any]:
     """
@@ -52,11 +54,12 @@ def get_weather_warning_info(lang: str = "en") -> Dict[str, Any]:
         data = response.json()
     except (requests.RequestException, ValueError) as e:
         return {"error": f"Failed to fetch data: {str(e)}."}
-    
+
     return {
         "warningStatement": data.get("warningStatement", ""),
         "updateTime": data.get("updateTime", ""),
     }
+
 
 def get_special_weather_tips(lang: str = "en") -> Dict[str, Any]:
     """
@@ -77,7 +80,7 @@ def get_special_weather_tips(lang: str = "en") -> Dict[str, Any]:
         data = response.json()
     except (requests.RequestException, ValueError) as e:
         return {"error": f"Failed to fetch data: {str(e)}."}
-    
+
     return {
         "specialWeatherTips": data.get("specialWeatherTips", []),
         "updateTime": data.get("updateTime", ""),

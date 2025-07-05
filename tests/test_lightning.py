@@ -2,15 +2,13 @@ import unittest
 from unittest.mock import patch, MagicMock
 from hkopenai.hk_climate_mcp_server.tools.lightning import get_lightning_data
 
+
 class TestLightningTools(unittest.TestCase):
     @patch("requests.get")
     def test_get_lightning_data(self, mock_get):
         example_json = {
             "fields": ["Date time", "Cloud-to-ground count", "Cloud-to-cloud count"],
-            "data": [
-                ["202506231300", "5", "10"],
-                ["202506231310", "3", "8"]
-            ]
+            "data": [["202506231300", "5", "10"], ["202506231310", "3", "8"]],
         }
         mock_response = MagicMock()
         mock_response.json.return_value = example_json
@@ -22,6 +20,7 @@ class TestLightningTools(unittest.TestCase):
         mock_get.assert_called_once_with(
             "https://data.weather.gov.hk/weatherAPI/opendata/opendata.php?dataType=LHL&lang=en&rformat=json"
         )
+
 
 if __name__ == "__main__":
     unittest.main()

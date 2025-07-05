@@ -8,6 +8,7 @@ and cloud-to-cloud lightning counts from the Hong Kong Observatory API.
 from typing import Dict, Any
 import requests
 
+
 def get_lightning_data(lang: str = "en") -> Dict[str, Any]:
     """
     Get cloud-to-ground and cloud-to-cloud lightning count data.
