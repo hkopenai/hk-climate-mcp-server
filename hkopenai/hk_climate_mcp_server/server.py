@@ -1,7 +1,15 @@
+"""
+HKO MCP Server - A server for handling weather data requests using the Model Context Protocol (MCP).
+
+This module provides a server implementation for accessing various weather data tools
+from the Hong Kong Observatory through the MCP protocol. It supports both HTTP and stdio
+transports for communication.
+"""
+
 import argparse
-from fastmcp import FastMCP
 from typing import Dict, Annotated, Optional
 from pydantic import Field
+from fastmcp import FastMCP
 from hkopenai.hk_climate_mcp_server.tools import astronomical
 from hkopenai.hk_climate_mcp_server.tools import current_weather
 from hkopenai.hk_climate_mcp_server.tools import forecast
@@ -17,37 +25,37 @@ def create_mcp_server():
     mcp = FastMCP(name="HKOServer")
 
     @mcp.tool(
-        description="Get current weather observations, warnings, temperature, humidity and rainfall in Hong Kong from Hong Kong Observatory, with optional region or place in Hong Kong",
+        description="Get current weather data, warnings, temp, humidity in HK from HKO.",
     )
     def get_current_weather(region: str = "Hong Kong Observatory") -> Dict:
         return current_weather.get_current_weather(region)
 
     @mcp.tool(
-        description="Get the 9-day weather forecast for Hong Kong including general situation, daily forecasts, sea and soil temperatures",
+        description="Get 9-day weather forecast for HK with general situation, daily data.",
     )
     def get_9_day_weather_forecast(lang: str = "en") -> Dict:
         return forecast.get_9_day_weather_forecast(lang)
 
     @mcp.tool(
-        description="Get local weather forecast for Hong Kong including forecast description, outlook and update time",
+        description="Get local weather forecast for HK with description, outlook, update.",
     )
     def get_local_weather_forecast(lang: str = "en") -> Dict:
         return forecast.get_local_weather_forecast(lang)
 
     @mcp.tool(
-        description="Get weather warning summary for Hong Kong including warning messages and update time",
+        description="Get weather warning summary for HK with messages and update.",
     )
     def get_weather_warning_summary(lang: str = "en") -> Dict:
         return warnings.get_weather_warning_summary(lang)
 
     @mcp.tool(
-        description="Get detailed weather warning information for Hong Kong including warning statement and update time",
+        description="Get detailed weather warning info for HK with statement and update.",
     )
     def get_weather_warning_info(lang: str = "en") -> Dict:
         return warnings.get_weather_warning_info(lang)
 
     @mcp.tool(
-        description="Get special weather tips for Hong Kong including tips list and update time",
+        description="Get special weather tips for Hong Kong including tips list and update.",
     )
     def get_special_weather_tips(lang: str = "en") -> Dict:
         return warnings.get_special_weather_tips(lang)
@@ -81,47 +89,47 @@ def create_mcp_server():
         )
 
     @mcp.tool(
-        description="Get hourly heights of astronomical tides for a specific station in Hong Kong",
+        description="Get hourly heights of astronomical tides for a station in HK.",
     )
     def get_hourly_tides(
         station: str,
         year: int,
-        month: Optional[int] = None,
-        day: Optional[int] = None,
-        hour: Optional[int] = None,
-        lang: str = "en"
+        options: Optional[Dict] = None
     ) -> Dict:
-        return tides.get_hourly_tides(
-            station=station,
-            year=year,
-            month=month,
-            day=day,
-            hour=hour,
-            lang=lang
-        )
+        params = {
+            "station": station,
+            "year": year,
+            "month": None,
+            "day": None,
+            "hour": None,
+            "lang": "en"
+        }
+        if options:
+            params.update(options)
+        return tides.get_hourly_tides(**params)
 
     @mcp.tool(
-        description="Get times and heights of astronomical high and low tides for a specific station in Hong Kong",
+        description="Get times, heights of astronomical high/low tides for a station in HK.",
     )
     def get_high_low_tides(
         station: str,
         year: int,
-        month: Optional[int] = None,
-        day: Optional[int] = None,
-        hour: Optional[int] = None,
-        lang: str = "en"
+        options: Optional[Dict] = None
     ) -> Dict:
-        return tides.get_high_low_tides(
-            station=station,
-            year=year,
-            month=month,
-            day=day,
-            hour=hour,
-            lang=lang
-        )
+        params = {
+            "station": station,
+            "year": year,
+            "month": None,
+            "day": None,
+            "hour": None,
+            "lang": "en"
+        }
+        if options:
+            params.update(options)
+        return tides.get_high_low_tides(**params)
 
     @mcp.tool(
-        description="Get a list of tide station codes and their corresponding names for tide reports in Hong Kong.",
+        description="Get list of tide station codes and names for tide reports in HK.",
     )
     def get_tide_station_codes(lang: str = "en") -> Dict:
         return tides.get_tide_station_codes(lang)
@@ -207,12 +215,12 @@ def create_mcp_server():
         )
 
     @mcp.tool(
-        description="Get weather and radiation level report for Hong Kong. Date must be in YYYYMMDD format and should be yesterday or before. Station must be a valid code like 'HKO' for Hong Kong Observatory.",
+        description="Get weather, radiation report for HK. Date must be YYYYMMDD.",
     )
     def get_weather_radiation_report(
-        date: Annotated[str, Field(description="Date in yyyyMMdd format, eg, 20250618")],
-        station: Annotated[str, Field(description="Station code in 3 characters in capital letters, eg, HKO")],
-        lang: Annotated[Optional[str], Field(description="Language (en/tc/sc)", json_schema_extra={"enum": ["en", "tc", "sc"]})] = 'en',
+        date: Annotated[str, Field(description="Date in yyyyMMdd format, e.g., 20250618")],
+        station: Annotated[str, Field(description="Station code in 3 caps letters, e.g., HKO")],
+        lang: Annotated[Optional[str], Field(description="Language (en/tc/sc)")] = 'en',
     ) -> Dict:
         return radiation.get_weather_radiation_report(
             date=date,
@@ -221,14 +229,19 @@ def create_mcp_server():
         )
 
     @mcp.tool(
-        description="Get a list of weather station codes and their corresponding names for radiation reports in Hong Kong.",
+        description="Get list of weather station codes and names for radiation reports in HK.",
     )
     def get_radiation_station_codes(lang: str = "en") -> Dict:
         return radiation.get_radiation_station_codes(lang)
-    
     return mcp
 
 def main(args):
+    """
+    Main function to run the HKO MCP Server.
+    
+    Args:
+        args: Command line arguments passed to the function.
+    """
     parser = argparse.ArgumentParser(description='HKO MCP Server')
     parser.add_argument('-s', '--sse', action='store_true',
                        help='Run in SSE mode instead of stdio')
@@ -238,7 +251,6 @@ def main(args):
 
     print(f"[DEBUG] Parsed arguments: {args}")
     server = create_mcp_server()
-    
     if args.sse:
         server.run(transport="streamable-http", port=args.port)
         print(f"HKO MCP Server running in SSE mode on port {args.port}")

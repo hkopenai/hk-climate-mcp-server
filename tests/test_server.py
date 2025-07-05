@@ -65,10 +65,10 @@ class TestApp(unittest.TestCase):
         decorated_funcs['get_moon_times'](year=2025, month=6, day=30)
         mock_astronomical.get_moon_times.assert_called_once_with(year=2025, month=6, day=30, lang="en")
 
-        decorated_funcs['get_hourly_tides'](station="TBT", year=2025, month=6, day=30)
+        decorated_funcs['get_hourly_tides'](station="TBT", year=2025, options={"month": 6, "day": 30})
         mock_tides.get_hourly_tides.assert_called_once_with(station="TBT", year=2025, month=6, day=30, hour=None, lang="en")
 
-        decorated_funcs['get_high_low_tides'](station="TBT", year=2025, month=6)
+        decorated_funcs['get_high_low_tides'](station="TBT", year=2025, options={"month": 6})
         mock_tides.get_high_low_tides.assert_called_once_with(station="TBT", year=2025, month=6, day=None, hour=None, lang="en")
 
         decorated_funcs['get_tide_station_codes']()
