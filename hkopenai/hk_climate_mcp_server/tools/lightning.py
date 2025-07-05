@@ -5,8 +5,8 @@ This module provides tools to retrieve lightning data including cloud-to-ground
 and cloud-to-cloud lightning counts from the Hong Kong Observatory API.
 """
 
-import requests
 from typing import Dict, Any
+import requests
 
 def get_lightning_data(lang: str = "en") -> Dict[str, Any]:
     """
@@ -18,7 +18,10 @@ def get_lightning_data(lang: str = "en") -> Dict[str, Any]:
     Returns:
         Dict containing lightning data with fields and data arrays
     """
-    url = f"https://data.weather.gov.hk/weatherAPI/opendata/opendata.php?dataType=LHL&lang={lang}&rformat=json"
+    url = (
+        f"https://data.weather.gov.hk/weatherAPI/opendata/opendata.php"
+        f"?dataType=LHL&lang={lang}&rformat=json"
+    )
     response = requests.get(url)
     try:
         response.raise_for_status()

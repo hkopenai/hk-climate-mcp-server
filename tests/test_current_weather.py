@@ -1,8 +1,17 @@
+"""
+Unit tests for current weather data fetching functions.
+
+This module tests the functionality of fetching current weather data from the Hong Kong Observatory API.
+"""
+
 import unittest
 from unittest.mock import patch, MagicMock
 from hkopenai.hk_climate_mcp_server.tools.current_weather import get_current_weather
 
 class TestCurrentWeatherTools(unittest.TestCase):
+    """
+    Test case class for testing current weather data fetching tools and functions.
+    """
     default_mock_response = {
         "rainfall": {
             "data": [

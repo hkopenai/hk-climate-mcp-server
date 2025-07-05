@@ -1,5 +1,12 @@
-import requests
+"""
+Weather Warnings Tools - Functions for fetching weather warning data from HKO.
+
+This module provides tools to retrieve weather warning information from
+the Hong Kong Observatory API.
+"""
+
 from typing import Dict, Any
+import requests
 
 def get_weather_warning_summary(lang: str = "en") -> Dict[str, Any]:
     """

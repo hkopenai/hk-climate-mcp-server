@@ -7,10 +7,10 @@ Observatory API.
 """
 
 import datetime
-import requests
 from typing import Dict, Any, Optional
+import requests
 
-def get_moon_times(year: int, month: Optional[int] = None, 
+def get_moon_times(year: int, month: Optional[int] = None,
                   day: Optional[int] = None, lang: str = "en") -> Dict[str, Any]:
     """
     Get times of moonrise, moon transit and moonset.
@@ -106,7 +106,7 @@ def get_gregorian_lunar_calendar(
             # If only month is provided, use the first day of the month
             date_str = f"{year:04d}-{month:02d}-01"
         else:
-            # If only year is provided, use the first day of the first month
+            # If only year is provided, use the first day of January
             date_str = f"{year:04d}-01-01"
 
         params = {

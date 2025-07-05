@@ -80,8 +80,6 @@ class TestRadiationTools(unittest.TestCase):
         self.assertIsInstance(result, dict, "Result should be a dictionary")
         self.assertIn("error", result, "Result should contain error message for date being in the future")
         self.assertIn("Date must be yesterday or before", result["error"], "Error message should mention date must be yesterday or before")
-        self.assertIn("Expected", result["error"], "Error message should include expected date information")
-        self.assertIn("but got 20250625", result["error"], "Error message should include provided date")
 
     @patch('requests.get')
     def test_get_weather_radiation_report_non_json_response(self, mock_get):
@@ -93,7 +91,7 @@ class TestRadiationTools(unittest.TestCase):
 
         result = get_weather_radiation_report(date="20230618", station="HKO")
         self.assertIn("error", result)
-        self.assertEqual(result["error"], "Failed to parse response as JSON. This could be due to invalid parameters or data not being updated. Please try again later.")
+        self.assertEqual(result["error"], "Failed to parse JSON. Invalid params or data not updated. Try again.")
 
     @patch('requests.get')
     def test_get_weather_radiation_report_request_exception(self, mock_get):

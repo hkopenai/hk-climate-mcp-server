@@ -1,3 +1,10 @@
+"""
+Run Live Tests - A script to execute live tests for the HKO MCP Server.
+
+This script runs live tests using pytest with the RUN_LIVE_TESTS environment variable set to enable
+live API calls. It can run all live tests or a specific test if provided as an argument.
+"""
+
 import os
 import subprocess
 import sys
@@ -10,7 +17,6 @@ def run_live_tests(test_name=None):
     """
     # Set the environment variable to enable live tests
     os.environ['RUN_LIVE_TESTS'] = 'true'
-    
     # Construct the pytest command
     pytest_args = ['pytest', '-v']
     if test_name:
@@ -18,12 +24,12 @@ def run_live_tests(test_name=None):
     else:
         # Find all live test files in the tests directory
         test_files = [f for f in os.listdir('tests/') if '_live' in f and f.endswith('.py')]
-        if test_files:
-            pytest_args.extend(['tests/' + f for f in test_files])
-        else:
-            pytest_args.append('tests/')
-    
-    print(f"Running live tests with command: {' '.join(pytest_args)}")
+    if test_files:
+        pytest_args.extend(['tests/' + f for f in test_files])
+    else:
+        pytest_args.append('tests/')
+    print(f"Running live tests with command:")
+    print(f"{' '.join(pytest_args)}")
     try:
         result = subprocess.run(pytest_args, check=True, text=True, capture_output=True)
         print(result.stdout)
@@ -43,6 +49,5 @@ if __name__ == "__main__":
         test_name = sys.argv[1]
         print(f"Running specific live test: {test_name}")
     else:
-        print("Running all live tests. To run a specific test, provide the test name as an argument.")
-    
+        print("Running all live tests. To run a specific test, provide the test name as argument.")
     exit(run_live_tests(test_name))

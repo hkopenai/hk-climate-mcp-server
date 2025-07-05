@@ -1,7 +1,13 @@
-import requests
-from typing import Dict, Any
+"""
+Visibility Data Tools - Functions for fetching visibility data from HKO.
 
-def get_visibility_data(lang: str = "en") -> Dict[str, Any]:
+This module provides tools to retrieve visibility data from the Hong Kong Observatory API.
+"""
+
+from typing import Dict, Any
+import requests
+
+def get_visibility(lang: str = "en") -> Dict[str, Any]:
     """
     Get latest 10-minute mean visibility data for Hong Kong.
 

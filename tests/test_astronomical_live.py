@@ -1,9 +1,18 @@
+"""
+Live unit tests for astronomical data fetching functions.
+
+This module tests the functionality of fetching real-time astronomical data such as sunrise/sunset times and Gregorian-Lunar calendar conversions from the Hong Kong Observatory API.
+"""
+
 import unittest
 import os
 from datetime import datetime
 from hkopenai.hk_climate_mcp_server.tools.astronomical import get_sunrise_sunset_times, get_gregorian_lunar_calendar
 
 class TestAstronomicalToolsLive(unittest.TestCase):
+    """
+    Test case class for live testing of astronomical data fetching tools and functions.
+    """
     @unittest.skipUnless(os.environ.get('RUN_LIVE_TESTS') == 'true', "Set RUN_LIVE_TESTS=true to run live tests")
     def test_get_sunrise_sunset_times_live(self):
         """

@@ -1,6 +1,6 @@
 import unittest
 from unittest.mock import patch, MagicMock
-from hkopenai.hk_climate_mcp_server.tools.visibility import get_visibility_data
+from hkopenai.hk_climate_mcp_server.tools.visibility import get_visibility
 
 class TestVisibilityTools(unittest.TestCase):
     @patch("requests.get")
@@ -16,7 +16,7 @@ class TestVisibilityTools(unittest.TestCase):
         mock_response.json.return_value = example_json
         mock_get.return_value = mock_response
 
-        result = get_visibility_data()
+        result = get_visibility()
         self.assertEqual(result["fields"], example_json["fields"])
         self.assertEqual(result["data"], example_json["data"])
         mock_get.assert_called_once_with(

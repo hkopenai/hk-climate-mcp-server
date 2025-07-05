@@ -1,8 +1,17 @@
+"""
+Live unit tests for current weather data fetching functions.
+
+This module tests the functionality of fetching real-time current weather data from the Hong Kong Observatory API.
+"""
+
 import unittest
 import os
 from hkopenai.hk_climate_mcp_server.tools.current_weather import get_current_weather
 
 class TestCurrentWeatherToolsLive(unittest.TestCase):
+    """
+    Test case class for live testing of current weather data fetching tools and functions.
+    """
     @unittest.skipUnless(os.environ.get('RUN_LIVE_TESTS') == 'true', "Set RUN_LIVE_TESTS=true to run live tests")
     def test_get_current_weather_live(self):
         """

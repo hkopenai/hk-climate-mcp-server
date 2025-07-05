@@ -1,8 +1,17 @@
+"""
+Unit tests for astronomical data fetching functions.
+
+This module tests the functionality of fetching astronomical data such as Gregorian-Lunar calendar conversions from the Hong Kong Observatory API.
+"""
+
 import unittest
 from unittest.mock import patch, MagicMock
 from hkopenai.hk_climate_mcp_server.tools.astronomical import get_gregorian_lunar_calendar
 
 class TestCalendarTools(unittest.TestCase):
+    """
+    Test case class for testing calendar-related tools and functions.
+    """
     @patch("requests.get")
     def test_get_gregorian_lunar_calendar(self, mock_get):
         example_json = {

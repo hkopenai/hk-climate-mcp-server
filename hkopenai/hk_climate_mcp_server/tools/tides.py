@@ -1,5 +1,13 @@
-import requests
 from typing import Dict, Any, Optional
+import json
+import requests
+
+"""
+Tide Data Tools - Functions for fetching tide data from HKO.
+
+This module provides tools to retrieve tide information including hourly tide heights
+and high/low tide times from the Hong Kong Observatory API.
+"""
 
 # Station names for tide data in different languages: en (English), tc (Traditional Chinese), sc (Simplified Chinese)
 VALID_TIDE_STATIONS = {
@@ -94,7 +102,6 @@ def get_hourly_tides(
         response.raise_for_status()
         # Decode response content with utf-8-sig to handle potential BOM
         content = response.content.decode('utf-8-sig')
-        import json
         return json.loads(content)
     except (requests.RequestException, UnicodeDecodeError, ValueError) as e:
         return {"error": f"Failed to fetch data: {str(e)}."}
@@ -138,8 +145,13 @@ def get_high_low_tides(
     stations_dict = VALID_TIDE_STATIONS.get(lang, VALID_TIDE_STATIONS['en'])
     
     if not station or station not in stations_dict:
-        return {"error": "Invalid or missing station code. Use the 'get_tide_station_codes' tool to retrieve the list of valid station codes."}
-        
+        return {
+            "error": (
+                "Invalid or missing station code. Use the "
+                "'get_tide_station_codes' tool to retrieve "
+                "the list of valid station codes."
+            )
+        }
     params = {
         'dataType': 'HLT',
         'lang': lang,
@@ -159,7 +171,6 @@ def get_high_low_tides(
         response.raise_for_status()
         # Decode response content with utf-8-sig to handle potential BOM
         content = response.content.decode('utf-8-sig')
-        import json
         return json.loads(content)
     except (requests.RequestException, UnicodeDecodeError, ValueError) as e:
         return {"error": f"Failed to fetch data: {str(e)}."}

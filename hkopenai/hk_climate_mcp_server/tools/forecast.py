@@ -1,12 +1,12 @@
 """
 Weather Forecast Tools - Functions for fetching weather forecast data from HKO.
 
-This module provides tools to retrieve weather forecast information including 9-day
-forecasts and local weather forecasts from the Hong Kong Observatory API.
+This module provides tools to retrieve weather forecast information including
+9-day and local weather forecasts from the Hong Kong Observatory API.
 """
 
-import requests
 from typing import Dict, Any
+import requests
 
 def get_9_day_weather_forecast(lang: str = "en") -> Dict[str, Any]:
     """
@@ -18,12 +18,14 @@ def get_9_day_weather_forecast(lang: str = "en") -> Dict[str, Any]:
     Returns:
         Dict containing:
             - generalSituation: General weather situation
-            - weatherForecast: List of daily forecast dicts (date, week, wind, weather, temp/humidity, etc.)
+            - weatherForecast: List of daily forecast dicts with details like date, week, wind,
+              weather, temp, humidity, etc.
             - updateTime: Last update time
             - seaTemp: Sea temperature info
             - soilTemp: List of soil temperature info
     """
-    url = f"https://data.weather.gov.hk/weatherAPI/opendata/weather.php?dataType=fnd&lang={lang}"
+    base_url = "https://data.weather.gov.hk/weatherAPI/opendata/weather.php"
+    url = f"{base_url}?dataType=fnd&lang={lang}"
     response = requests.get(url)
     try:
         response.raise_for_status()
@@ -78,7 +80,6 @@ def get_local_weather_forecast(lang: str = "en") -> Dict[str, Any]:
         data = response.json()
     except (requests.RequestException, ValueError) as e:
         return {"error": f"Failed to fetch data: {str(e)}."}
-    
     return {
         "generalSituation": data.get("generalSituation", ""),
         "forecastDesc": data.get("forecastDesc", ""),

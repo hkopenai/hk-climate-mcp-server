@@ -219,7 +219,7 @@ def create_mcp_server():
     )
     def get_weather_radiation_report(
         date: Annotated[str, Field(description="Date in yyyyMMdd format, e.g., 20250618")],
-        station: Annotated[str, Field(description="Station code in 3 caps letters, e.g., HKO")],
+        station: Annotated[str, Field(description="Station code, e.g., HKO")],
         lang: Annotated[Optional[str], Field(description="Language (en/tc/sc)")] = 'en',
     ) -> Dict:
         return radiation.get_weather_radiation_report(

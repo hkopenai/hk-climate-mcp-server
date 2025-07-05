@@ -1,8 +1,16 @@
-import requests
-from datetime import datetime, timedelta
-from typing import Dict, Any, Optional
+"""
+Radiation Data Tools - Functions for fetching radiation data from HKO.
 
-# Station names in different languages: en (English), tc (Traditional Chinese), sc (Simplified Chinese)
+This module provides tools to retrieve radiation data including weather
+and radiation level reports from the Hong Kong Observatory API.
+"""
+
+from datetime import datetime
+from typing import Dict, Any
+import requests
+
+# Station names in different languages: en (English), tc (Traditional Chinese),
+# sc (Simplified Chinese)
 VALID_STATIONS = {
     'en': {
         'CCH': 'Cheung Chau',
@@ -38,7 +46,7 @@ VALID_STATIONS = {
         'WTS': 'Wong Tai Sin',
         'YCT': 'Tai Po',
         'YLP': 'Yuen Long Park',
-        'YNF': 'Yuen Ng Fan'
+        'YNF': 'Yuen Ng Fan',
     },
     'tc': {
         'CCH': '長洲',
@@ -125,32 +133,31 @@ def get_weather_radiation_report(
 
     Args:
         date: Mandatory date in YYYYMMDD format (e.g., 20250618)
-        station: Mandatory station code (e.g., 'HKO' for Hong Kong Observatory). 
+        station: Mandatory station code (e.g., 'HKO' for Hong Kong Observatory).
                  If not provided or invalid, returns an error message.
         lang: Language code (en/tc/sc, default: en)
 
     Returns:
-        Dict containing weather and radiation data or an error message if station is invalid
+        Dict containing weather and radiation data or an error message if
+        station is invalid
     """
-    
-    # Select the station dictionary based on the language, default to English
+    # Select station by language
     stations_dict = VALID_STATIONS.get(lang, VALID_STATIONS['en'])
-
     if not station or station not in stations_dict:
-        return {"error": "Invalid or missing station code. Use the 'get_radiation_station_codes' tool to retrieve the list of valid station codes."}
-        
+        return {
+            "error": "Invalid or missing station code. "
+                     "Use 'get_radiation_station_codes' for codes."
+        }
     if not date:
         return {"error": "Date parameter is mandatory in YYYYMMDD format (e.g., 20250618)"}
-        
     try:
         datetime.strptime(date, '%Y%m%d')
     except ValueError:
         return {"error": "Invalid date format. Date must be in YYYYMMDD format (e.g., 20250618)"}
-        
     if is_date_in_future(date):
-        yesterday = (datetime.now() - timedelta(days=1)).strftime('%Y%m%d')
-        return {"error": f"Date must be yesterday or before in YYYYMMDD format. Expected {yesterday} or earlier, but got {date}"}
-        
+        return {
+            "error": "Date must be yesterday or before."
+        }
     params = {
         'dataType': 'RYES',
         'lang': lang,
@@ -160,18 +167,25 @@ def get_weather_radiation_report(
     }
 
     try:
-        response = requests.get(
-            'https://data.weather.gov.hk/weatherAPI/opendata/opendata.php',
-            params=params
-        )
+        base_url = 'https://data.weather.gov.hk/weatherAPI/opendata/opendata.php'
+        response = requests.get(base_url, params=params)
         response.raise_for_status()
         try:
             return response.json()
         except ValueError:
-            return {"error": "Failed to parse response as JSON. This could be due to invalid parameters or data not being updated. Please try again later."}
+            return {
+                "error": (
+                    "Failed to parse JSON. Invalid params or data not updated. "
+                    "Try again."
+                )
+            }
     except requests.RequestException as e:
-        return {"error": f"Failed to fetch data: {str(e)}. Please try again later."}
-
+        return {
+            "error": (
+                f"Failed to fetch data: {str(e)}. Please try "
+                "again later."
+            )
+        }
 
 def get_radiation_station_codes(lang: str = "en") -> Dict[str, str]:
     """

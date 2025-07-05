@@ -1,5 +1,12 @@
-import requests
 from typing import Dict, Any, Optional
+import requests
+
+"""
+Temperature Data Tools - Functions for fetching temperature data from HKO.
+
+This module provides tools to retrieve temperature data including daily mean,
+maximum, and minimum temperatures from the Hong Kong Observatory API.
+"""
 
 def get_daily_mean_temperature(
     station: str,
@@ -36,7 +43,13 @@ def get_daily_mean_temperature(
         response.raise_for_status()
         return response.json()
     except requests.exceptions.JSONDecodeError as e:
-        return {"error": f"Failed to parse API response: {str(e)}. This might indicate invalid parameters or no data for the given request."}
+        return {
+            "error": (
+                f"Failed to parse API response: {str(e)}. This might "
+                "indicate invalid parameters or no data for the given "
+                "request."
+            )
+        }
     except requests.RequestException as e:
         return {"error": f"Failed to fetch data: {str(e)}."}
 
@@ -75,7 +88,13 @@ def get_daily_max_temperature(
         response.raise_for_status()
         return response.json()
     except requests.exceptions.JSONDecodeError as e:
-        return {"error": f"Failed to parse API response: {str(e)}. This might indicate invalid parameters or no data for the given request."}
+        return {
+            "error": (
+                f"Failed to parse API response: {str(e)}. This might "
+                "indicate invalid parameters or no data for the given "
+                "request."
+            )
+        }
     except requests.RequestException as e:
         return {"error": f"Failed to fetch data: {str(e)}."}
 
@@ -114,6 +133,12 @@ def get_daily_min_temperature(
         response.raise_for_status()
         return response.json()
     except requests.exceptions.JSONDecodeError as e:
-        return {"error": f"Failed to parse API response: {str(e)}. This might indicate invalid parameters or no data for the given request."}
+        return {
+            "error": (
+                f"Failed to parse API response: {str(e)}. This might "
+                "indicate invalid parameters or no data for the given "
+                "request."
+            )
+        }
     except requests.RequestException as e:
         return {"error": f"Failed to fetch data: {str(e)}."}
