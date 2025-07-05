@@ -8,11 +8,11 @@ class TestVisibilityToolsLive(unittest.TestCase):
         os.environ.get("RUN_LIVE_TESTS") == "true",
         "Set RUN_LIVE_TESTS=true to run live tests",
     )
-    def test_get_visibility_data_live(self):
+    def test_get_visibility_live(self):
         """
         Live test to fetch actual visibility data from Hong Kong Observatory.
         This test makes a real API call and should be run selectively.
-        To run this test with pytest, use: pytest -k test_get_visibility_data_live --live-tests
+        To run this test with pytest, use: pytest -k test_get_visibility_live --live-tests
         """
         result = get_visibility(lang="en")
         self.assertIsNotNone(result)
@@ -25,9 +25,9 @@ class TestVisibilityToolsLive(unittest.TestCase):
         os.environ.get("RUN_LIVE_TESTS") == "true",
         "Set RUN_LIVE_TESTS=true to run live tests",
     )
-    def test_get_visibility_data_invalid_lang_live(self):
+    def test_get_visibility_invalid_lang_live(self):
         """
-        Live test to check error handling for an invalid language in get_visibility_data.
+        Live test to check error handling for an invalid language in get_visibility.
         """
         result = get_visibility(lang="xx")  # An invalid language code
 

@@ -1,9 +1,24 @@
+"""
+Live Tests for Lightning Tools - Testing lightning data retrieval from HKO.
+
+This module contains live tests for the lightning tools, making actual API calls to the
+Hong Kong Observatory to retrieve lightning data. These tests are conditional and run
+only when the environment variable RUN_LIVE_TESTS is set to 'true'.
+"""
+
 import unittest
 import os
 from hkopenai.hk_climate_mcp_server.tools.lightning import get_lightning_data
 
 
 class TestLightningToolsLive(unittest.TestCase):
+    """
+    Test case class for live testing of lightning data retrieval tools.
+    
+    This class contains test methods that make actual API calls to the Hong Kong Observatory
+    to verify the functionality of lightning data retrieval functions. Tests are skipped unless
+    the RUN_LIVE_TESTS environment variable is set to 'true'.
+    """
     @unittest.skipUnless(
         os.environ.get("RUN_LIVE_TESTS") == "true",
         "Set RUN_LIVE_TESTS=true to run live tests",

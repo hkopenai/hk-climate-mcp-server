@@ -5,8 +5,8 @@ This module serves as the entry point for the HKO MCP Server application.
 It handles command-line arguments and initiates the main server functionality.
 """
 
-from hkopenai.hk_climate_mcp_server.server import main
 import argparse
+from .server import main
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="HKO MCP Server")

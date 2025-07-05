@@ -5,7 +5,7 @@ from hkopenai.hk_climate_mcp_server.tools.visibility import get_visibility
 
 class TestVisibilityTools(unittest.TestCase):
     @patch("requests.get")
-    def test_get_visibility_data(self, mock_get):
+    def test_get_visibility(self, mock_get):
         example_json = {
             "fields": [
                 "Date time",

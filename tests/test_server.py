@@ -72,8 +72,8 @@ class TestApp(unittest.TestCase):
         decorated_funcs["get_special_weather_tips"]()
         mock_warnings.get_special_weather_tips.assert_called_once_with("en")
 
-        decorated_funcs["get_visibility_data"]()
-        mock_visibility.get_visibility_data.assert_called_once_with("en")
+        decorated_funcs["get_visibility"]()
+        mock_visibility.get_visibility.assert_called_once_with("en")
 
         decorated_funcs["get_lightning_data"]()
         mock_lightning.get_lightning_data.assert_called_once_with("en")

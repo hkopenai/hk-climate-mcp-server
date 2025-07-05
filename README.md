@@ -89,7 +89,7 @@ This is an MCP server that provides access to climate and weather data through a
     - updateTime: Last update time
 
 ### Visibility Data
-`get_visibility_data(lang: str = "en") -> Dict`
+`get_visibility(lang: str = "en") -> Dict`
 - Get latest 10-minute mean visibility data for Hong Kong
 - Parameters:
   - lang: Language code (en/tc/sc, default: en)

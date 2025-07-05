@@ -1,3 +1,10 @@
+"""
+Unit Tests for Forecast Tools
+
+This module contains unit tests for the forecast tools provided by the HKO MCP Server.
+It tests the functionality of fetching 9-day and local weather forecasts using mocked API responses.
+"""
+
 import unittest
 from unittest.mock import patch, MagicMock
 from hkopenai.hk_climate_mcp_server.tools.forecast import (
@@ -7,8 +14,23 @@ from hkopenai.hk_climate_mcp_server.tools.forecast import (
 
 
 class TestForecastTools(unittest.TestCase):
+    """
+    Test case class for forecast tools.
+    
+    This class contains test methods to verify the correct functioning of 
+    forecast data retrieval functions using mocked HTTP requests.
+    """
     @patch("requests.get")
     def test_get_9_day_weather_forecast(self, mock_get):
+        """
+        Test the retrieval of 9-day weather forecast data.
+        
+        This test uses a mocked HTTP response to simulate the API call and
+        verifies that the function correctly parses and returns the forecast data.
+        
+        Args:
+            mock_get: Mocked requests.get method to simulate API response.
+        """
         example_json = {
             "generalSituation": "A southerly airstream...",
             "weatherForecast": [
@@ -64,6 +86,15 @@ class TestForecastTools(unittest.TestCase):
 
     @patch("requests.get")
     def test_get_local_weather_forecast(self, mock_get):
+        """
+        Test the retrieval of local weather forecast data.
+        
+        This test uses a mocked HTTP response to simulate the API call and
+        verifies that the function correctly parses and returns the local forecast data.
+        
+        Args:
+            mock_get: Mocked requests.get method to simulate API response.
+        """
         example_json = {
             "generalSituation": "A southerly airstream is bringing showers to the coast of Guangdong and the northern part of the South China Sea. Locally, around 5 millimetres of rainfall were recorded over many places in the past couple of hours.",
             "forecastPeriod": "Weather forecast for today",

@@ -10,19 +10,24 @@ import argparse
 from typing import Dict, Annotated, Optional
 from pydantic import Field
 from fastmcp import FastMCP
-from hkopenai.hk_climate_mcp_server.tools import astronomical
-from hkopenai.hk_climate_mcp_server.tools import current_weather
-from hkopenai.hk_climate_mcp_server.tools import forecast
-from hkopenai.hk_climate_mcp_server.tools import lightning
-from hkopenai.hk_climate_mcp_server.tools import radiation
-from hkopenai.hk_climate_mcp_server.tools import temperature
-from hkopenai.hk_climate_mcp_server.tools import tides
-from hkopenai.hk_climate_mcp_server.tools import visibility
-from hkopenai.hk_climate_mcp_server.tools import warnings
+from .tools import astronomical
+from .tools import current_weather
+from .tools import forecast
+from .tools import lightning
+from .tools import radiation
+from .tools import temperature
+from .tools import tides
+from .tools import visibility
+from .tools import warnings
 
 
 def create_mcp_server():
-    """Create and configure the HKO MCP server"""
+    """
+    Create and configure the HKO MCP server.
+    
+    Returns:
+        FastMCP: Configured MCP server instance with weather data tools.
+    """
     mcp = FastMCP(name="HKOServer")
 
     @mcp.tool(
@@ -64,8 +69,8 @@ def create_mcp_server():
     @mcp.tool(
         description="Get latest 10-minute mean visibility data for Hong Kong",
     )
-    def get_visibility_data(lang: str = "en") -> Dict:
-        return visibility.get_visibility_data(lang)
+    def get_visibility(lang: str = "en") -> Dict:
+        return visibility.get_visibility(lang)
 
     @mcp.tool(
         description="Get cloud-to-ground and cloud-to-cloud lightning count data",

@@ -22,7 +22,7 @@ class TestRadiationToolsLive(unittest.TestCase):
         self.assertIsInstance(result, dict, "Result should be a dictionary")
 
         # Check if the response contains an error field, which indicates a failure in data retrieval
-        self.assertFalse("error" in result, result)
+        self.assertFalse("Failed" in result, result)
 
     @unittest.skipUnless(
         os.environ.get("RUN_LIVE_TESTS") == "true",

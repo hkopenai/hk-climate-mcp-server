@@ -203,10 +203,10 @@ class TestMCPClientSimulation(unittest.TestCase):
         os.environ.get("RUN_MCP_CLIENT_TESTS") == "true",
         "Set RUN_MCP_CLIENT_TESTS=true to run live tests",
     )
-    def test_get_visibility_data_tool(self):
-        """Test the 'get_visibility_data' tool functionality."""
-        logger.debug("Testing 'get_visibility_data' tool...")
-        asyncio.run(self._call_tool_and_assert("get_visibility_data", {"lang": "en"}))
+    def test_get_visibility_tool(self):
+        """Test the 'get_visibility' tool functionality."""
+        logger.debug("Testing 'get_visibility' tool...")
+        asyncio.run(self._call_tool_and_assert("get_visibility", {"lang": "en"}))
 
     @unittest.skipUnless(
         os.environ.get("RUN_MCP_CLIENT_TESTS") == "true",

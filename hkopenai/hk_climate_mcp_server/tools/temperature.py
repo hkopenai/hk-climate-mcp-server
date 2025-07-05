@@ -1,12 +1,12 @@
-from typing import Dict, Any, Optional
-import requests
-
 """
 Temperature Data Tools - Functions for fetching temperature data from HKO.
 
 This module provides tools to retrieve temperature data including daily mean,
 maximum, and minimum temperatures from the Hong Kong Observatory API.
 """
+
+from typing import Dict, Any, Optional
+import requests
 
 
 def get_daily_mean_temperature(

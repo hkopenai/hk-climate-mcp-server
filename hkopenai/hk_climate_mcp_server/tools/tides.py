@@ -1,13 +1,13 @@
-from typing import Dict, Any, Optional
-import json
-import requests
-
 """
 Tide Data Tools - Functions for fetching tide data from HKO.
 
 This module provides tools to retrieve tide information including hourly tide heights
 and high/low tide times from the Hong Kong Observatory API.
 """
+
+from typing import Dict, Any, Optional
+import json
+import requests
 
 # Station names for tide data in different languages: en (English), tc (Traditional Chinese), sc (Simplified Chinese)
 VALID_TIDE_STATIONS = {

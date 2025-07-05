@@ -18,7 +18,7 @@ Below is a table listing the tools within the Hong Kong Climate MCP Server, thei
 | get_weather_warning_summary    | Type 1 - Simple Request-Response with Structured Data | Validate response structure, handle HTTP errors, retry on transient issues | No        |
 | get_weather_warning_info       | Type 1 - Simple Request-Response with Structured Data | Validate response structure, handle HTTP errors, retry on transient issues | No        |
 | get_special_weather_tips       | Type 1 - Simple Request-Response with Structured Data | Validate response structure, handle HTTP errors, retry on transient issues | No        |
-| get_visibility_data            | Type 2 - APIs Requiring Data Dictionary Supplement | Enrich data with dictionary, handle missing dictionary data, HTTP errors | No        |
+| get_visibility            | Type 2 - APIs Requiring Data Dictionary Supplement | Enrich data with dictionary, handle missing dictionary data, HTTP errors | No        |
 | get_lightning_data             | Type 2 - APIs Requiring Data Dictionary Supplement | Enrich data with dictionary, handle missing dictionary data, HTTP errors | No        |
 | get_moon_times                 | Type 2 - APIs Requiring Data Dictionary Supplement | Enrich data with dictionary, handle missing dictionary data, HTTP errors | No        |
 | get_hourly_tides               | Type 3 - APIs with Transformable Data Formats (e.g., CSV) | Transform data to JSON, supplement with dictionary, handle format mismatches | No        |
