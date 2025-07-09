@@ -226,21 +226,7 @@ def main(args):
     Args:
         args: Command line arguments passed to the function.
     """
-    parser = argparse.ArgumentParser(description="MCP Server")
-    parser.add_argument(
-        "-s", "--sse", action="store_true", help="Run in SSE mode instead of stdio"
-    )
-    parser.add_argument(
-        "-p",
-        "--port",
-        type=int,
-        default=8000,
-        help="Port to run the server on (default: 8000)",
-    )
-    parser.add_argument(
-        "--host", type=str, default="127.0.0.1", help="Host to bind the server to"
-    )
-    args = parser.parse_args()
+    
 
     print(f"[DEBUG] Parsed arguments: {args}")
     server = create_mcp_server()

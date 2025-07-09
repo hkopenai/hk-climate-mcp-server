@@ -20,5 +20,8 @@ if __name__ == "__main__":
         default=8000,
         help="Port to run the server on (default: 8000)",
     )
+    parser.add_argument(
+        "--host", type=str, default="127.0.0.1", help="Host to bind the server to"
+    )
     args = parser.parse_args()
     main(args)
