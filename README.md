@@ -176,6 +176,17 @@ This is an MCP server that provides access to climate and weather data through a
 - Default stdio mode: `python server.py`
 - SSE mode (port 8000): `python server.py --sse`
 
+### Environment Variables
+
+- `TRANSPORT_MODE`: Set to `sse` to run the server in SSE mode. If not set, defaults to `stdio` mode.
+- `HOST`: When `TRANSPORT_MODE` is `sse`, specifies the host to bind the server to (e.g., `0.0.0.0`). Defaults to `127.0.0.1`.
+- `PORT`: When `TRANSPORT_MODE` is `sse`, specifies the port to run the server on (e.g., `8080`). Defaults to `8000`.
+
+Example:
+```bash
+TRANSPORT_MODE=sse HOST=0.0.0.0 PORT=8080 python server.py
+```
+
 ## Cline Integration
 
 To connect this MCP server to Cline using stdio:

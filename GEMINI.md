@@ -29,6 +29,8 @@
 | get_daily_min_temperature      | Type 3 | No        |
 | get_weather_radiation_report   | Type 1 | Yes       |
 | get_valid_station_codes        | Type 1 | No        |
+| get_tide_station_codes         | Type 1 | No        |
+| get_radiation_station_codes    | Type 1 | No        |
 
 This table serves as a reference for current and future development, ensuring that each tool's API interaction and error handling approach is aligned with the defined principles.
 

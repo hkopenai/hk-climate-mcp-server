@@ -20,4 +20,4 @@ ENV PATH=/root/.local/bin:$PATH
 # Expose the port the app runs on
 EXPOSE 8000
 # Command to run the MCP server in SSE
-CMD ["python", "-m", "hkopenai.hk_climate_mcp_server", "--sse", "--host", "0.0.0.0"]
+CMD ["python", "-m", "hkopenai.hk_climate_mcp_server"]

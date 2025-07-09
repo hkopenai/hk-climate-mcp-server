@@ -227,8 +227,6 @@ def main(args):
         args: Command line arguments passed to the function.
     """
     
-
-    print(f"[DEBUG] Parsed arguments: {args}")
     server = create_mcp_server()
     if args.sse:
         server.run(transport="streamable-http", host=args.host, port=args.port)
