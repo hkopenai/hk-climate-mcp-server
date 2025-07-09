@@ -1,13 +1,3 @@
-# Project Overview
-
-## Active Context
-### Current Work Focus
-- Fixing unit tests for the server implementation
-- Ensuring all project context is properly captured
-- Establishing documentation standards for future updates
-- Resolving packaging issue with tools directory
-- Documenting API handling strategies and error handling aspects for MCP tools
-
 #### API Handling Strategies and Error Handling Table
 | Tool Name                       | API Handling Strategy Type                          | Validated |
 |---------------------------------|----------------------------------------------------|-----------|
