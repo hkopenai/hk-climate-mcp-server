@@ -10,26 +10,26 @@
 ### API Handling Strategies and Error Handling Table
 Below is a table listing the tools within the Hong Kong Climate MCP Server, their associated API handling strategy types as defined in the MCP Tool Implementation Principles, key aspects of error handling, and validation status:
 
-| Tool Name                       | API Handling Strategy Type                          | Key Error Handling Aspects                                      | Validated |
-|---------------------------------|----------------------------------------------------|-----------------------------------------------------------------|-----------|
-| get_current_weather            | Type 1 - Simple Request-Response with Structured Data | Validate response structure, handle HTTP errors, retry on transient issues | No        |
-| get_9_day_weather_forecast     | Type 1 - Simple Request-Response with Structured Data | Validate response structure, handle HTTP errors, retry on transient issues | No        |
-| get_local_weather_forecast     | Type 1 - Simple Request-Response with Structured Data | Validate response structure, handle HTTP errors, retry on transient issues | No        |
-| get_weather_warning_summary    | Type 1 - Simple Request-Response with Structured Data | Validate response structure, handle HTTP errors, retry on transient issues | No        |
-| get_weather_warning_info       | Type 1 - Simple Request-Response with Structured Data | Validate response structure, handle HTTP errors, retry on transient issues | No        |
-| get_special_weather_tips       | Type 1 - Simple Request-Response with Structured Data | Validate response structure, handle HTTP errors, retry on transient issues | No        |
-| get_visibility            | Type 2 - APIs Requiring Data Dictionary Supplement | Enrich data with dictionary, handle missing dictionary data, HTTP errors | No        |
-| get_lightning_data             | Type 2 - APIs Requiring Data Dictionary Supplement | Enrich data with dictionary, handle missing dictionary data, HTTP errors | No        |
-| get_moon_times                 | Type 2 - APIs Requiring Data Dictionary Supplement | Enrich data with dictionary, handle missing dictionary data, HTTP errors | No        |
-| get_hourly_tides               | Type 3 - APIs with Transformable Data Formats (e.g., CSV) | Transform data to JSON, supplement with dictionary, handle format mismatches | No        |
-| get_high_low_tides             | Type 3 - APIs with Transformable Data Formats (e.g., CSV) | Transform data to JSON, supplement with dictionary, handle format mismatches | No        |
-| get_sunrise_sunset_times       | Type 2 - APIs Requiring Data Dictionary Supplement | Enrich data with dictionary, handle missing dictionary data, HTTP errors | No        |
-| get_gregorian_lunar_calendar   | Type 2 - APIs Requiring Data Dictionary Supplement | Enrich data with dictionary, handle missing dictionary data, HTTP errors | No        |
-| get_daily_mean_temperature     | Type 3 - APIs with Transformable Data Formats (e.g., CSV) | Transform data to JSON, supplement with dictionary, handle format mismatches | No        |
-| get_daily_max_temperature      | Type 3 - APIs with Transformable Data Formats (e.g., CSV) | Transform data to JSON, supplement with dictionary, handle format mismatches | No        |
-| get_daily_min_temperature      | Type 3 - APIs with Transformable Data Formats (e.g., CSV) | Transform data to JSON, supplement with dictionary, handle format mismatches | No        |
-| get_weather_radiation_report   | Type 4 - APIs Requiring Aggregation from Multiple Calls | Validate response structure, handle HTTP errors, retry on transient issues | Yes       |
-| get_valid_station_codes        | Type 1 - Simple Request-Response with Structured Data | Validate response structure, handle HTTP errors, retry on transient issues | No        |
+| Tool Name                       | API Handling Strategy Type                          | Validated |
+|---------------------------------|----------------------------------------------------|-----------|
+| get_current_weather            | Type 1 | No        |
+| get_9_day_weather_forecast     | Type 1 | No        |
+| get_local_weather_forecast     | Type 1 | No        |
+| get_weather_warning_summary    | Type 1 | No        |
+| get_weather_warning_info       | Type 1 | No        |
+| get_special_weather_tips       | Type 1 | No        |
+| get_visibility            | Type 2 | No        |
+| get_lightning_data             | Type 2 | No        |
+| get_moon_times                 | Type 2 | No        |
+| get_hourly_tides               | Type 3 | No        |
+| get_high_low_tides             | Type 3 | No        |
+| get_sunrise_sunset_times       | Type 2 | No        |
+| get_gregorian_lunar_calendar   | Type 2 | No        |
+| get_daily_mean_temperature     | Type 3 | No        |
+| get_daily_max_temperature      | Type 3 | No        |
+| get_daily_min_temperature      | Type 3 | No        |
+| get_weather_radiation_report   | Type 1 | Yes       |
+| get_valid_station_codes        | Type 1 | No        |
 
 This table serves as a reference for current and future development, ensuring that each tool's API interaction and error handling approach is aligned with the defined principles.
 
