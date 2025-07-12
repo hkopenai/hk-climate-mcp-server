@@ -7,9 +7,17 @@ and cloud-to-cloud lightning counts from the Hong Kong Observatory API.
 
 from typing import Dict, Any
 import requests
+from fastmcp import FastMCP
 
 
-def get_lightning_data(lang: str = "en") -> Dict[str, Any]:
+def register(mcp: FastMCP):
+    @mcp.tool(
+        description="Get cloud-to-ground and cloud-to-cloud lightning count data",
+    )
+    def get_lightning_data(lang: str = "en") -> Dict[str, Any]:
+        return _get_lightning_data(lang)
+
+def _get_lightning_data(lang: str = "en") -> Dict[str, Any]:
     """
     Get cloud-to-ground and cloud-to-cloud lightning count data.
 

@@ -8,8 +8,8 @@ import unittest
 import os
 from datetime import datetime
 from hkopenai.hk_climate_mcp_server.tools.astronomical import (
-    get_sunrise_sunset_times,
-    get_gregorian_lunar_calendar,
+    _get_sunrise_sunset_times as get_sunrise_sunset_times,
+    _get_gregorian_lunar_calendar as get_gregorian_lunar_calendar,
 )
 
 

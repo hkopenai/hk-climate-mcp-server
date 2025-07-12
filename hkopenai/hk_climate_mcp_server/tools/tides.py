@@ -8,6 +8,7 @@ and high/low tide times from the Hong Kong Observatory API.
 from typing import Dict, Any, Optional
 import json
 import requests
+from fastmcp import FastMCP
 
 # Station names for tide data in different languages: en (English), tc (Traditional Chinese), sc (Simplified Chinese)
 VALID_TIDE_STATIONS = {
@@ -62,7 +63,44 @@ VALID_TIDE_STATIONS = {
 }
 
 
-def get_hourly_tides(
+def register(mcp: FastMCP):
+    @mcp.tool(
+        description="Get hourly heights of astronomical tides for a station in HK.",
+    )
+    def get_hourly_tides(
+        station: str,
+        year: int,
+        options: Optional[Dict] = None
+    ) -> Dict[str, Any]:
+        month = options.get('month') if options else None
+        day = options.get('day') if options else None
+        hour = options.get('hour') if options else None
+        lang = options.get('lang', 'en') if options else 'en'
+        return _get_hourly_tides(station=station, year=year, month=month, day=day, hour=hour, lang=lang)
+
+
+    @mcp.tool(
+        description="Get list of tide station codes and names for tide reports in HK.",
+    )
+    def get_tide_station_codes(lang: str = "en") -> Dict[str, str]:
+        return _get_tide_station_codes(lang)
+
+
+    @mcp.tool(
+        description="Get times, heights of astronomical high/low tides for a station in HK.",
+    )
+    def get_high_low_tides(
+        station: str,
+        year: int,
+        options: Optional[Dict] = None
+    ) -> Dict[str, Any]:
+        month = options.get('month') if options else None
+        day = options.get('day') if options else None
+        hour = options.get('hour') if options else None
+        lang = options.get('lang', 'en') if options else 'en'
+        return _get_high_low_tides(station=station, year=year, month=month, day=day, hour=hour, lang=lang)
+
+def _get_hourly_tides(
     station: str,
     year: int,
     month: Optional[int] = None,
@@ -110,7 +148,7 @@ def get_hourly_tides(
         return {"error": f"Failed to fetch data: {str(e)}."}
 
 
-def get_tide_station_codes(lang: str = "en") -> Dict[str, str]:
+def _get_tide_station_codes(lang: str = "en") -> Dict[str, str]:
     """
     Get a dictionary of station codes and their corresponding names for tide reports in Hong Kong.
 
@@ -124,7 +162,7 @@ def get_tide_station_codes(lang: str = "en") -> Dict[str, str]:
     return VALID_TIDE_STATIONS.get(lang, VALID_TIDE_STATIONS["en"])
 
 
-def get_high_low_tides(
+def _get_high_low_tides(
     station: str,
     year: int,
     month: Optional[int] = None,

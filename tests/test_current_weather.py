@@ -6,7 +6,7 @@ This module tests the functionality of fetching current weather data from the Ho
 
 import unittest
 from unittest.mock import patch, MagicMock
-from hkopenai.hk_climate_mcp_server.tools.current_weather import get_current_weather
+from hkopenai.hk_climate_mcp_server.tools.current_weather import register
 
 
 class TestCurrentWeatherTools(unittest.TestCase):
@@ -96,94 +96,22 @@ class TestCurrentWeatherTools(unittest.TestCase):
         },
     }
 
-    @patch("requests.get")
-    def test_get_current_weather(self, mock_get):
-        """
-        Test the retrieval of current weather data from HKO API.
-        
-        Args:
-            mock_get: Mock object for requests.get to simulate API response.
-        """
-        # Setup mock response
-        mock_response = MagicMock()
-        mock_response.json.return_value = self.default_mock_response
-        mock_get.return_value = mock_response
+    def test_register_tool(self):
+        mock_mcp = MagicMock()
+        register(mock_mcp)
 
-        # Test
-        result = get_current_weather(lang="en")
-        self.assertEqual(result["weatherObservation"]["temperature"]["value"], 29)
-        self.assertEqual(result["weatherObservation"]["temperature"]["unit"], "C")
-        self.assertEqual(
-            result["weatherObservation"]["temperature"]["recordTime"],
-            "2025-06-07T22:00:00+08:00",
-        )
-        self.assertEqual(result["weatherObservation"]["humidity"]["value"], 79)
-        self.assertEqual(result["weatherObservation"]["humidity"]["unit"], "percent")
-        self.assertEqual(
-            result["weatherObservation"]["humidity"]["recordTime"],
-            "2025-06-07T22:00:00+08:00",
-        )
-        self.assertEqual(result["weatherObservation"]["rainfall"]["value"], 0)
-        self.assertEqual(
-            result["weatherObservation"]["rainfall"]["startTime"],
-            "2025-06-07T20:45:00+08:00",
-        )
-        self.assertEqual(
-            result["weatherObservation"]["rainfall"]["endTime"],
-            "2025-06-07T21:45:00+08:00",
-        )
-        self.assertEqual(
-            result["generalSituation"],
-            "The Very Hot weather Warning is now in force. Prolonged heat alert! Please drink sufficient water. If feeling unwell, take rest or seek help immediately. If needed, seek medical advice as soon as possible.",
-        )
-        mock_get.assert_called_once_with(
-            "https://data.weather.gov.hk/weatherAPI/opendata/weather.php?dataType=rhrread&lang=en"
-        )
+        # Verify that mcp.tool was called for each tool function
+        self.assertEqual(mock_mcp.tool.call_count, 1)
 
-    @patch("requests.get")
-    def test_get_current_weather_with_region(self, mock_get):
-        """
-        Test the retrieval of current weather data for a specific region from HKO API.
-        
-        Args:
-            mock_get: Mock object for requests.get to simulate API response.
-        """
-        # Setup mock response
-        mock_response = MagicMock()
-        mock_response.json.return_value = self.default_mock_response
-        mock_get.return_value = mock_response
+        # Get the decorated function
+        decorated_func = mock_mcp.tool.return_value.call_args[0][0]
 
-        # Test
-        result = get_current_weather("Cheung Chau", lang="en")
-        self.assertEqual(result["weatherObservation"]["temperature"]["value"], 27)
-        self.assertEqual(result["weatherObservation"]["temperature"]["unit"], "C")
-        self.assertEqual(
-            result["weatherObservation"]["temperature"]["recordTime"],
-            "2025-06-07T22:00:00+08:00",
-        )
-        self.assertEqual(result["weatherObservation"]["humidity"]["value"], 79)
-        self.assertEqual(result["weatherObservation"]["humidity"]["unit"], "percent")
-        self.assertEqual(
-            result["weatherObservation"]["humidity"]["recordTime"],
-            "2025-06-07T22:00:00+08:00",
-        )
-        self.assertEqual(result["weatherObservation"]["rainfall"]["value"], 0)
-        self.assertEqual(
-            result["weatherObservation"]["rainfall"]["startTime"],
-            "2025-06-07T20:45:00+08:00",
-        )
-        self.assertEqual(
-            result["weatherObservation"]["rainfall"]["endTime"],
-            "2025-06-07T21:45:00+08:00",
-        )
-        self.assertEqual(
-            result["generalSituation"],
-            "The Very Hot weather Warning is now in force. Prolonged heat alert! Please drink sufficient water. If feeling unwell, take rest or seek help immediately. If needed, seek medical advice as soon as possible.",
-        )
-        mock_get.assert_called_once_with(
-            "https://data.weather.gov.hk/weatherAPI/opendata/weather.php?dataType=rhrread&lang=en"
-        )
+        # Test get_current_weather
+        with patch("hkopenai.hk_climate_mcp_server.tools.current_weather._get_current_weather") as mock_get_current_weather:
+            decorated_func(region="test", lang="en")
+            mock_get_current_weather.assert_called_once_with("test", "en")
 
 
 if __name__ == "__main__":
     unittest.main()
+

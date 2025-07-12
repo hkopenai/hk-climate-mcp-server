@@ -7,9 +7,46 @@ maximum, and minimum temperatures from the Hong Kong Observatory API.
 
 from typing import Dict, Any, Optional
 import requests
+from fastmcp import FastMCP
 
 
-def get_daily_mean_temperature(
+def register(mcp: FastMCP):
+    @mcp.tool(
+        description="Get daily mean temperature data for a specific station in Hong Kong",
+    )
+    def get_daily_mean_temperature(
+        station: str,
+        year: Optional[int] = None,
+        month: Optional[int] = None,
+        lang: str = "en",
+    ) -> Dict[str, Any]:
+        return _get_daily_mean_temperature(station=station, year=year, month=month, lang=lang)
+
+
+    @mcp.tool(
+        description="Get daily maximum temperature data for a specific station in Hong Kong",
+    )
+    def get_daily_max_temperature(
+        station: str,
+        year: Optional[int] = None,
+        month: Optional[int] = None,
+        lang: str = "en",
+    ) -> Dict[str, Any]:
+        return _get_daily_max_temperature(station=station, year=year, month=month, lang=lang)
+
+
+    @mcp.tool(
+        description="Get daily minimum temperature data for a specific station in Hong Kong",
+    )
+    def get_daily_min_temperature(
+        station: str,
+        year: Optional[int] = None,
+        month: Optional[int] = None,
+        lang: str = "en",
+    ) -> Dict[str, Any]:
+        return _get_daily_min_temperature(station=station, year=year, month=month, lang=lang)
+
+def _get_daily_mean_temperature(
     station: str,
     year: Optional[int] = None,
     month: Optional[int] = None,
@@ -56,7 +93,7 @@ def get_daily_mean_temperature(
         return {"error": f"Failed to fetch data: {str(e)}."}
 
 
-def get_daily_max_temperature(
+def _get_daily_max_temperature(
     station: str,
     year: Optional[int] = None,
     month: Optional[int] = None,
@@ -103,7 +140,7 @@ def get_daily_max_temperature(
         return {"error": f"Failed to fetch data: {str(e)}."}
 
 
-def get_daily_min_temperature(
+def _get_daily_min_temperature(
     station: str,
     year: Optional[int] = None,
     month: Optional[int] = None,

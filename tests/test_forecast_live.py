@@ -8,7 +8,7 @@ and run only when the environment variable RUN_LIVE_TESTS is set to 'true'.
 
 import unittest
 import os
-from hkopenai.hk_climate_mcp_server.tools.forecast import get_9_day_weather_forecast
+from hkopenai.hk_climate_mcp_server.tools.forecast import _get_9_day_weather_forecast
 
 
 class TestForecastToolsLive(unittest.TestCase):
@@ -29,7 +29,7 @@ class TestForecastToolsLive(unittest.TestCase):
         This test makes a real API call and should be run selectively.
         To run this test with pytest, use: pytest -k test_get_9_day_weather_forecast_live --live-tests
         """
-        result = get_9_day_weather_forecast(lang="en")
+        result = _get_9_day_weather_forecast(lang="en")
         self.assertIsNotNone(result)
         self.assertIsInstance(result, dict, "Result should be a dictionary")
 
@@ -44,7 +44,7 @@ class TestForecastToolsLive(unittest.TestCase):
         """
         Live test to check error handling for an invalid language in get_9_day_weather_forecast.
         """
-        result = get_9_day_weather_forecast(lang="xx")  # An invalid language code
+        result = _get_9_day_weather_forecast(lang="xx")  # An invalid language code
 
         self.assertIsNotNone(result)
         self.assertIsInstance(result, dict, "Result should be a dictionary")

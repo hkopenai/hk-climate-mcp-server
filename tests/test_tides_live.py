@@ -10,8 +10,8 @@ import unittest
 import os
 from datetime import datetime
 from hkopenai.hk_climate_mcp_server.tools.tides import (
-    get_high_low_tides,
-    get_hourly_tides,
+    _get_high_low_tides,
+    _get_hourly_tides,
 )
 
 
@@ -34,7 +34,7 @@ class TestTidesToolsLive(unittest.TestCase):
         To run this test with pytest, use: pytest -k test_get_high_low_tides_live --live-tests
         """
         current_year = datetime.now().year
-        result = get_high_low_tides(station="QUB", year=current_year)
+        result = _get_high_low_tides(station="QUB", year=current_year)
 
         self.assertIsNotNone(result)
         self.assertIsInstance(result, dict, "Result should be a dictionary")
@@ -53,7 +53,7 @@ class TestTidesToolsLive(unittest.TestCase):
         To run this test with pytest, use: pytest -k test_get_hourly_tides_live --live-tests
         """
         current_year = datetime.now().year
-        result = get_hourly_tides(station="QUB", year=current_year)
+        result = _get_hourly_tides(station="QUB", year=current_year)
 
         self.assertIsNotNone(result)
         self.assertIsInstance(result, dict, "Result should be a dictionary")
@@ -70,7 +70,7 @@ class TestTidesToolsLive(unittest.TestCase):
         Live test to check error handling for an invalid station code in get_high_low_tides.
         """
         current_year = datetime.now().year
-        result = get_high_low_tides(station="INVALID", year=current_year)
+        result = _get_high_low_tides(station="INVALID", year=current_year)
 
         self.assertIsNotNone(result)
         self.assertIsInstance(result, dict, "Result should be a dictionary")

@@ -7,102 +7,40 @@ to ensure they correctly fetch and process temperature data from the HKO API.
 
 import unittest
 from unittest.mock import patch, MagicMock
-from hkopenai.hk_climate_mcp_server.tools.temperature import (
-    get_daily_mean_temperature,
-    get_daily_max_temperature,
-    get_daily_min_temperature,
-)
+from hkopenai.hk_climate_mcp_server.tools.temperature import register, _get_daily_mean_temperature, _get_daily_max_temperature, _get_daily_min_temperature
 
 
 class TestTemperatureTools(unittest.TestCase):
     """Test case class for temperature data tools."""
-    @patch("requests.get")
-    def test_get_daily_mean_temperature(self, mock_get):
-        """
-        Test the retrieval of daily mean temperature data from HKO API.
-        
-        Args:
-            mock_get: Mock object for requests.get to simulate API response.
-        """
-        example_json = {
-            "fields": ["Date", "Mean Temperature (degree Celsius)"],
-            "data": [["20250601", "26.5"], ["20250602", "27.0"]],
+    def test_register_tool(self):
+        mock_mcp = MagicMock()
+        register(mock_mcp)
+
+        # Verify that mcp.tool was called for each tool function
+        self.assertEqual(mock_mcp.tool.call_count, 3)
+
+        # Get the decorated functions
+        decorated_funcs = {
+            call.args[0].__name__: call.args[0]
+            for call in mock_mcp.tool.return_value.call_args_list
         }
-        mock_response = MagicMock()
-        mock_response.json.return_value = example_json
-        mock_get.return_value = mock_response
 
-        result = get_daily_mean_temperature(station="HKO")
-        self.assertEqual(result["fields"], example_json["fields"])
-        self.assertEqual(result["data"], example_json["data"])
-        mock_get.assert_called_once_with(
-            "https://data.weather.gov.hk/weatherAPI/opendata/opendata.php",
-            params={
-                "dataType": "CLMTEMP",
-                "lang": "en",
-                "rformat": "json",
-                "station": "HKO",
-            },
-        )
+        # Test get_daily_mean_temperature
+        with patch("hkopenai.hk_climate_mcp_server.tools.temperature._get_daily_mean_temperature") as mock_get_daily_mean_temperature:
+            decorated_funcs["get_daily_mean_temperature"](station="HKO", year=2025)
+            mock_get_daily_mean_temperature.assert_called_once_with(station="HKO", year=2025, month=None, lang="en")
 
-    @patch("requests.get")
-    def test_get_daily_max_temperature(self, mock_get):
-        """
-        Test the retrieval of daily maximum temperature data from HKO API.
-        
-        Args:
-            mock_get: Mock object for requests.get to simulate API response.
-        """
-        example_json = {
-            "fields": ["Date", "Maximum Temperature (degree Celsius)"],
-            "data": [["20250601", "30.2"], ["20250602", "31.5"]],
-        }
-        mock_response = MagicMock()
-        mock_response.json.return_value = example_json
-        mock_get.return_value = mock_response
+        # Test get_daily_max_temperature
+        with patch("hkopenai.hk_climate_mcp_server.tools.temperature._get_daily_max_temperature") as mock_get_daily_max_temperature:
+            decorated_funcs["get_daily_max_temperature"](station="HKO", year=2025, month=6)
+            mock_get_daily_max_temperature.assert_called_once_with(station="HKO", year=2025, month=6, lang="en")
 
-        result = get_daily_max_temperature(station="HKO")
-        self.assertEqual(result["fields"], example_json["fields"])
-        self.assertEqual(result["data"], example_json["data"])
-        mock_get.assert_called_once_with(
-            "https://data.weather.gov.hk/weatherAPI/opendata/opendata.php",
-            params={
-                "dataType": "CLMMAXT",
-                "lang": "en",
-                "rformat": "json",
-                "station": "HKO",
-            },
-        )
-
-    @patch("requests.get")
-    def test_get_daily_min_temperature(self, mock_get):
-        """
-        Test the retrieval of daily minimum temperature data from HKO API.
-        
-        Args:
-            mock_get: Mock object for requests.get to simulate API response.
-        """
-        example_json = {
-            "fields": ["Date", "Minimum Temperature (degree Celsius)"],
-            "data": [["20250601", "23.1"], ["20250602", "24.0"]],
-        }
-        mock_response = MagicMock()
-        mock_response.json.return_value = example_json
-        mock_get.return_value = mock_response
-
-        result = get_daily_min_temperature(station="HKO")
-        self.assertEqual(result["fields"], example_json["fields"])
-        self.assertEqual(result["data"], example_json["data"])
-        mock_get.assert_called_once_with(
-            "https://data.weather.gov.hk/weatherAPI/opendata/opendata.php",
-            params={
-                "dataType": "CLMMINT",
-                "lang": "en",
-                "rformat": "json",
-                "station": "HKO",
-            },
-        )
+        # Test get_daily_min_temperature
+        with patch("hkopenai.hk_climate_mcp_server.tools.temperature._get_daily_min_temperature") as mock_get_daily_min_temperature:
+            decorated_funcs["get_daily_min_temperature"](station="HKO")
+            mock_get_daily_min_temperature.assert_called_once_with(station="HKO", year=None, month=None, lang="en")
 
 
 if __name__ == "__main__":
     unittest.main()
+

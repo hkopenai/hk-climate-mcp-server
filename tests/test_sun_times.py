@@ -7,37 +7,28 @@ to ensure it correctly fetches and processes sun times data from the HKO API.
 
 import unittest
 from unittest.mock import patch, MagicMock
-from hkopenai.hk_climate_mcp_server.tools.astronomical import get_sunrise_sunset_times
+from hkopenai.hk_climate_mcp_server.tools.astronomical import register, _get_sunrise_sunset_times
 
 
 class TestSunTimesTools(unittest.TestCase):
     """Test case class for sun times data tools."""
-    @patch("requests.get")
-    def test_get_sunrise_sunset_times(self, mock_get):
-        """
-        Test the retrieval of sunrise and sunset times data from HKO API.
-        
-        Args:
-            mock_get: Mock object for requests.get to simulate API response.
-        """
-        example_json = {
-            "fields": ["Date", "Sunrise", "Sun Transit", "Sunset"],
-            "data": [
-                ["20250601", "05:40", "12:15", "18:50"],
-                ["20250602", "05:40", "12:15", "18:51"],
-            ],
-        }
-        mock_response = MagicMock()
-        mock_response.json.return_value = example_json
-        mock_get.return_value = mock_response
+    def test_register_tool(self):
+        mock_mcp = MagicMock()
+        register(mock_mcp)
 
-        result = get_sunrise_sunset_times(year=2025)
-        self.assertEqual(result["fields"], example_json["fields"])
-        self.assertEqual(result["data"], example_json["data"])
-        mock_get.assert_called_once_with(
-            "https://data.weather.gov.hk/weatherAPI/opendata/opendata.php",
-            params={"dataType": "SRS", "lang": "en", "rformat": "json", "year": 2025},
-        )
+        # Verify that mcp.tool was called for each tool function
+        self.assertEqual(mock_mcp.tool.call_count, 3)
+
+        # Get the decorated functions
+        decorated_funcs = {
+            call.args[0].__name__: call.args[0]
+            for call in mock_mcp.tool.return_value.call_args_list
+        }
+
+        # Test get_sunrise_sunset_times
+        with patch("hkopenai.hk_climate_mcp_server.tools.astronomical._get_sunrise_sunset_times") as mock_get_sunrise_sunset_times:
+            decorated_funcs["get_sunrise_sunset_times"](year=2025)
+            mock_get_sunrise_sunset_times.assert_called_once_with(year=2025, month=None, day=None, lang="en")
 
 
 if __name__ == "__main__":

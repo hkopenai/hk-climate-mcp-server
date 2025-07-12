@@ -8,9 +8,48 @@ Observatory API.
 
 from typing import Dict, Any, Optional
 import requests
+from fastmcp import FastMCP
+from pydantic import Field
+from typing_extensions import Annotated
 
 
-def get_moon_times(
+def register(mcp: FastMCP):
+    @mcp.tool(
+        description="Get times of moonrise, moon transit and moonset",
+    )
+    def get_moon_times(
+        year: int,
+        month: Optional[int] = None,
+        day: Optional[int] = None,
+        lang: str = "en",
+    ) -> Dict[str, Any]:
+        return _get_moon_times(year=year, month=month, day=day, lang=lang)
+
+
+    @mcp.tool(
+        description="Get times of sunrise, sun transit and sunset for Hong Kong",
+    )
+    def get_sunrise_sunset_times(
+        year: int,
+        month: Optional[int] = None,
+        day: Optional[int] = None,
+        lang: str = "en",
+    ) -> Dict[str, Any]:
+        return _get_sunrise_sunset_times(year=year, month=month, day=day, lang=lang)
+
+
+    @mcp.tool(
+        description="Get Gregorian-Lunar calendar conversion data",
+    )
+    def get_gregorian_lunar_calendar(
+        year: int,
+        month: Optional[int] = None,
+        day: Optional[int] = None,
+        lang: str = "en",
+    ) -> Dict[str, Any]:
+        return _get_gregorian_lunar_calendar(year=year, month=month, day=day, lang=lang)
+
+def _get_moon_times(
     year: int, month: Optional[int] = None, day: Optional[int] = None, lang: str = "en"
 ) -> Dict[str, Any]:
     """
@@ -41,7 +80,7 @@ def get_moon_times(
         return {"error": f"Failed to fetch data: {str(e)}."}
 
 
-def get_sunrise_sunset_times(
+def _get_sunrise_sunset_times(
     year: int, month: Optional[int] = None, day: Optional[int] = None, lang: str = "en"
 ) -> Dict[str, Any]:
     """
@@ -72,7 +111,7 @@ def get_sunrise_sunset_times(
         return {"error": f"Failed to fetch data: {str(e)}."}
 
 
-def get_gregorian_lunar_calendar(
+def _get_gregorian_lunar_calendar(
     year: int, month: Optional[int] = None, day: Optional[int] = None, lang: str = "en"
 ) -> Dict[str, Any]:
     """
@@ -108,3 +147,4 @@ def get_gregorian_lunar_calendar(
         return response.json()
     except (requests.RequestException, ValueError) as e:
         return {"error": f"Failed to fetch data: {str(e)}."}
+

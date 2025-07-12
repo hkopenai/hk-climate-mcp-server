@@ -6,9 +6,17 @@ This module provides tools to retrieve visibility data from the Hong Kong Observ
 
 from typing import Dict, Any
 import requests
+from fastmcp import FastMCP
 
 
-def get_visibility(lang: str = "en") -> Dict[str, Any]:
+def register(mcp: FastMCP):
+    @mcp.tool(
+        description="Get latest 10-minute mean visibility data for Hong Kong",
+    )
+    def get_visibility(lang: str = "en") -> Dict[str, Any]:
+        return _get_visibility(lang=lang)
+
+def _get_visibility(lang: str = "en") -> Dict[str, Any]:
     """
     Get latest 10-minute mean visibility data for Hong Kong.
 

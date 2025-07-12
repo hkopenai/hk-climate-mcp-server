@@ -7,9 +7,19 @@ humidity, rainfall, and weather warnings from the Hong Kong Observatory API.
 
 from typing import Dict
 import requests
+from fastmcp import FastMCP
 
 
-def get_current_weather(
+def register(mcp: FastMCP):
+    @mcp.tool(
+        description="Get current weather data, warnings, temp, humidity in HK from HKO.",
+    )
+    def get_current_weather(
+        region: str = "Hong Kong Observatory", lang: str = "en"
+    ) -> Dict:
+        return _get_current_weather(region, lang)
+
+def _get_current_weather(
     region: str = "Hong Kong Observatory", lang: str = "en"
 ) -> Dict:
     """
@@ -37,7 +47,7 @@ def get_current_weather(
     if "warningMessage" in data:
         if isinstance(data["warningMessage"], list) and data["warningMessage"]:
             warning = data["warningMessage"][0]
-        elif data["warningMessage"]:  # Handle string case
+        elif data["warningMessage"]:
             warning = data["warningMessage"]
 
     # Get default values from HKO data

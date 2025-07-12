@@ -8,73 +8,38 @@ to ensure they correctly fetch and process tides data from the HKO API.
 import unittest
 from unittest.mock import patch, MagicMock
 import json
-from hkopenai.hk_climate_mcp_server.tools.tides import (
-    get_hourly_tides,
-    get_high_low_tides,
-)
+from hkopenai.hk_climate_mcp_server.tools.tides import register
 
 
 class TestTidesTools(unittest.TestCase):
     """Test case class for tides data tools."""
-    @patch("requests.get")
-    def test_get_hourly_tides(self, mock_get):
-        """
-        Test the retrieval of hourly tides data from HKO API.
-        
-        Args:
-            mock_get: Mock object for requests.get to simulate API response.
-        """
-        example_json = {
-            "fields": ["Date time", "Height (m)"],
-            "data": [["202506010100", "1.2"], ["202506010200", "1.3"]],
+    def test_register_tool(self):
+        mock_mcp = MagicMock()
+        register(mock_mcp)
+
+        # Verify that mcp.tool was called for each tool function
+        self.assertEqual(mock_mcp.tool.call_count, 3)
+
+        # Get the decorated functions
+        decorated_funcs = {
+            call.args[0].__name__: call.args[0]
+            for call in mock_mcp.tool.return_value.call_args_list
         }
-        mock_response = MagicMock()
-        mock_response.content = json.dumps(example_json).encode("utf-8")
-        mock_get.return_value = mock_response
 
-        result = get_hourly_tides(station="CCH", year=2025)
-        self.assertEqual(result["fields"], example_json["fields"])
-        self.assertEqual(result["data"], example_json["data"])
-        mock_get.assert_called_once_with(
-            "https://data.weather.gov.hk/weatherAPI/opendata/opendata.php",
-            params={
-                "dataType": "HHOT",
-                "lang": "en",
-                "rformat": "json",
-                "station": "CCH",
-                "year": 2025,
-            },
-        )
+        # Test get_hourly_tides
+        with patch("hkopenai.hk_climate_mcp_server.tools.tides._get_hourly_tides") as mock_get_hourly_tides:
+            decorated_funcs["get_hourly_tides"](station="TBT", year=2025, options={"month": 6, "day": 30})
+            mock_get_hourly_tides.assert_called_once_with(station="TBT", year=2025, month=6, day=30, hour=None, lang="en")
 
-    @patch("requests.get")
-    def test_get_high_low_tides(self, mock_get):
-        """
-        Test the retrieval of high and low tides data from HKO API.
-        
-        Args:
-            mock_get: Mock object for requests.get to simulate API response.
-        """
-        example_json = {
-            "fields": ["Date time", "Type", "Height (m)"],
-            "data": [["202506010430", "High", "1.8"], ["202506011030", "Low", "0.5"]],
-        }
-        mock_response = MagicMock()
-        mock_response.content = json.dumps(example_json).encode("utf-8")
-        mock_get.return_value = mock_response
+        # Test get_high_low_tides
+        with patch("hkopenai.hk_climate_mcp_server.tools.tides._get_high_low_tides") as mock_get_high_low_tides:
+            decorated_funcs["get_high_low_tides"](station="TBT", year=2025, options={"month": 6})
+            mock_get_high_low_tides.assert_called_once_with(station="TBT", year=2025, month=6, day=None, hour=None, lang="en")
 
-        result = get_high_low_tides(station="CCH", year=2025)
-        self.assertEqual(result["fields"], example_json["fields"])
-        self.assertEqual(result["data"], example_json["data"])
-        mock_get.assert_called_once_with(
-            "https://data.weather.gov.hk/weatherAPI/opendata/opendata.php",
-            params={
-                "dataType": "HLT",
-                "lang": "en",
-                "station": "CCH",
-                "year": 2025,
-                "rformat": "json",
-            },
-        )
+        # Test get_tide_station_codes
+        with patch("hkopenai.hk_climate_mcp_server.tools.tides._get_tide_station_codes") as mock_get_tide_station_codes:
+            decorated_funcs["get_tide_station_codes"](lang="en")
+            mock_get_tide_station_codes.assert_called_once_with("en")
 
 
 if __name__ == "__main__":

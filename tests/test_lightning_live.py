@@ -8,7 +8,7 @@ only when the environment variable RUN_LIVE_TESTS is set to 'true'.
 
 import unittest
 import os
-from hkopenai.hk_climate_mcp_server.tools.lightning import get_lightning_data
+from hkopenai.hk_climate_mcp_server.tools.lightning import _get_lightning_data
 
 
 class TestLightningToolsLive(unittest.TestCase):
@@ -29,7 +29,7 @@ class TestLightningToolsLive(unittest.TestCase):
         This test makes a real API call and should be run selectively.
         To run this test with pytest, use: pytest -k test_get_lightning_data_live --live-tests
         """
-        result = get_lightning_data(lang="en")
+        result = _get_lightning_data(lang="en")
         self.assertIsNotNone(result)
         self.assertIsInstance(result, dict, "Result should be a dictionary")
 
@@ -44,7 +44,7 @@ class TestLightningToolsLive(unittest.TestCase):
         """
         Live test to check error handling for an invalid language in get_lightning_data.
         """
-        result = get_lightning_data(lang="xx")  # An invalid language code
+        result = _get_lightning_data(lang="xx")  # An invalid language code
 
         self.assertIsNotNone(result)
         self.assertIsInstance(result, dict, "Result should be a dictionary")

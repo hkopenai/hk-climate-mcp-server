@@ -7,9 +7,24 @@ This module provides tools to retrieve weather forecast information including
 
 from typing import Dict, Any
 import requests
+from fastmcp import FastMCP
 
 
-def get_9_day_weather_forecast(lang: str = "en") -> Dict[str, Any]:
+def register(mcp: FastMCP):
+    @mcp.tool(
+        description="Get 9-day weather forecast for HK with general situation, daily data.",
+    )
+    def get_9_day_weather_forecast(lang: str = "en") -> Dict[str, Any]:
+        return _get_9_day_weather_forecast(lang)
+
+
+    @mcp.tool(
+        description="Get local weather forecast for HK with description, outlook, update.",
+    )
+    def get_local_weather_forecast(lang: str = "en") -> Dict[str, Any]:
+        return _get_local_weather_forecast(lang)
+
+def _get_9_day_weather_forecast(lang: str = "en") -> Dict[str, Any]:
     """
     Get the 9-day weather forecast for Hong Kong.
 
@@ -62,7 +77,7 @@ def get_9_day_weather_forecast(lang: str = "en") -> Dict[str, Any]:
     return forecast
 
 
-def get_local_weather_forecast(lang: str = "en") -> Dict[str, Any]:
+def _get_local_weather_forecast(lang: str = "en") -> Dict[str, Any]:
     """
     Get local weather forecast for Hong Kong.
 

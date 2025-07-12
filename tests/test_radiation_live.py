@@ -1,6 +1,6 @@
 import unittest
 import os
-from hkopenai.hk_climate_mcp_server.tools.radiation import get_weather_radiation_report
+from hkopenai.hk_climate_mcp_server.tools.radiation import _get_weather_radiation_report
 from datetime import datetime, timedelta
 
 
@@ -17,7 +17,7 @@ class TestRadiationToolsLive(unittest.TestCase):
         """
         # Use yesterday's date in YYYYMMDD format
         yesterday = (datetime.now() - timedelta(days=1)).strftime("%Y%m%d")
-        result = get_weather_radiation_report(date=yesterday, station="HKO")
+        result = _get_weather_radiation_report(date=yesterday, station="HKO")
         self.assertIsNotNone(result)
         self.assertIsInstance(result, dict, "Result should be a dictionary")
 
@@ -32,7 +32,7 @@ class TestRadiationToolsLive(unittest.TestCase):
         """
         Live test to check error handling for an invalid date format in get_weather_radiation_report.
         """
-        result = get_weather_radiation_report(
+        result = _get_weather_radiation_report(
             date="2025-06-18", station="HKO"
         )  # Invalid date format
 
@@ -53,7 +53,7 @@ class TestRadiationToolsLive(unittest.TestCase):
         Live test to check error handling for a future date in get_weather_radiation_report.
         """
         tomorrow = (datetime.now() + timedelta(days=1)).strftime("%Y%m%d")
-        result = get_weather_radiation_report(
+        result = _get_weather_radiation_report(
             date=tomorrow, station="HKO"
         )  # Future date
 
@@ -73,7 +73,7 @@ class TestRadiationToolsLive(unittest.TestCase):
         Live test to check error handling for an invalid station in get_weather_radiation_report.
         """
         yesterday = (datetime.now() - timedelta(days=1)).strftime("%Y%m%d")
-        result = get_weather_radiation_report(
+        result = _get_weather_radiation_report(
             date=yesterday, station="INVALID"
         )  # Invalid station
 

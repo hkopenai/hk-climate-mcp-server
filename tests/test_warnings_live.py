@@ -1,9 +1,9 @@
 import unittest
 import os
 from hkopenai.hk_climate_mcp_server.tools.warnings import (
-    get_weather_warning_summary,
-    get_weather_warning_info,
-    get_special_weather_tips,
+    _get_weather_warning_summary,
+    _get_weather_warning_info,
+    _get_special_weather_tips,
 )
 
 
@@ -18,7 +18,7 @@ class TestWarningsToolsLive(unittest.TestCase):
         This test makes a real API call and should be run selectively.
         To run this test with pytest, use: pytest -k test_get_weather_warning_summary_live --live-tests
         """
-        result = get_weather_warning_summary(lang="en")
+        result = _get_weather_warning_summary(lang="en")
         self.assertIsNotNone(result)
         self.assertIsInstance(result, dict, "Result should be a dictionary")
 
@@ -33,7 +33,7 @@ class TestWarningsToolsLive(unittest.TestCase):
         """
         Live test to check error handling for an invalid language in get_weather_warning_summary.
         """
-        result = get_weather_warning_summary(lang="xx")  # An invalid language code
+        result = _get_weather_warning_summary(lang="xx")  # An invalid language code
 
         self.assertIsNotNone(result)
         self.assertIsInstance(result, dict, "Result should be a dictionary")
@@ -51,7 +51,7 @@ class TestWarningsToolsLive(unittest.TestCase):
         """
         Live test to fetch actual weather warning info data from Hong Kong Observatory.
         """
-        result = get_weather_warning_info(lang="en")
+        result = _get_weather_warning_info(lang="en")
         self.assertIsNotNone(result)
         self.assertIsInstance(result, dict, "Result should be a dictionary")
         self.assertFalse("error" in result, result)
@@ -64,7 +64,7 @@ class TestWarningsToolsLive(unittest.TestCase):
         """
         Live test to check error handling for an invalid language in get_weather_warning_info.
         """
-        result = get_weather_warning_info(lang="xx")
+        result = _get_weather_warning_info(lang="xx")
         self.assertIsNotNone(result)
         self.assertIsInstance(result, dict, "Result should be a dictionary")
         self.assertTrue(
@@ -81,7 +81,7 @@ class TestWarningsToolsLive(unittest.TestCase):
         """
         Live test to fetch actual special weather tips data from Hong Kong Observatory.
         """
-        result = get_special_weather_tips(lang="en")
+        result = _get_special_weather_tips(lang="en")
         self.assertIsNotNone(result)
         self.assertIsInstance(result, dict, "Result should be a dictionary")
         self.assertFalse("error" in result, result)
@@ -94,7 +94,7 @@ class TestWarningsToolsLive(unittest.TestCase):
         """
         Live test to check error handling for an invalid language in get_special_weather_tips.
         """
-        result = get_special_weather_tips(lang="xx")
+        result = _get_special_weather_tips(lang="xx")
         self.assertIsNotNone(result)
         self.assertIsInstance(result, dict, "Result should be a dictionary")
         self.assertTrue(

@@ -7,9 +7,31 @@ the Hong Kong Observatory API.
 
 from typing import Dict, Any
 import requests
+from fastmcp import FastMCP
 
 
-def get_weather_warning_summary(lang: str = "en") -> Dict[str, Any]:
+def register(mcp: FastMCP):
+    @mcp.tool(
+        description="Get weather warning summary for HK with messages and update.",
+    )
+    def get_weather_warning_summary(lang: str = "en") -> Dict[str, Any]:
+        return _get_weather_warning_summary(lang)
+
+
+    @mcp.tool(
+        description="Get detailed weather warning info for HK with statement and update.",
+    )
+    def get_weather_warning_info(lang: str = "en") -> Dict[str, Any]:
+        return _get_weather_warning_info(lang)
+
+
+    @mcp.tool(
+        description="Get special weather tips for Hong Kong including tips list and update.",
+    )
+    def get_special_weather_tips(lang: str = "en") -> Dict[str, Any]:
+        return _get_special_weather_tips(lang)
+
+def _get_weather_warning_summary(lang: str = "en") -> Dict[str, Any]:
     """
     Get weather warning summary for Hong Kong.
 
@@ -35,7 +57,7 @@ def get_weather_warning_summary(lang: str = "en") -> Dict[str, Any]:
     }
 
 
-def get_weather_warning_info(lang: str = "en") -> Dict[str, Any]:
+def _get_weather_warning_info(lang: str = "en") -> Dict[str, Any]:
     """
     Get detailed weather warning information for Hong Kong.
 
@@ -61,7 +83,7 @@ def get_weather_warning_info(lang: str = "en") -> Dict[str, Any]:
     }
 
 
-def get_special_weather_tips(lang: str = "en") -> Dict[str, Any]:
+def _get_special_weather_tips(lang: str = "en") -> Dict[str, Any]:
     """
     Get special weather tips for Hong Kong.
 

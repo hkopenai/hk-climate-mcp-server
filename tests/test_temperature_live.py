@@ -3,9 +3,9 @@ import os
 import subprocess
 import sys
 from hkopenai.hk_climate_mcp_server.tools.temperature import (
-    get_daily_mean_temperature,
-    get_daily_max_temperature,
-    get_daily_min_temperature,
+    _get_daily_mean_temperature,
+    _get_daily_max_temperature,
+    _get_daily_min_temperature,
 )
 
 
@@ -20,7 +20,7 @@ class TestTemperatureToolsLive(unittest.TestCase):
         This test makes a real API call and should be run selectively.
         To run this test with pytest, use: pytest -k test_get_daily_mean_temperature_live --live-tests
         """
-        result = get_daily_mean_temperature(station="HKO")
+        result = _get_daily_mean_temperature(station="HKO")
         self.assertIsNotNone(result)
         self.assertIsInstance(result, dict, "Result should be a dictionary")
         # Check if the response contains an error field, which indicates a failure in data retrieval
@@ -35,7 +35,7 @@ class TestTemperatureToolsLive(unittest.TestCase):
         Live test to fetch actual daily maximum temperature data from Hong Kong Observatory.
         This test makes a real API call and should be run selectively.
         """
-        result = get_daily_max_temperature(station="HKO")
+        result = _get_daily_max_temperature(station="HKO")
         self.assertIsNotNone(result)
         self.assertIsInstance(result, dict, "Result should be a dictionary")
         # Check if the response contains an error field, which indicates a failure in data retrieval
@@ -49,10 +49,10 @@ class TestTemperatureToolsLive(unittest.TestCase):
         """
         Live test to fetch actual daily minimum temperature data from Hong Kong Observatory.
         """
-        result = get_daily_min_temperature(station="HKO")
+        result = _get_daily_min_temperature(station="HKO")
         self.assertIsNotNone(result)
         self.assertIsInstance(result, dict, "Result should be a dictionary")
-        # Check if the response contains an error field, which indicates a failure in data retrieval
+        # Check if the response contains an.error field, which indicates a failure in data retrieval
         self.assertFalse("error" in result, result)
 
     @unittest.skipUnless(
@@ -63,7 +63,7 @@ class TestTemperatureToolsLive(unittest.TestCase):
         """
         Live test to check error handling for an invalid station in get_daily_mean_temperature.
         """
-        result = get_daily_mean_temperature(station="INVALID")
+        result = _get_daily_mean_temperature(station="INVALID")
         self.assertIsNotNone(result)
         self.assertIsInstance(result, dict, "Result should be a dictionary")
         self.assertTrue(
@@ -80,7 +80,7 @@ class TestTemperatureToolsLive(unittest.TestCase):
         """
         Live test to check error handling for an invalid year in get_daily_max_temperature.
         """
-        result = get_daily_max_temperature(station="HKO", year=2050)  # Invalid year
+        result = _get_daily_max_temperature(station="HKO", year=2050)  # Invalid year
         self.assertIsNotNone(result)
         self.assertIsInstance(result, dict, "Result should be a dictionary")
         self.assertTrue(

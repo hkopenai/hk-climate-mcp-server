@@ -7,7 +7,7 @@ ensuring it handles various input scenarios and API responses correctly.
 import unittest
 from unittest.mock import patch, MagicMock
 import requests
-from hkopenai.hk_climate_mcp_server.tools.radiation import get_weather_radiation_report
+from hkopenai.hk_climate_mcp_server.tools.radiation import register, _get_weather_radiation_report, _get_radiation_station_codes, is_date_in_future
 
 
 class TestRadiationTools(unittest.TestCase):
@@ -44,7 +44,7 @@ class TestRadiationTools(unittest.TestCase):
         mock_response.json.return_value = self.EXAMPLE_JSON
         mock_get.return_value = mock_response
 
-        result = get_weather_radiation_report(date="20250623", station="HKO")
+        result = _get_weather_radiation_report(date="20250623", station="HKO")
         mock_get.assert_called_once_with(
             "https://data.weather.gov.hk/weatherAPI/opendata/opendata.php",
             params={
@@ -63,7 +63,7 @@ class TestRadiationTools(unittest.TestCase):
 
     def test_get_weather_radiation_report_missing_station(self):
         """Test handling of missing station parameter."""
-        result = get_weather_radiation_report(date="20250623", station="")
+        result = _get_weather_radiation_report(date="20250623", station="")
         self.assertIsInstance(result, dict, "Result should be a dictionary")
         self.assertIn(
             "error", result, "Result should contain error message for missing station"
@@ -71,7 +71,7 @@ class TestRadiationTools(unittest.TestCase):
 
     def test_get_weather_radiation_report_invalid_station(self):
         """Test handling of invalid station parameter."""
-        result = get_weather_radiation_report(date="20250623", station="INVALID")
+        result = _get_weather_radiation_report(date="20250623", station="INVALID")
         self.assertIsInstance(result, dict, "Result should be a dictionary")
         self.assertIn(
             "error", result, "Result should contain error message for invalid station"
@@ -79,7 +79,7 @@ class TestRadiationTools(unittest.TestCase):
 
     def test_get_weather_radiation_report_missing_date(self):
         """Test handling of missing date parameter."""
-        result = get_weather_radiation_report(date="", station="HKO")
+        result = _get_weather_radiation_report(date="", station="HKO")
         self.assertIsInstance(result, dict, "Result should be a dictionary")
         self.assertIn(
             "error", result, "Result should contain error message for missing date"
@@ -87,7 +87,7 @@ class TestRadiationTools(unittest.TestCase):
 
     def test_get_weather_radiation_report_invalid_date_format(self):
         """Test handling of invalid date format."""
-        result = get_weather_radiation_report(date="2025-06-23", station="HKO")
+        result = _get_weather_radiation_report(date="2025-06-23", station="HKO")
         self.assertIsInstance(result, dict, "Result should be a dictionary")
         self.assertIn(
             "error",
@@ -106,7 +106,7 @@ class TestRadiationTools(unittest.TestCase):
         mock_response.json.return_value = self.EXAMPLE_JSON
         mock_get.return_value = mock_response
 
-        result = get_weather_radiation_report(date="20250623", station="HKO")
+        result = _get_weather_radiation_report(date="20250623", station="HKO")
         mock_get.assert_called_once_with(
             "https://data.weather.gov.hk/weatherAPI/opendata/opendata.php",
             params={
@@ -130,7 +130,7 @@ class TestRadiationTools(unittest.TestCase):
     def test_get_weather_radiation_report_date_in_future(self, mock_date_check):
         """Test handling of future date input for radiation report."""
         mock_date_check.return_value = True
-        result = get_weather_radiation_report(date="20250625", station="HKO")
+        result = _get_weather_radiation_report(date="20250625", station="HKO")
         self.assertIsInstance(result, dict, "Result should be a dictionary")
         self.assertIn(
             "error",
@@ -151,7 +151,7 @@ class TestRadiationTools(unittest.TestCase):
         mock_response.json.side_effect = ValueError("Invalid JSON")
         mock_get.return_value = mock_response
 
-        result = get_weather_radiation_report(date="20230618", station="HKO")
+        result = _get_weather_radiation_report(date="20230618", station="HKO")
         self.assertIn("error", result)
         self.assertEqual(
             result["error"],
@@ -163,11 +163,34 @@ class TestRadiationTools(unittest.TestCase):
         """Test error handling for request exceptions."""
         mock_get.side_effect = requests.RequestException("Network error")
 
-        result = get_weather_radiation_report(date="20230618", station="HKO")
+        result = _get_weather_radiation_report(date="20230618", station="HKO")
         self.assertIn("error", result)
         self.assertTrue(
             result["error"].startswith("Failed to fetch data: Network error")
         )
+
+    def test_register_tool(self):
+        mock_mcp = MagicMock()
+        register(mock_mcp)
+
+        # Verify that mcp.tool was called for each tool function
+        self.assertEqual(mock_mcp.tool.call_count, 2)
+
+        # Get the decorated functions
+        decorated_funcs = {
+            call.args[0].__name__: call.args[0]
+            for call in mock_mcp.tool.return_value.call_args_list
+        }
+
+        # Test get_weather_radiation_report
+        with patch("hkopenai.hk_climate_mcp_server.tools.radiation._get_weather_radiation_report") as mock_get_weather_radiation_report:
+            decorated_funcs["get_weather_radiation_report"](date="20250629", station="HKO")
+            mock_get_weather_radiation_report.assert_called_once_with(date="20250629", station="HKO", lang="en")
+
+        # Test get_radiation_station_codes
+        with patch("hkopenai.hk_climate_mcp_server.tools.radiation._get_radiation_station_codes") as mock_get_radiation_station_codes:
+            decorated_funcs["get_radiation_station_codes"](lang="en")
+            mock_get_radiation_station_codes.assert_called_once_with(lang="en")
 
 
 if __name__ == "__main__":
