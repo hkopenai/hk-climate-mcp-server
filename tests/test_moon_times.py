@@ -12,7 +12,9 @@ from hkopenai.hk_climate_mcp_server.tools.astronomical import register
 
 class TestMoonTimesTools(unittest.TestCase):
     """Test case class for moon times data tools."""
+
     def test_register_tool(self):
+        """Tests that the moon times tool is correctly registered."""
         mock_mcp = MagicMock()
         register(mock_mcp)
 
@@ -26,9 +28,13 @@ class TestMoonTimesTools(unittest.TestCase):
         }
 
         # Test get_moon_times
-        with patch("hkopenai.hk_climate_mcp_server.tools.astronomical._get_moon_times") as mock_get_moon_times:
+        with patch(
+            "hkopenai.hk_climate_mcp_server.tools.astronomical._get_moon_times"
+        ) as mock_get_moon_times:
             decorated_funcs["get_moon_times"](year=2025, month=6, day=30)
-            mock_get_moon_times.assert_called_once_with(year=2025, month=6, day=30, lang="en")
+            mock_get_moon_times.assert_called_once_with(
+                year=2025, month=6, day=30, lang="en"
+            )
 
 
 if __name__ == "__main__":

@@ -1,5 +1,7 @@
-import unittest
+"""Live unit tests for weather warnings data retrieval functionality."""
+
 import os
+import unittest
 from hkopenai.hk_climate_mcp_server.tools.warnings import (
     _get_weather_warning_summary,
     _get_weather_warning_info,
@@ -8,6 +10,7 @@ from hkopenai.hk_climate_mcp_server.tools.warnings import (
 
 
 class TestWarningsToolsLive(unittest.TestCase):
+    """Live tests for weather warnings data retrieval functionality."""
     @unittest.skipUnless(
         os.environ.get("RUN_LIVE_TESTS") == "true",
         "Set RUN_LIVE_TESTS=true to run live tests",

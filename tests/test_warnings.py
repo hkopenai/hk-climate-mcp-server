@@ -12,7 +12,9 @@ from hkopenai.hk_climate_mcp_server.tools.warnings import register
 
 class TestWarningsTools(unittest.TestCase):
     """Test case class for weather warnings data tools."""
+
     def test_register_tool(self):
+        """Tests that the warnings tools are correctly registered."""
         mock_mcp = MagicMock()
         register(mock_mcp)
 
@@ -26,17 +28,23 @@ class TestWarningsTools(unittest.TestCase):
         }
 
         # Test get_weather_warning_summary
-        with patch("hkopenai.hk_climate_mcp_server.tools.warnings._get_weather_warning_summary") as mock_get_weather_warning_summary:
+        with patch(
+            "hkopenai.hk_climate_mcp_server.tools.warnings._get_weather_warning_summary"
+        ) as mock_get_weather_warning_summary:
             decorated_funcs["get_weather_warning_summary"](lang="en")
             mock_get_weather_warning_summary.assert_called_once_with("en")
 
         # Test get_weather_warning_info
-        with patch("hkopenai.hk_climate_mcp_server.tools.warnings._get_weather_warning_info") as mock_get_weather_warning_info:
+        with patch(
+            "hkopenai.hk_climate_mcp_server.tools.warnings._get_weather_warning_info"
+        ) as mock_get_weather_warning_info:
             decorated_funcs["get_weather_warning_info"](lang="en")
             mock_get_weather_warning_info.assert_called_once_with("en")
 
         # Test get_special_weather_tips
-        with patch("hkopenai.hk_climate_mcp_server.tools.warnings._get_special_weather_tips") as mock_get_special_weather_tips:
+        with patch(
+            "hkopenai.hk_climate_mcp_server.tools.warnings._get_special_weather_tips"
+        ) as mock_get_special_weather_tips:
             decorated_funcs["get_special_weather_tips"](lang="en")
             mock_get_special_weather_tips.assert_called_once_with("en")
 

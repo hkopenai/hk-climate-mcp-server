@@ -6,11 +6,10 @@ and radiation level reports from the Hong Kong Observatory API.
 """
 
 from datetime import datetime
-from typing import Dict, Any, Optional
+from typing import Dict, Any, Optional, Annotated
+from pydantic import Field
 import requests
 from fastmcp import FastMCP
-from pydantic import Field
-from typing_extensions import Annotated
 
 # Station names in different languages: en (English), tc (Traditional Chinese),
 # sc (Simplified Chinese)
@@ -127,6 +126,7 @@ VALID_STATIONS = {
 
 
 def register(mcp: FastMCP):
+    """Registers the radiation data tools with the FastMCP server."""
     @mcp.tool(
         description="Get weather, radiation report for HK. Date must be YYYYMMDD.",
     )
@@ -141,12 +141,12 @@ def register(mcp: FastMCP):
             date=date, station=station, lang=lang or "en"
         )
 
-
     @mcp.tool(
         description="Get list of weather station codes and names for radiation reports in HK.",
     )
     def get_radiation_station_codes(lang: str = "en") -> Dict[str, str]:
         return _get_radiation_station_codes(lang=lang)
+
 
 def _get_weather_radiation_report(
     date: str = "Unknown", station: str = "Unknown", lang: str = "en"
@@ -222,7 +222,6 @@ def _get_radiation_station_codes(lang: str = "en") -> Dict[str, str]:
     """
     # Return the dictionary for the specified language, default to English
     return VALID_STATIONS.get(lang, VALID_STATIONS["en"])
-
 
 
 def is_date_in_future(date_str: str) -> bool:

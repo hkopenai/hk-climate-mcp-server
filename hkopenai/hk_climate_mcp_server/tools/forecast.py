@@ -11,18 +11,19 @@ from fastmcp import FastMCP
 
 
 def register(mcp: FastMCP):
+    """Registers the forecast tools with the FastMCP server."""
     @mcp.tool(
         description="Get 9-day weather forecast for HK with general situation, daily data.",
     )
     def get_9_day_weather_forecast(lang: str = "en") -> Dict[str, Any]:
         return _get_9_day_weather_forecast(lang)
 
-
     @mcp.tool(
         description="Get local weather forecast for HK with description, outlook, update.",
     )
     def get_local_weather_forecast(lang: str = "en") -> Dict[str, Any]:
         return _get_local_weather_forecast(lang)
+
 
 def _get_9_day_weather_forecast(lang: str = "en") -> Dict[str, Any]:
     """

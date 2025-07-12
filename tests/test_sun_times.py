@@ -7,12 +7,14 @@ to ensure it correctly fetches and processes sun times data from the HKO API.
 
 import unittest
 from unittest.mock import patch, MagicMock
-from hkopenai.hk_climate_mcp_server.tools.astronomical import register, _get_sunrise_sunset_times
+from hkopenai.hk_climate_mcp_server.tools.astronomical import register
 
 
 class TestSunTimesTools(unittest.TestCase):
     """Test case class for sun times data tools."""
+
     def test_register_tool(self):
+        """Tests that the sun times tool is correctly registered."""
         mock_mcp = MagicMock()
         register(mock_mcp)
 
@@ -26,9 +28,13 @@ class TestSunTimesTools(unittest.TestCase):
         }
 
         # Test get_sunrise_sunset_times
-        with patch("hkopenai.hk_climate_mcp_server.tools.astronomical._get_sunrise_sunset_times") as mock_get_sunrise_sunset_times:
+        with patch(
+            "hkopenai.hk_climate_mcp_server.tools.astronomical._get_sunrise_sunset_times"
+        ) as mock_get_sunrise_sunset_times:
             decorated_funcs["get_sunrise_sunset_times"](year=2025)
-            mock_get_sunrise_sunset_times.assert_called_once_with(year=2025, month=None, day=None, lang="en")
+            mock_get_sunrise_sunset_times.assert_called_once_with(
+                year=2025, month=None, day=None, lang="en"
+            )
 
 
 if __name__ == "__main__":

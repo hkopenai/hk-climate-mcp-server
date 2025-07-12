@@ -11,6 +11,7 @@ from fastmcp import FastMCP
 
 
 def register(mcp: FastMCP):
+    """Registers the temperature data tools with the FastMCP server."""
     @mcp.tool(
         description="Get daily mean temperature data for a specific station in Hong Kong",
     )
@@ -20,8 +21,9 @@ def register(mcp: FastMCP):
         month: Optional[int] = None,
         lang: str = "en",
     ) -> Dict[str, Any]:
-        return _get_daily_mean_temperature(station=station, year=year, month=month, lang=lang)
-
+        return _get_daily_mean_temperature(
+            station=station, year=year, month=month, lang=lang
+        )
 
     @mcp.tool(
         description="Get daily maximum temperature data for a specific station in Hong Kong",
@@ -32,8 +34,9 @@ def register(mcp: FastMCP):
         month: Optional[int] = None,
         lang: str = "en",
     ) -> Dict[str, Any]:
-        return _get_daily_max_temperature(station=station, year=year, month=month, lang=lang)
-
+        return _get_daily_max_temperature(
+            station=station, year=year, month=month, lang=lang
+        )
 
     @mcp.tool(
         description="Get daily minimum temperature data for a specific station in Hong Kong",
@@ -44,7 +47,10 @@ def register(mcp: FastMCP):
         month: Optional[int] = None,
         lang: str = "en",
     ) -> Dict[str, Any]:
-        return _get_daily_min_temperature(station=station, year=year, month=month, lang=lang)
+        return _get_daily_min_temperature(
+            station=station, year=year, month=month, lang=lang
+        )
+
 
 def _get_daily_mean_temperature(
     station: str,

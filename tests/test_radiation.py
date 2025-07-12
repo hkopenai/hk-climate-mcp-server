@@ -7,7 +7,10 @@ ensuring it handles various input scenarios and API responses correctly.
 import unittest
 from unittest.mock import patch, MagicMock
 import requests
-from hkopenai.hk_climate_mcp_server.tools.radiation import register, _get_weather_radiation_report, _get_radiation_station_codes, is_date_in_future
+from hkopenai.hk_climate_mcp_server.tools.radiation import (
+    register,
+    _get_weather_radiation_report,
+)
 
 
 class TestRadiationTools(unittest.TestCase):
@@ -170,6 +173,7 @@ class TestRadiationTools(unittest.TestCase):
         )
 
     def test_register_tool(self):
+        """Tests that the radiation tools are correctly registered."""
         mock_mcp = MagicMock()
         register(mock_mcp)
 
@@ -183,12 +187,20 @@ class TestRadiationTools(unittest.TestCase):
         }
 
         # Test get_weather_radiation_report
-        with patch("hkopenai.hk_climate_mcp_server.tools.radiation._get_weather_radiation_report") as mock_get_weather_radiation_report:
-            decorated_funcs["get_weather_radiation_report"](date="20250629", station="HKO")
-            mock_get_weather_radiation_report.assert_called_once_with(date="20250629", station="HKO", lang="en")
+        with patch(
+            "hkopenai.hk_climate_mcp_server.tools.radiation._get_weather_radiation_report"
+        ) as mock_get_weather_radiation_report:
+            decorated_funcs["get_weather_radiation_report"](
+                date="20250629", station="HKO"
+            )
+            mock_get_weather_radiation_report.assert_called_once_with(
+                date="20250629", station="HKO", lang="en"
+            )
 
         # Test get_radiation_station_codes
-        with patch("hkopenai.hk_climate_mcp_server.tools.radiation._get_radiation_station_codes") as mock_get_radiation_station_codes:
+        with patch(
+            "hkopenai.hk_climate_mcp_server.tools.radiation._get_radiation_station_codes"
+        ) as mock_get_radiation_station_codes:
             decorated_funcs["get_radiation_station_codes"](lang="en")
             mock_get_radiation_station_codes.assert_called_once_with(lang="en")
 

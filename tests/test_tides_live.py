@@ -18,11 +18,12 @@ from hkopenai.hk_climate_mcp_server.tools.tides import (
 class TestTidesToolsLive(unittest.TestCase):
     """
     Test case class for live testing of tides tools.
-    
-    This class contains test methods to verify the correct functioning of 
+
+    This class contains test methods to verify the correct functioning of
     tides data retrieval functions using real API calls to the Hong Kong Observatory.
     Tests are skipped unless the RUN_LIVE_TESTS environment variable is set to 'true'.
     """
+
     @unittest.skipUnless(
         os.environ.get("RUN_LIVE_TESTS") == "true",
         "Set RUN_LIVE_TESTS=true to run live tests",

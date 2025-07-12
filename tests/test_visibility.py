@@ -41,6 +41,7 @@ class TestVisibilityTools(unittest.TestCase):
         )
 
     def test_register_tool(self):
+        """Tests that the visibility tool is correctly registered."""
         mock_mcp = MagicMock()
         register(mock_mcp)
 

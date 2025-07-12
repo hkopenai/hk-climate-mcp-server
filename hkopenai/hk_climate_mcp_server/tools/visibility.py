@@ -10,11 +10,22 @@ from fastmcp import FastMCP
 
 
 def register(mcp: FastMCP):
+    """Registers the visibility data tool with the FastMCP server."""
     @mcp.tool(
         description="Get latest 10-minute mean visibility data for Hong Kong",
     )
     def get_visibility(lang: str = "en") -> Dict[str, Any]:
+        """
+        Get latest 10-minute mean visibility data for Hong Kong.
+
+        Args:
+            lang: Language code (en/tc/sc, default: en)
+
+        Returns:
+            Dict containing visibility data with fields and data arrays
+        """
         return _get_visibility(lang=lang)
+
 
 def _get_visibility(lang: str = "en") -> Dict[str, Any]:
     """

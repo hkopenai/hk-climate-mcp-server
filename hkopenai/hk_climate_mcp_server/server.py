@@ -6,9 +6,6 @@ from the Hong Kong Observatory through the MCP protocol. It supports both HTTP a
 transports for communication.
 """
 
-import argparse
-from typing import Dict, Annotated, Optional
-from pydantic import Field
 from fastmcp import FastMCP
 from .tools import astronomical
 from .tools import current_weather
@@ -24,7 +21,7 @@ from .tools import warnings
 def create_mcp_server():
     """
     Create and configure the HKO MCP server.
-    
+
     Returns:
         FastMCP: Configured MCP server instance with weather data tools.
     """
@@ -50,11 +47,13 @@ def main(args):
     Args:
         args: Command line arguments passed to the function.
     """
-    
+
     server = create_mcp_server()
     if args.sse:
         server.run(transport="streamable-http", host=args.host, port=args.port)
-        print(f"MCP Server running in SSE mode on port {args.port}, bound to {args.host}")
+        print(
+            f"MCP Server running in SSE mode on port {args.port}, bound to {args.host}"
+        )
     else:
         server.run()
         print("MCP Server running in stdio mode")

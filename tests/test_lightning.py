@@ -12,7 +12,9 @@ from hkopenai.hk_climate_mcp_server.tools.lightning import register
 
 class TestLightningTools(unittest.TestCase):
     """Test case class for lightning data tools."""
+
     def test_register_tool(self):
+        """Tests that the lightning data tool is correctly registered."""
         mock_mcp = MagicMock()
         register(mock_mcp)
 
@@ -23,7 +25,9 @@ class TestLightningTools(unittest.TestCase):
         decorated_func = mock_mcp.tool.return_value.call_args[0][0]
 
         # Test get_lightning_data
-        with patch("hkopenai.hk_climate_mcp_server.tools.lightning._get_lightning_data") as mock_get_lightning_data:
+        with patch(
+            "hkopenai.hk_climate_mcp_server.tools.lightning._get_lightning_data"
+        ) as mock_get_lightning_data:
             decorated_func(lang="en")
             mock_get_lightning_data.assert_called_once_with("en")
 

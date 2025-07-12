@@ -13,11 +13,13 @@ from hkopenai.hk_climate_mcp_server.tools.forecast import register
 class TestForecastTools(unittest.TestCase):
     """
     Test case class for forecast tools.
-    
-    This class contains test methods to verify the correct functioning of 
+
+    This class contains test methods to verify the correct functioning of
     forecast data retrieval functions using mocked HTTP requests.
     """
+
     def test_register_tool(self):
+        """Tests that the forecast tools are correctly registered."""
         mock_mcp = MagicMock()
         register(mock_mcp)
 
@@ -31,16 +33,19 @@ class TestForecastTools(unittest.TestCase):
         }
 
         # Test get_9_day_weather_forecast
-        with patch("hkopenai.hk_climate_mcp_server.tools.forecast._get_9_day_weather_forecast") as mock_get_9_day_weather_forecast:
+        with patch(
+            "hkopenai.hk_climate_mcp_server.tools.forecast._get_9_day_weather_forecast"
+        ) as mock_get_9_day_weather_forecast:
             decorated_funcs["get_9_day_weather_forecast"](lang="en")
             mock_get_9_day_weather_forecast.assert_called_once_with("en")
 
         # Test get_local_weather_forecast
-        with patch("hkopenai.hk_climate_mcp_server.tools.forecast._get_local_weather_forecast") as mock_get_local_weather_forecast:
+        with patch(
+            "hkopenai.hk_climate_mcp_server.tools.forecast._get_local_weather_forecast"
+        ) as mock_get_local_weather_forecast:
             decorated_funcs["get_local_weather_forecast"](lang="en")
             mock_get_local_weather_forecast.assert_called_once_with("en")
 
 
 if __name__ == "__main__":
     unittest.main()
-

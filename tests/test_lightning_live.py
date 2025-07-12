@@ -14,11 +14,12 @@ from hkopenai.hk_climate_mcp_server.tools.lightning import _get_lightning_data
 class TestLightningToolsLive(unittest.TestCase):
     """
     Test case class for live testing of lightning data retrieval tools.
-    
+
     This class contains test methods that make actual API calls to the Hong Kong Observatory
     to verify the functionality of lightning data retrieval functions. Tests are skipped unless
     the RUN_LIVE_TESTS environment variable is set to 'true'.
     """
+
     @unittest.skipUnless(
         os.environ.get("RUN_LIVE_TESTS") == "true",
         "Set RUN_LIVE_TESTS=true to run live tests",

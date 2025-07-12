@@ -11,13 +11,29 @@ from fastmcp import FastMCP
 
 
 def register(mcp: FastMCP):
+    """Registers the current weather tool with the FastMCP server."""
     @mcp.tool(
         description="Get current weather data, warnings, temp, humidity in HK from HKO.",
     )
     def get_current_weather(
         region: str = "Hong Kong Observatory", lang: str = "en"
     ) -> Dict:
+        """
+        Get current weather observations for a specific region in Hong Kong
+
+        Args:
+            region: The region to get weather for (default: "Hong Kong Observatory")
+            lang: Language code (en/tc/sc, default: en)
+
+        Returns:
+            Dict containing:
+            - warning: Current weather warnings
+            - temperature: Current temperature in Celsius
+            - humidity: Current humidity percentage
+            - rainfall: Current rainfall in mm
+        """
         return _get_current_weather(region, lang)
+
 
 def _get_current_weather(
     region: str = "Hong Kong Observatory", lang: str = "en"

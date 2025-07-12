@@ -64,20 +64,20 @@ VALID_TIDE_STATIONS = {
 
 
 def register(mcp: FastMCP):
+    """Registers the tide data tools with the FastMCP server."""
     @mcp.tool(
         description="Get hourly heights of astronomical tides for a station in HK.",
     )
     def get_hourly_tides(
-        station: str,
-        year: int,
-        options: Optional[Dict] = None
+        station: str, year: int, options: Optional[Dict] = None
     ) -> Dict[str, Any]:
-        month = options.get('month') if options else None
-        day = options.get('day') if options else None
-        hour = options.get('hour') if options else None
-        lang = options.get('lang', 'en') if options else 'en'
-        return _get_hourly_tides(station=station, year=year, month=month, day=day, hour=hour, lang=lang)
-
+        month = options.get("month") if options else None
+        day = options.get("day") if options else None
+        hour = options.get("hour") if options else None
+        lang = options.get("lang", "en") if options else "en"
+        return _get_hourly_tides(
+            station=station, year=year, month=month, day=day, hour=hour, lang=lang
+        )
 
     @mcp.tool(
         description="Get list of tide station codes and names for tide reports in HK.",
@@ -85,20 +85,20 @@ def register(mcp: FastMCP):
     def get_tide_station_codes(lang: str = "en") -> Dict[str, str]:
         return _get_tide_station_codes(lang)
 
-
     @mcp.tool(
         description="Get times, heights of astronomical high/low tides for a station in HK.",
     )
     def get_high_low_tides(
-        station: str,
-        year: int,
-        options: Optional[Dict] = None
+        station: str, year: int, options: Optional[Dict] = None
     ) -> Dict[str, Any]:
-        month = options.get('month') if options else None
-        day = options.get('day') if options else None
-        hour = options.get('hour') if options else None
-        lang = options.get('lang', 'en') if options else 'en'
-        return _get_high_low_tides(station=station, year=year, month=month, day=day, hour=hour, lang=lang)
+        month = options.get("month") if options else None
+        day = options.get("day") if options else None
+        hour = options.get("hour") if options else None
+        lang = options.get("lang", "en") if options else "en"
+        return _get_high_low_tides(
+            station=station, year=year, month=month, day=day, hour=hour, lang=lang
+        )
+
 
 def _get_hourly_tides(
     station: str,

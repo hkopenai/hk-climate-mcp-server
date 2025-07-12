@@ -11,6 +11,7 @@ from fastmcp import FastMCP
 
 
 def register(mcp: FastMCP):
+    """Registers the weather warnings tools with the FastMCP server."""
     @mcp.tool(
         description="Get weather warning summary for HK with messages and update.",
     )
@@ -30,6 +31,7 @@ def register(mcp: FastMCP):
     )
     def get_special_weather_tips(lang: str = "en") -> Dict[str, Any]:
         return _get_special_weather_tips(lang)
+
 
 def _get_weather_warning_summary(lang: str = "en") -> Dict[str, Any]:
     """

@@ -11,11 +11,13 @@ from fastmcp import FastMCP
 
 
 def register(mcp: FastMCP):
+    """Registers the lightning data tool with the FastMCP server."""
     @mcp.tool(
         description="Get cloud-to-ground and cloud-to-cloud lightning count data",
     )
     def get_lightning_data(lang: str = "en") -> Dict[str, Any]:
         return _get_lightning_data(lang)
+
 
 def _get_lightning_data(lang: str = "en") -> Dict[str, Any]:
     """

@@ -1,3 +1,5 @@
+"""Unit tests for the MCP server creation and tool registration."""
+
 import unittest
 from unittest.mock import patch, Mock
 from hkopenai.hk_climate_mcp_server.server import create_mcp_server

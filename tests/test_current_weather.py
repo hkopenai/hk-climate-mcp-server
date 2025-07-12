@@ -97,6 +97,7 @@ class TestCurrentWeatherTools(unittest.TestCase):
     }
 
     def test_register_tool(self):
+        """Tests that the current weather tool is correctly registered."""
         mock_mcp = MagicMock()
         register(mock_mcp)
 
@@ -107,11 +108,12 @@ class TestCurrentWeatherTools(unittest.TestCase):
         decorated_func = mock_mcp.tool.return_value.call_args[0][0]
 
         # Test get_current_weather
-        with patch("hkopenai.hk_climate_mcp_server.tools.current_weather._get_current_weather") as mock_get_current_weather:
+        with patch(
+            "hkopenai.hk_climate_mcp_server.tools.current_weather._get_current_weather"
+        ) as mock_get_current_weather:
             decorated_func(region="test", lang="en")
             mock_get_current_weather.assert_called_once_with("test", "en")
 
 
 if __name__ == "__main__":
     unittest.main()
-

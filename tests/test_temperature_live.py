@@ -1,7 +1,9 @@
-import unittest
+"""Live unit tests for temperature data fetching functions."""
+
 import os
 import subprocess
 import sys
+import unittest
 from hkopenai.hk_climate_mcp_server.tools.temperature import (
     _get_daily_mean_temperature,
     _get_daily_max_temperature,
@@ -10,6 +12,7 @@ from hkopenai.hk_climate_mcp_server.tools.temperature import (
 
 
 class TestTemperatureToolsLive(unittest.TestCase):
+    """Live tests for temperature data fetching functions."""
     @unittest.skipUnless(
         os.environ.get("RUN_LIVE_TESTS") == "true",
         "Set RUN_LIVE_TESTS=true to run live tests",
