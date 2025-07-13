@@ -1,7 +1,7 @@
 """Hong Kong climate MCP Server package."""
 
-from .server import main
+from .server import server
 
 
 __version__ = "0.1.0"
-__all__ = ["main"]
+__all__ = ["server"]
