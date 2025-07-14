@@ -108,6 +108,8 @@ def _get_current_weather(
 
     # Get rainfall (0 if no rain)
     rainfall = 0
+    rainfall_start = ""
+    rainfall_end = ""
     if "rainfall" in data:
         rainfall = max(float(r.get("max", 0)) for r in data["rainfall"]["data"])
         rainfall_start = data["rainfall"]["startTime"]
