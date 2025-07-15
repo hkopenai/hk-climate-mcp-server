@@ -54,4 +54,3 @@ def server(host: str, port: int, sse: bool):
         
     else:
         server.run()
-        

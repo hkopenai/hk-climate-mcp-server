@@ -9,6 +9,7 @@ from datetime import datetime
 from typing import Dict, Any, Optional, Annotated
 from pydantic import Field
 import requests
+from hkopenai_common.json_utils import fetch_json_data
 from fastmcp import FastMCP
 
 # Station names in different languages: en (English), tc (Traditional Chinese),
@@ -191,23 +192,8 @@ def _get_weather_radiation_report(
         "station": station,
     }
 
-    try:
-        base_url = "https://data.weather.gov.hk/weatherAPI/opendata/opendata.php"
-        response = requests.get(base_url, params=params)
-        response.raise_for_status()
-        try:
-            return response.json()
-        except ValueError:
-            return {
-                "error": (
-                    "Failed to parse JSON. Invalid params or data not updated. "
-                    "Try again."
-                )
-            }
-    except requests.RequestException as e:
-        return {
-            "error": (f"Failed to fetch data: {str(e)}. Please try " "again later.")
-        }
+    base_url = "https://data.weather.gov.hk/weatherAPI/opendata/opendata.php"
+    return fetch_json_data(base_url, params)
 
 
 def _get_radiation_station_codes(lang: str = "en") -> Dict[str, str]:

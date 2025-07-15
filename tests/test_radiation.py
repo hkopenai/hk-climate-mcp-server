@@ -158,7 +158,7 @@ class TestRadiationTools(unittest.TestCase):
         self.assertIn("error", result)
         self.assertEqual(
             result["error"],
-            "Failed to parse JSON. Invalid params or data not updated. Try again.",
+            "Failed to parse JSON response from API. The API might have returned non-JSON data or an empty response.",
         )
 
     @patch("requests.get")
@@ -169,7 +169,7 @@ class TestRadiationTools(unittest.TestCase):
         result = _get_weather_radiation_report(date="20230618", station="HKO")
         self.assertIn("error", result)
         self.assertTrue(
-            result["error"].startswith("Failed to fetch data: Network error")
+            result["error"].startswith("An unexpected error occurred during the request:")
         )
 
     def test_register_tool(self):
