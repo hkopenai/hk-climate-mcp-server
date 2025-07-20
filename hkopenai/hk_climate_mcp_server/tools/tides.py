@@ -6,9 +6,8 @@ and high/low tide times from the Hong Kong Observatory API.
 """
 
 from typing import Dict, Any, Optional
-import json
-import requests
 from fastmcp import FastMCP
+from hkopenai_common.json_utils import fetch_json_data
 
 # Station names for tide data in different languages: en (English), tc (Traditional Chinese), sc (Simplified Chinese)
 VALID_TIDE_STATIONS = {
@@ -65,6 +64,7 @@ VALID_TIDE_STATIONS = {
 
 def register(mcp: FastMCP):
     """Registers the tide data tools with the FastMCP server."""
+
     @mcp.tool(
         description="Get hourly heights of astronomical tides for a station in HK.",
     )
@@ -136,16 +136,11 @@ def _get_hourly_tides(
     if hour:
         params["hour"] = str(hour)
 
-    response = requests.get(
-        "https://data.weather.gov.hk/weatherAPI/opendata/opendata.php", params=params
+    return fetch_json_data(
+        "https://data.weather.gov.hk/weatherAPI/opendata/opendata.php",
+        params=params,
+        encoding="utf-8-sig",
     )
-    try:
-        response.raise_for_status()
-        # Decode response content with utf-8-sig to handle potential BOM
-        content = response.content.decode("utf-8-sig")
-        return json.loads(content)
-    except (requests.RequestException, UnicodeDecodeError, ValueError) as e:
-        return {"error": f"Failed to fetch data: {str(e)}."}
 
 
 def _get_tide_station_codes(lang: str = "en") -> Dict[str, str]:
@@ -209,13 +204,8 @@ def _get_high_low_tides(
     if hour:
         params["hour"] = str(hour)
 
-    response = requests.get(
-        "https://data.weather.gov.hk/weatherAPI/opendata/opendata.php", params=params
+    return fetch_json_data(
+        "https://data.weather.gov.hk/weatherAPI/opendata/opendata.php",
+        params=params,
+        encoding="utf-8-sig",
     )
-    try:
-        response.raise_for_status()
-        # Decode response content with utf-8-sig to handle potential BOM
-        content = response.content.decode("utf-8-sig")
-        return json.loads(content)
-    except (requests.RequestException, UnicodeDecodeError, ValueError) as e:
-        return {"error": f"Failed to fetch data: {str(e)}."}

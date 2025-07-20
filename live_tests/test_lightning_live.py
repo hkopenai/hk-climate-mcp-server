@@ -53,7 +53,7 @@ class TestLightningToolsLive(unittest.TestCase):
             "error" in result,
             "Result should contain an error field for invalid language",
         )
-        self.assertIn("Failed to fetch data", result["error"])
+        self.assertIn("Failed to parse JSON response from API", result["error"])
 
 
 if __name__ == "__main__":

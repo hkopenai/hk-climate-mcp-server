@@ -6,12 +6,13 @@ maximum, and minimum temperatures from the Hong Kong Observatory API.
 """
 
 from typing import Dict, Any, Optional
-import requests
 from fastmcp import FastMCP
+from hkopenai_common.json_utils import fetch_json_data
 
 
 def register(mcp: FastMCP):
     """Registers the temperature data tools with the FastMCP server."""
+
     @mcp.tool(
         description="Get daily mean temperature data for a specific station in Hong Kong",
     )
@@ -81,22 +82,9 @@ def _get_daily_mean_temperature(
     if month:
         params["month"] = str(month)
 
-    response = requests.get(
+    return fetch_json_data(
         "https://data.weather.gov.hk/weatherAPI/opendata/opendata.php", params=params
     )
-    try:
-        response.raise_for_status()
-        return response.json()
-    except requests.exceptions.JSONDecodeError as e:
-        return {
-            "error": (
-                f"Failed to parse API response: {str(e)}. This might "
-                "indicate invalid parameters or no data for the given "
-                "request."
-            )
-        }
-    except requests.RequestException as e:
-        return {"error": f"Failed to fetch data: {str(e)}."}
 
 
 def _get_daily_max_temperature(
@@ -128,22 +116,9 @@ def _get_daily_max_temperature(
     if month:
         params["month"] = str(month)
 
-    response = requests.get(
+    return fetch_json_data(
         "https://data.weather.gov.hk/weatherAPI/opendata/opendata.php", params=params
     )
-    try:
-        response.raise_for_status()
-        return response.json()
-    except requests.exceptions.JSONDecodeError as e:
-        return {
-            "error": (
-                f"Failed to parse API response: {str(e)}. This might "
-                "indicate invalid parameters or no data for the given "
-                "request."
-            )
-        }
-    except requests.RequestException as e:
-        return {"error": f"Failed to fetch data: {str(e)}."}
 
 
 def _get_daily_min_temperature(
@@ -175,19 +150,6 @@ def _get_daily_min_temperature(
     if month:
         params["month"] = str(month)
 
-    response = requests.get(
+    return fetch_json_data(
         "https://data.weather.gov.hk/weatherAPI/opendata/opendata.php", params=params
     )
-    try:
-        response.raise_for_status()
-        return response.json()
-    except requests.exceptions.JSONDecodeError as e:
-        return {
-            "error": (
-                f"Failed to parse API response: {str(e)}. This might "
-                "indicate invalid parameters or no data for the given "
-                "request."
-            )
-        }
-    except requests.RequestException as e:
-        return {"error": f"Failed to fetch data: {str(e)}."}

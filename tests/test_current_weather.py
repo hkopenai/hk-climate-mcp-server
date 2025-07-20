@@ -6,7 +6,11 @@ This module tests the functionality of fetching current weather data from the Ho
 
 import unittest
 from unittest.mock import patch, MagicMock
-from hkopenai.hk_climate_mcp_server.tools.current_weather import register
+from hkopenai.hk_climate_mcp_server.tools.current_weather import (
+    register,
+    _get_current_weather,
+)
+from hkopenai_common.json_utils import fetch_json_data
 
 
 class TestCurrentWeatherTools(unittest.TestCase):
@@ -113,6 +117,22 @@ class TestCurrentWeatherTools(unittest.TestCase):
         ) as mock_get_current_weather:
             decorated_func(region="test", lang="en")
             mock_get_current_weather.assert_called_once_with("test", "en")
+
+    @patch("hkopenai.hk_climate_mcp_server.tools.current_weather.fetch_json_data")
+    def test_get_current_weather_internal(self, mock_fetch_json_data):
+        """Test the internal _get_current_weather function."""
+        mock_fetch_json_data.return_value = self.default_mock_response
+
+        result = _get_current_weather(region="Hong Kong Observatory", lang="en")
+        self.assertIsNotNone(result)
+        self.assertIn("generalSituation", result)
+        self.assertIn("weatherObservation", result)
+        self.assertEqual(
+            result["weatherObservation"]["temperature"]["value"], 29
+        )  # From default_mock_response
+        mock_fetch_json_data.assert_called_once_with(
+            "https://data.weather.gov.hk/weatherAPI/opendata/weather.php?dataType=rhrread&lang=en"
+        )
 
 
 if __name__ == "__main__":

@@ -18,7 +18,7 @@ from .tools import visibility
 from .tools import warnings
 
 
-def create_mcp_server():
+def server():
     """
     Create and configure the HKO MCP server.
 
@@ -38,19 +38,3 @@ def create_mcp_server():
     astronomical.register(mcp)
 
     return mcp
-
-
-def server(host: str, port: int, sse: bool):
-    """
-    Main function to run the MCP Server.
-
-    Args:
-        args: Command line arguments passed to the function.
-    """
-
-    server = create_mcp_server()
-    if sse:
-        server.run(transport="streamable-http", host=host, port=port)
-        
-    else:
-        server.run()

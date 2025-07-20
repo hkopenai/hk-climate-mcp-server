@@ -13,6 +13,7 @@ from hkopenai.hk_climate_mcp_server.tools.temperature import (
 
 class TestTemperatureToolsLive(unittest.TestCase):
     """Live tests for temperature data fetching functions."""
+
     @unittest.skipUnless(
         os.environ.get("RUN_LIVE_TESTS") == "true",
         "Set RUN_LIVE_TESTS=true to run live tests",
@@ -73,7 +74,7 @@ class TestTemperatureToolsLive(unittest.TestCase):
             "error" in result,
             "Result should contain an error field for invalid station",
         )
-        self.assertIn("Failed to parse API response", result["error"])
+        self.assertIn("Failed to parse JSON response from API", result["error"])
 
     @unittest.skipUnless(
         os.environ.get("RUN_LIVE_TESTS") == "true",
@@ -89,7 +90,7 @@ class TestTemperatureToolsLive(unittest.TestCase):
         self.assertTrue(
             "error" in result, "Result should contain an error field for invalid year"
         )
-        self.assertIn("Failed to parse API response", result["error"])
+        self.assertIn("Failed to parse JSON response from API", result["error"])
 
 
 if __name__ == "__main__":

@@ -7,7 +7,8 @@ to ensure it correctly fetches and processes lightning data from the HKO API.
 
 import unittest
 from unittest.mock import patch, MagicMock
-from hkopenai.hk_climate_mcp_server.tools.lightning import register
+from hkopenai.hk_climate_mcp_server.tools.lightning import register, _get_lightning_data
+from hkopenai.hk_climate_mcp_server.tools.lightning import fetch_json_data
 
 
 class TestLightningTools(unittest.TestCase):
@@ -30,6 +31,24 @@ class TestLightningTools(unittest.TestCase):
         ) as mock_get_lightning_data:
             decorated_func(lang="en")
             mock_get_lightning_data.assert_called_once_with("en")
+
+    @patch("hkopenai.hk_climate_mcp_server.tools.lightning.fetch_json_data")
+    def test_get_lightning_data_internal(self, mock_fetch_json_data):
+        """Test the internal _get_lightning_data function."""
+        example_json = {
+            "fields": ["Time", "Cloud-to-ground", "Cloud-to-cloud"],
+            "data": [
+                ["202506231400", 10, 5],
+                ["202506231410", 12, 7],
+            ],
+        }
+        mock_fetch_json_data.return_value = example_json
+
+        result = _get_lightning_data(lang="en")
+        self.assertEqual(result, example_json)
+        mock_fetch_json_data.assert_called_once_with(
+            "https://data.weather.gov.hk/weatherAPI/opendata/opendata.php?dataType=LHL&lang=en&rformat=json"
+        )
 
 
 if __name__ == "__main__":

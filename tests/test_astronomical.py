@@ -6,11 +6,18 @@ This module tests the functionality of fetching astronomical data such as Gregor
 
 import unittest
 from unittest.mock import patch, MagicMock
-from hkopenai.hk_climate_mcp_server.tools.astronomical import register
+from hkopenai.hk_climate_mcp_server.tools.astronomical import (
+    register,
+    _get_moon_times,
+    _get_sunrise_sunset_times,
+    _get_gregorian_lunar_calendar,
+)
+from hkopenai.hk_climate_mcp_server.tools.astronomical import fetch_json_data
 
 
 class TestAstronomicalTools(unittest.TestCase):
     """Tests for the astronomical data tools."""
+
     def test_register_tool(self):
         """Tests that the astronomical tools are correctly registered."""
         mock_mcp = MagicMock()
@@ -51,6 +58,71 @@ class TestAstronomicalTools(unittest.TestCase):
             mock_get_gregorian_lunar_calendar.assert_called_once_with(
                 year=2025, month=6, day=None, lang="en"
             )
+
+    @patch("hkopenai.hk_climate_mcp_server.tools.astronomical.fetch_json_data")
+    def test_get_moon_times_internal(self, mock_fetch_json_data):
+        """Test the internal _get_moon_times function."""
+        example_json = {
+            "fields": ["Date", "Moonrise", "Moonset", "Moon Transit", "Moon Phase"],
+            "data": [
+                ["2025/06/30", "00:00", "12:00", "06:00", "New Moon"],
+            ],
+        }
+        mock_fetch_json_data.return_value = example_json
+
+        result = _get_moon_times(year=2025, month=6, day=30, lang="en")
+        self.assertEqual(result, example_json)
+        mock_fetch_json_data.assert_called_once_with(
+            "https://data.weather.gov.hk/weatherAPI/opendata/opendata.php",
+            params={
+                "dataType": "MRS",
+                "lang": "en",
+                "rformat": "json",
+                "year": 2025,
+                "month": "6",
+                "day": "30",
+            },
+        )
+
+    @patch("hkopenai.hk_climate_mcp_server.tools.astronomical.fetch_json_data")
+    def test_get_sunrise_sunset_times_internal(self, mock_fetch_json_data):
+        """Test the internal _get_sunrise_sunset_times function."""
+        example_json = {
+            "fields": ["Date", "Sunrise", "Sunset", "Sun Transit"],
+            "data": [
+                ["2025/06/30", "06:00", "18:00", "12:00"],
+            ],
+        }
+        mock_fetch_json_data.return_value = example_json
+
+        result = _get_sunrise_sunset_times(year=2025, lang="en")
+        self.assertEqual(result, example_json)
+        mock_fetch_json_data.assert_called_once_with(
+            "https://data.weather.gov.hk/weatherAPI/opendata/opendata.php",
+            params={
+                "dataType": "SRS",
+                "lang": "en",
+                "rformat": "json",
+                "year": 2025,
+            },
+        )
+
+    @patch("hkopenai.hk_climate_mcp_server.tools.astronomical.fetch_json_data")
+    def test_get_gregorian_lunar_calendar_internal(self, mock_fetch_json_data):
+        """Test the internal _get_gregorian_lunar_calendar function."""
+        example_json = {
+            "gregorianDate": "2025-06-30",
+            "lunarDate": "2025-06-05",
+            "chineseZodiac": "Snake",
+        }
+        mock_fetch_json_data.return_value = example_json
+
+        result = _get_gregorian_lunar_calendar(year=2025, month=6, day=30, lang="en")
+        self.assertEqual(result, example_json)
+        mock_fetch_json_data.assert_called_once_with(
+            "https://data.weather.gov.hk/weatherAPI/opendata/lunardate.php",
+            params={"date": "2025-06-30"},
+        )
 
 
 if __name__ == "__main__":

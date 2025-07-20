@@ -53,7 +53,7 @@ class TestAstronomicalToolsLive(unittest.TestCase):
         self.assertTrue(
             "error" in result, "Result should contain an error field for invalid year"
         )
-        self.assertIn("Failed to fetch data", result["error"])
+        self.assertIn("Failed to parse JSON response from API", result["error"])
 
     @unittest.skipUnless(
         os.environ.get("RUN_LIVE_TESTS") == "true",
@@ -86,7 +86,7 @@ class TestAstronomicalToolsLive(unittest.TestCase):
         self.assertTrue(
             "error" in result, "Result should contain an error field for invalid year"
         )
-        self.assertIn("Failed to fetch data", result["error"])
+        self.assertIn("Failed to parse JSON response from API", result["error"])
 
 
 if __name__ == "__main__":

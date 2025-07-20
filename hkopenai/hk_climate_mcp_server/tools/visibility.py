@@ -5,12 +5,13 @@ This module provides tools to retrieve visibility data from the Hong Kong Observ
 """
 
 from typing import Dict, Any
-import requests
 from fastmcp import FastMCP
+from hkopenai_common.json_utils import fetch_json_data
 
 
 def register(mcp: FastMCP):
     """Registers the visibility data tool with the FastMCP server."""
+
     @mcp.tool(
         description="Get latest 10-minute mean visibility data for Hong Kong",
     )
@@ -38,9 +39,4 @@ def _get_visibility(lang: str = "en") -> Dict[str, Any]:
         Dict containing visibility data with fields and data arrays
     """
     url = f"https://data.weather.gov.hk/weatherAPI/opendata/opendata.php?dataType=LTMV&lang={lang}&rformat=json"
-    response = requests.get(url)
-    try:
-        response.raise_for_status()
-        return response.json()
-    except (requests.RequestException, ValueError) as e:
-        return {"error": f"Failed to fetch data: {str(e)}."}
+    return fetch_json_data(url)

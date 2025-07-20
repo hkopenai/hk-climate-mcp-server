@@ -8,7 +8,7 @@ and radiation level reports from the Hong Kong Observatory API.
 from datetime import datetime
 from typing import Dict, Any, Optional, Annotated
 from pydantic import Field
-import requests
+
 from hkopenai_common.json_utils import fetch_json_data
 from fastmcp import FastMCP
 
@@ -128,6 +128,7 @@ VALID_STATIONS = {
 
 def register(mcp: FastMCP):
     """Registers the radiation data tools with the FastMCP server."""
+
     @mcp.tool(
         description="Get weather, radiation report for HK. Date must be YYYYMMDD.",
     )
@@ -193,7 +194,14 @@ def _get_weather_radiation_report(
     }
 
     base_url = "https://data.weather.gov.hk/weatherAPI/opendata/opendata.php"
-    return fetch_json_data(base_url, params)
+    try:
+        return fetch_json_data(base_url, params=params)
+    except ValueError as e:
+        return {
+            "error": f"Failed to parse JSON response from API: {e}. The API might have returned non-JSON data or an empty response."
+        }
+    except Exception as e:
+        return {"error": f"An unexpected error occurred during the API request: {e}."}
 
 
 def _get_radiation_station_codes(lang: str = "en") -> Dict[str, str]:

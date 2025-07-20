@@ -2,7 +2,7 @@
 
 import unittest
 from unittest.mock import patch, Mock
-from hkopenai.hk_climate_mcp_server.server import create_mcp_server
+from hkopenai.hk_climate_mcp_server.server import server
 
 
 class TestApp(unittest.TestCase):
@@ -39,11 +39,11 @@ class TestApp(unittest.TestCase):
         mock_fastmcp.return_value = mock_server
 
         # Test server creation
-        server = create_mcp_server()
+        server_instance = server()
 
         # Verify server creation
         mock_fastmcp.assert_called_once()
-        self.assertEqual(server, mock_server)
+        self.assertEqual(server_instance, mock_server)
 
         # Verify that the register function of each tool module was called with the mcp instance
         mock_astronomical_register.assert_called_once_with(mock_server)

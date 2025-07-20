@@ -6,10 +6,10 @@ ensuring it handles various input scenarios and API responses correctly.
 
 import unittest
 from unittest.mock import patch, MagicMock
-import requests
 from hkopenai.hk_climate_mcp_server.tools.radiation import (
     register,
     _get_weather_radiation_report,
+    fetch_json_data,
 )
 
 
@@ -40,17 +40,27 @@ class TestRadiationTools(unittest.TestCase):
         "carried out.",
     }
 
-    @patch("requests.get")
-    def test_get_weather_radiation_report(self, mock_get):
+    @patch("hkopenai.hk_climate_mcp_server.tools.radiation.is_date_in_future")
+    @patch("hkopenai.hk_climate_mcp_server.tools.radiation.fetch_json_data")
+    def test_get_weather_radiation_report(
+        self, mock_fetch_json_data, mock_is_date_in_future
+    ):
         """Test retrieval of radiation report with valid parameters."""
-        mock_response = MagicMock()
-        mock_response.json.return_value = self.EXAMPLE_JSON
-        mock_get.return_value = mock_response
+        mock_is_date_in_future.return_value = (
+            False  # Ensure date is not considered in the future
+        )
+        mock_fetch_json_data.return_value = self.EXAMPLE_JSON
 
         result = _get_weather_radiation_report(date="20250623", station="HKO")
-        mock_get.assert_called_once_with(
-            "https://data.weather.gov.hk/weatherAPI/opendata/opendata.php",
-            params={
+        # Assert that fetch_json_data was called with the correct URL and parameters
+        mock_fetch_json_data.assert_called_once()
+        call_args, call_kwargs = mock_fetch_json_data.call_args
+        self.assertEqual(
+            call_args[0], "https://data.weather.gov.hk/weatherAPI/opendata/opendata.php"
+        )
+        self.assertDictEqual(
+            call_kwargs["params"],
+            {
                 "dataType": "RYES",
                 "lang": "en",
                 "rformat": "json",
@@ -58,6 +68,7 @@ class TestRadiationTools(unittest.TestCase):
                 "station": "HKO",
             },
         )
+        mock_fetch_json_data.reset_mock()
         self.assertIsNotNone(result)
         self.assertIsInstance(result, dict, "Result should be a " "dictionary")
         self.assertIn(
@@ -99,20 +110,23 @@ class TestRadiationTools(unittest.TestCase):
         )
 
     @patch("hkopenai.hk_climate_mcp_server.tools.radiation.is_date_in_future")
-    @patch("requests.get")
+    @patch("hkopenai.hk_climate_mcp_server.tools.radiation.fetch_json_data")
     def test_get_weather_radiation_report_yesterday_valid(
-        self, mock_get, mock_date_check
+        self, mock_fetch_json_data, mock_date_check
     ):
         """Test retrieval of radiation report for yesterday's date."""
         mock_date_check.return_value = False
-        mock_response = MagicMock()
-        mock_response.json.return_value = self.EXAMPLE_JSON
-        mock_get.return_value = mock_response
+        mock_fetch_json_data.return_value = self.EXAMPLE_JSON
 
         result = _get_weather_radiation_report(date="20250623", station="HKO")
-        mock_get.assert_called_once_with(
-            "https://data.weather.gov.hk/weatherAPI/opendata/opendata.php",
-            params={
+        mock_fetch_json_data.assert_called_once()
+        call_args, call_kwargs = mock_fetch_json_data.call_args
+        self.assertEqual(
+            call_args[0], "https://data.weather.gov.hk/weatherAPI/opendata/opendata.php"
+        )
+        self.assertDictEqual(
+            call_kwargs["params"],
+            {
                 "dataType": "RYES",
                 "lang": "en",
                 "rformat": "json",
@@ -146,30 +160,29 @@ class TestRadiationTools(unittest.TestCase):
             "Error must note date must be yesterday or prior",
         )
 
-    @patch("requests.get")
-    def test_get_weather_radiation_report_non_json_response(self, mock_get):
+    @patch("hkopenai.hk_climate_mcp_server.tools.radiation.fetch_json_data")
+    def test_get_weather_radiation_report_non_json_response(self, mock_fetch_json_data):
         """Test error handling for non-JSON response."""
-        mock_response = MagicMock()
-        mock_response.raise_for_status.return_value = None
-        mock_response.json.side_effect = ValueError("Invalid JSON")
-        mock_get.return_value = mock_response
+        mock_fetch_json_data.side_effect = ValueError("Invalid JSON")
 
         result = _get_weather_radiation_report(date="20230618", station="HKO")
         self.assertIn("error", result)
         self.assertEqual(
             result["error"],
-            "Failed to parse JSON response from API. The API might have returned non-JSON data or an empty response.",
+            "Failed to parse JSON response from API: Invalid JSON. The API might have returned non-JSON data or an empty response.",
         )
 
-    @patch("requests.get")
-    def test_get_weather_radiation_report_request_exception(self, mock_get):
+    @patch("hkopenai.hk_climate_mcp_server.tools.radiation.fetch_json_data")
+    def test_get_weather_radiation_report_request_exception(self, mock_fetch_json_data):
         """Test error handling for request exceptions."""
-        mock_get.side_effect = requests.RequestException("Network error")
+        mock_fetch_json_data.side_effect = Exception("Network error")
 
         result = _get_weather_radiation_report(date="20230618", station="HKO")
         self.assertIn("error", result)
         self.assertTrue(
-            result["error"].startswith("An unexpected error occurred during the request:")
+            result["error"].startswith(
+                "An unexpected error occurred during the API request: Network error."
+            )
         )
 
     def test_register_tool(self):

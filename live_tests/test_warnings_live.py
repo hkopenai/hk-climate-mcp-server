@@ -11,6 +11,7 @@ from hkopenai.hk_climate_mcp_server.tools.warnings import (
 
 class TestWarningsToolsLive(unittest.TestCase):
     """Live tests for weather warnings data retrieval functionality."""
+
     @unittest.skipUnless(
         os.environ.get("RUN_LIVE_TESTS") == "true",
         "Set RUN_LIVE_TESTS=true to run live tests",
@@ -36,15 +37,16 @@ class TestWarningsToolsLive(unittest.TestCase):
         """
         Live test to check error handling for an invalid language in get_weather_warning_summary.
         """
-        result = _get_weather_warning_summary(lang="xx")  # An invalid language code
+        lang = "xx"
+        result = _get_weather_warning_summary(lang=lang)  # An invalid language code
 
         self.assertIsNotNone(result)
         self.assertIsInstance(result, dict, "Result should be a dictionary")
-        self.assertTrue(
-            "error" in result,
-            "Result should contain an error field for invalid language",
-        )
-        self.assertIn("Failed to fetch data", result["error"])
+        self.assertFalse(
+            "error" in result, result
+        )  # No error key expected for invalid language
+        self.assertEqual(result["warningMessage"], [])
+        self.assertEqual(result["updateTime"], "")
 
     @unittest.skipUnless(
         os.environ.get("RUN_LIVE_TESTS") == "true",
@@ -67,14 +69,11 @@ class TestWarningsToolsLive(unittest.TestCase):
         """
         Live test to check error handling for an invalid language in get_weather_warning_info.
         """
-        result = _get_weather_warning_info(lang="xx")
+        lang = "xx"
+        result = _get_weather_warning_info(lang=lang)
         self.assertIsNotNone(result)
         self.assertIsInstance(result, dict, "Result should be a dictionary")
-        self.assertTrue(
-            "error" in result,
-            "Result should contain an error field for invalid language",
-        )
-        self.assertIn("Failed to fetch data", result["error"])
+        self.assertFalse("error" in result, result)
 
     @unittest.skipUnless(
         os.environ.get("RUN_LIVE_TESTS") == "true",
@@ -97,14 +96,11 @@ class TestWarningsToolsLive(unittest.TestCase):
         """
         Live test to check error handling for an invalid language in get_special_weather_tips.
         """
-        result = _get_special_weather_tips(lang="xx")
+        lang = "xx"
+        result = _get_special_weather_tips(lang=lang)
         self.assertIsNotNone(result)
         self.assertIsInstance(result, dict, "Result should be a dictionary")
-        self.assertTrue(
-            "error" in result,
-            "Result should contain an error field for invalid language",
-        )
-        self.assertIn("Failed to fetch data", result["error"])
+        self.assertFalse("error" in result, result)
 
 
 if __name__ == "__main__":

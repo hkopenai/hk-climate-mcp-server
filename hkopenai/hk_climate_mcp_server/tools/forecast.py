@@ -6,12 +6,13 @@ This module provides tools to retrieve weather forecast information including
 """
 
 from typing import Dict, Any
-import requests
 from fastmcp import FastMCP
+from hkopenai_common.json_utils import fetch_json_data
 
 
 def register(mcp: FastMCP):
     """Registers the forecast tools with the FastMCP server."""
+
     @mcp.tool(
         description="Get 9-day weather forecast for HK with general situation, daily data.",
     )
@@ -43,12 +44,7 @@ def _get_9_day_weather_forecast(lang: str = "en") -> Dict[str, Any]:
     """
     base_url = "https://data.weather.gov.hk/weatherAPI/opendata/weather.php"
     url = f"{base_url}?dataType=fnd&lang={lang}"
-    response = requests.get(url)
-    try:
-        response.raise_for_status()
-        data = response.json()
-    except (requests.RequestException, ValueError) as e:
-        return {"error": f"Failed to fetch data: {str(e)}."}
+    data = fetch_json_data(url)
 
     # Structure the output
     forecast = {
@@ -56,7 +52,7 @@ def _get_9_day_weather_forecast(lang: str = "en") -> Dict[str, Any]:
         "weatherForecast": [],
         "updateTime": data.get("updateTime", ""),
         "seaTemp": data.get("seaTemp", {}),
-        "soilTemp": data.get("soilTemp", []),
+        "soilTemp": [],
     }
 
     # Extract 9-day forecast
@@ -94,12 +90,7 @@ def _get_local_weather_forecast(lang: str = "en") -> Dict[str, Any]:
             - forecastDate: Forecast date
     """
     url = f"https://data.weather.gov.hk/weatherAPI/opendata/weather.php?dataType=flw&lang={lang}"
-    response = requests.get(url)
-    try:
-        response.raise_for_status()
-        data = response.json()
-    except (requests.RequestException, ValueError) as e:
-        return {"error": f"Failed to fetch data: {str(e)}."}
+    data = fetch_json_data(url)
     return {
         "generalSituation": data.get("generalSituation", ""),
         "forecastDesc": data.get("forecastDesc", ""),

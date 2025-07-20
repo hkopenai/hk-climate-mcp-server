@@ -6,12 +6,13 @@ humidity, rainfall, and weather warnings from the Hong Kong Observatory API.
 """
 
 from typing import Dict
-import requests
 from fastmcp import FastMCP
+from hkopenai_common.json_utils import fetch_json_data
 
 
 def register(mcp: FastMCP):
     """Registers the current weather tool with the FastMCP server."""
+
     @mcp.tool(
         description="Get current weather data, warnings, temp, humidity in HK from HKO.",
     )
@@ -52,11 +53,10 @@ def _get_current_weather(
         - humidity: Current humidity percentage
         - rainfall: Current rainfall in mm
     """
-    response = requests.get(
+    data = fetch_json_data(
         f"https://data.weather.gov.hk/weatherAPI/opendata/weather.php"
         f"?dataType=rhrread&lang={lang}"
     )
-    data = response.json()
 
     # Handle warnings
     warning = "No warning in force"

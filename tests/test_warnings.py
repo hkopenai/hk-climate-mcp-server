@@ -7,7 +7,13 @@ to ensure they correctly fetch and process weather warnings data from the HKO AP
 
 import unittest
 from unittest.mock import patch, MagicMock
-from hkopenai.hk_climate_mcp_server.tools.warnings import register
+from hkopenai.hk_climate_mcp_server.tools.warnings import (
+    register,
+    _get_weather_warning_summary,
+    _get_weather_warning_info,
+    _get_special_weather_tips,
+)
+from hkopenai_common.json_utils import fetch_json_data
 
 
 class TestWarningsTools(unittest.TestCase):
@@ -47,6 +53,51 @@ class TestWarningsTools(unittest.TestCase):
         ) as mock_get_special_weather_tips:
             decorated_funcs["get_special_weather_tips"](lang="en")
             mock_get_special_weather_tips.assert_called_once_with("en")
+
+    @patch("hkopenai.hk_climate_mcp_server.tools.warnings.fetch_json_data")
+    def test_get_weather_warning_summary_internal(self, mock_fetch_json_data):
+        """Test the internal _get_weather_warning_summary function."""
+        example_json = {
+            "warningMessage": ["A warning is in force."],
+            "updateTime": "2025-06-23T10:00:00+08:00",
+        }
+        mock_fetch_json_data.return_value = example_json
+
+        result = _get_weather_warning_summary(lang="en")
+        self.assertEqual(result, example_json)
+        mock_fetch_json_data.assert_called_once_with(
+            "https://data.weather.gov.hk/weatherAPI/opendata/weather.php?dataType=warnsum&lang=en"
+        )
+
+    @patch("hkopenai.hk_climate_mcp_server.tools.warnings.fetch_json_data")
+    def test_get_weather_warning_info_internal(self, mock_fetch_json_data):
+        """Test the internal _get_weather_warning_info function."""
+        example_json = {
+            "warningStatement": "Detailed warning info.",
+            "updateTime": "2025-06-23T10:00:00+08:00",
+        }
+        mock_fetch_json_data.return_value = example_json
+
+        result = _get_weather_warning_info(lang="en")
+        self.assertEqual(result, example_json)
+        mock_fetch_json_data.assert_called_once_with(
+            "https://data.weather.gov.hk/weatherAPI/opendata/weather.php?dataType=warningInfo&lang=en"
+        )
+
+    @patch("hkopenai.hk_climate_mcp_server.tools.warnings.fetch_json_data")
+    def test_get_special_weather_tips_internal(self, mock_fetch_json_data):
+        """Test the internal _get_special_weather_tips function."""
+        example_json = {
+            "specialWeatherTips": ["Tip 1", "Tip 2"],
+            "updateTime": "2025-06-23T10:00:00+08:00",
+        }
+        mock_fetch_json_data.return_value = example_json
+
+        result = _get_special_weather_tips(lang="en")
+        self.assertEqual(result, example_json)
+        mock_fetch_json_data.assert_called_once_with(
+            "https://data.weather.gov.hk/weatherAPI/opendata/weather.php?dataType=swt&lang=en"
+        )
 
 
 if __name__ == "__main__":

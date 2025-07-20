@@ -6,25 +6,24 @@ the Hong Kong Observatory API.
 """
 
 from typing import Dict, Any
-import requests
 from fastmcp import FastMCP
+from hkopenai_common.json_utils import fetch_json_data
 
 
 def register(mcp: FastMCP):
     """Registers the weather warnings tools with the FastMCP server."""
+
     @mcp.tool(
         description="Get weather warning summary for HK with messages and update.",
     )
     def get_weather_warning_summary(lang: str = "en") -> Dict[str, Any]:
         return _get_weather_warning_summary(lang)
 
-
     @mcp.tool(
         description="Get detailed weather warning info for HK with statement and update.",
     )
     def get_weather_warning_info(lang: str = "en") -> Dict[str, Any]:
         return _get_weather_warning_info(lang)
-
 
     @mcp.tool(
         description="Get special weather tips for Hong Kong including tips list and update.",
@@ -46,12 +45,7 @@ def _get_weather_warning_summary(lang: str = "en") -> Dict[str, Any]:
             - updateTime: Last update time
     """
     url = f"https://data.weather.gov.hk/weatherAPI/opendata/weather.php?dataType=warnsum&lang={lang}"
-    response = requests.get(url)
-    try:
-        response.raise_for_status()
-        data = response.json()
-    except (requests.RequestException, ValueError) as e:
-        return {"error": f"Failed to fetch data: {str(e)}."}
+    data = fetch_json_data(url)
 
     return {
         "warningMessage": data.get("warningMessage", []),
@@ -72,12 +66,7 @@ def _get_weather_warning_info(lang: str = "en") -> Dict[str, Any]:
             - updateTime: Last update time
     """
     url = f"https://data.weather.gov.hk/weatherAPI/opendata/weather.php?dataType=warningInfo&lang={lang}"
-    response = requests.get(url)
-    try:
-        response.raise_for_status()
-        data = response.json()
-    except (requests.RequestException, ValueError) as e:
-        return {"error": f"Failed to fetch data: {str(e)}."}
+    data = fetch_json_data(url)
 
     return {
         "warningStatement": data.get("warningStatement", ""),
@@ -98,12 +87,7 @@ def _get_special_weather_tips(lang: str = "en") -> Dict[str, Any]:
             - updateTime: Last update time
     """
     url = f"https://data.weather.gov.hk/weatherAPI/opendata/weather.php?dataType=swt&lang={lang}"
-    response = requests.get(url)
-    try:
-        response.raise_for_status()
-        data = response.json()
-    except (requests.RequestException, ValueError) as e:
-        return {"error": f"Failed to fetch data: {str(e)}."}
+    data = fetch_json_data(url)
 
     return {
         "specialWeatherTips": data.get("specialWeatherTips", []),

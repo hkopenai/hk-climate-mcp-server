@@ -7,13 +7,13 @@ Observatory API.
 """
 
 from typing import Dict, Any, Optional
-import requests
 from fastmcp import FastMCP
-
+from hkopenai_common.json_utils import fetch_json_data
 
 
 def register(mcp: FastMCP):
     """Registers the astronomical tools with the FastMCP server."""
+
     @mcp.tool(
         description="Get times of moonrise, moon transit and moonset",
     )
@@ -69,14 +69,9 @@ def _get_moon_times(
     if day:
         params["day"] = str(day)
 
-    response = requests.get(
+    return fetch_json_data(
         "https://data.weather.gov.hk/weatherAPI/opendata/opendata.php", params=params
     )
-    try:
-        response.raise_for_status()
-        return response.json()
-    except (requests.RequestException, ValueError) as e:
-        return {"error": f"Failed to fetch data: {str(e)}."}
 
 
 def _get_sunrise_sunset_times(
@@ -100,14 +95,9 @@ def _get_sunrise_sunset_times(
     if day:
         params["day"] = str(day)
 
-    response = requests.get(
+    return fetch_json_data(
         "https://data.weather.gov.hk/weatherAPI/opendata/opendata.php", params=params
     )
-    try:
-        response.raise_for_status()
-        return response.json()
-    except (requests.RequestException, ValueError) as e:
-        return {"error": f"Failed to fetch data: {str(e)}."}
 
 
 def _get_gregorian_lunar_calendar(
@@ -125,24 +115,19 @@ def _get_gregorian_lunar_calendar(
     Returns:
         Dict containing calendar conversion data
     """
-    try:
-        # Construct the date string in YYYY-MM-DD format
-        if month and day:
-            date_str = f"{year:04d}-{month:02d}-{day:02d}"
-        elif month:
-            # If only month is provided, use the first day of the month
-            date_str = f"{year:04d}-{month:02d}-01"
-        else:
-            # If only year is provided, use the first day of January
-            date_str = f"{year:04d}-01-01"
+    # Construct the date string in YYYY-MM-DD format
+    if month and day:
+        date_str = f"{year:04d}-{month:02d}-{day:02d}"
+    elif month:
+        # If only month is provided, use the first day of the month
+        date_str = f"{year:04d}-{month:02d}-01"
+    else:
+        # If only year is provided, use the first day of January
+        date_str = f"{year:04d}-01-01"
 
-        params = {"date": date_str}
+    params = {"date": date_str}
 
-        response = requests.get(
-            "https://data.weather.gov.hk/weatherAPI/opendata/lunardate.php",
-            params=params,
-        )
-        response.raise_for_status()
-        return response.json()
-    except (requests.RequestException, ValueError) as e:
-        return {"error": f"Failed to fetch data: {str(e)}."}
+    return fetch_json_data(
+        "https://data.weather.gov.hk/weatherAPI/opendata/lunardate.php",
+        params=params,
+    )

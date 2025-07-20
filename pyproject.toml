@@ -19,7 +19,7 @@ email = "neo@01man.com"
 repository = "https://github.com/hkopenai/hk-climate-mcp-server.git"
 
 [project.scripts]
-hk_climate_mcp_server = "hkopenai.hk_climate_mcp_server.app:main"
+hk_climate_mcp_server = "hkopenai.hk_climate_mcp_server.__main__:cli_main"
 
 [tool.setuptools]
 packages = [ "hkopenai.hk_climate_mcp_server",]

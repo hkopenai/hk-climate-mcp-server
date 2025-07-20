@@ -9,6 +9,7 @@ from hkopenai.hk_climate_mcp_server.tools.radiation import _get_weather_radiatio
 
 class TestRadiationToolsLive(unittest.TestCase):
     """Live tests for radiation data fetching functions."""
+
     @unittest.skipUnless(
         os.environ.get("RUN_LIVE_TESTS") == "true",
         "Set RUN_LIVE_TESTS=true to run live tests",

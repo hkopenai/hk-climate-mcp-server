@@ -8,13 +8,14 @@ to ensure it correctly fetches and processes visibility data from the HKO API.
 import unittest
 from unittest.mock import patch, MagicMock
 from hkopenai.hk_climate_mcp_server.tools.visibility import register, _get_visibility
+from hkopenai.hk_climate_mcp_server.tools.visibility import fetch_json_data
 
 
 class TestVisibilityTools(unittest.TestCase):
     """Test case class for visibility data tools."""
 
-    @patch("requests.get")
-    def test_get_visibility_internal(self, mock_get):
+    @patch("hkopenai.hk_climate_mcp_server.tools.visibility.fetch_json_data")
+    def test_get_visibility_internal(self, mock_fetch_json_data):
         """
         Test the internal _get_visibility function.
         """
@@ -29,14 +30,12 @@ class TestVisibilityTools(unittest.TestCase):
                 ["202506231320", "Chek Lap Kok", "50 km"],
             ],
         }
-        mock_response = MagicMock()
-        mock_response.json.return_value = example_json
-        mock_get.return_value = mock_response
+        mock_fetch_json_data.return_value = example_json
 
         result = _get_visibility(lang="en")
         self.assertEqual(result["fields"], example_json["fields"])
         self.assertEqual(result["data"], example_json["data"])
-        mock_get.assert_called_once_with(
+        mock_fetch_json_data.assert_called_once_with(
             "https://data.weather.gov.hk/weatherAPI/opendata/opendata.php?dataType=LTMV&lang=en&rformat=json"
         )
 

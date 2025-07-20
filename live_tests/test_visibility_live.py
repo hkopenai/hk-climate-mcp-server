@@ -7,6 +7,7 @@ from hkopenai.hk_climate_mcp_server.tools.visibility import _get_visibility
 
 class TestVisibilityToolsLive(unittest.TestCase):
     """Live tests for visibility data fetching functions."""
+
     @unittest.skipUnless(
         os.environ.get("RUN_LIVE_TESTS") == "true",
         "Set RUN_LIVE_TESTS=true to run live tests",
@@ -40,7 +41,7 @@ class TestVisibilityToolsLive(unittest.TestCase):
             "error" in result,
             "Result should contain an error field for invalid language",
         )
-        self.assertIn("Failed to fetch data", result["error"])
+        self.assertIn("Failed to parse JSON response from API", result["error"])
 
 
 if __name__ == "__main__":

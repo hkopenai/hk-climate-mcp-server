@@ -11,6 +11,7 @@ from hkopenai.hk_climate_mcp_server.tools.current_weather import _get_current_we
 
 class TestCurrentWeatherToolsLive(unittest.TestCase):
     """Live tests for current weather data fetching functions."""
+
     @unittest.skipUnless(
         os.environ.get("RUN_LIVE_TESTS") == "true",
         "Set RUN_LIVE_TESTS=true to run live tests",

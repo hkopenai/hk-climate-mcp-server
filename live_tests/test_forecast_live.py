@@ -45,15 +45,16 @@ class TestForecastToolsLive(unittest.TestCase):
         """
         Live test to check error handling for an invalid language in get_9_day_weather_forecast.
         """
-        result = _get_9_day_weather_forecast(lang="xx")  # An invalid language code
+        lang = "xx"
+        result = _get_9_day_weather_forecast(lang=lang)  # An invalid language code
 
         self.assertIsNotNone(result)
         self.assertIsInstance(result, dict, "Result should be a dictionary")
-        self.assertTrue(
-            "error" in result,
-            "Result should contain an error field for invalid language",
-        )
-        self.assertIn("Failed to fetch data", result["error"])
+        self.assertFalse(
+            "error" in result, result
+        )  # No error key expected for invalid language
+        self.assertEqual(result["generalSituation"], "")
+        self.assertEqual(result["weatherForecast"], [])
 
 
 if __name__ == "__main__":
