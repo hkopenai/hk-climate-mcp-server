@@ -1,0 +1,2 @@
+fastmcp==2.12.5
+hkopenai-common==0.5.0
