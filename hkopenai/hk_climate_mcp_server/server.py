@@ -16,6 +16,7 @@ from .tools import temperature
 from .tools import tides
 from .tools import visibility
 from .tools import warnings
+from .tools import weather_summary
 
 
 def server():
@@ -36,5 +37,6 @@ def server():
     visibility.register(mcp)
     warnings.register(mcp)
     astronomical.register(mcp)
+    weather_summary.register(mcp)
 
     return mcp
