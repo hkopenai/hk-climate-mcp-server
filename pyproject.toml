@@ -28,8 +28,5 @@ include-package-data = true
 [tool.bandit]
 exclude_dirs = [ "venv", ".venv", "tests",]
 
-[tool.pytest.ini_options]
-asyncio_default_fixture_loop_scope = "function"
-
 [tool.hatch.build.targets.wheel]
 packages = [ "hkopenai",]
