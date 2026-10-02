@@ -30,3 +30,11 @@ exclude_dirs = [ "venv", ".venv", "tests",]
 
 [tool.hatch.build.targets.wheel]
 packages = [ "hkopenai",]
+
+[tool.pytest.ini_options]
+# `live` marker is auto-applied by live_tests/conftest.py to every test
+# collected from that directory. The CI workflow uses `-m "not live"`
+# to deselect them (they hit external APIs).
+markers = [
+    "live: marks tests as live (external API calls)",
+]
